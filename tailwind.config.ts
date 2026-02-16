@@ -28,6 +28,7 @@ const config: Config = {
             800: "#1f2937",
             900: "#111827",
           },
+          cream: "#FFFBF7",
         },
       },
       fontFamily: {

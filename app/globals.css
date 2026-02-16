@@ -10,7 +10,7 @@
   }
   
   body {
-    @apply bg-white text-brand-gray-900 font-body antialiased;
+    @apply bg-brand-cream text-brand-gray-900 font-body antialiased;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
     /* Ensure minimum width for very small screens */

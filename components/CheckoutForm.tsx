@@ -83,8 +83,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
 
   const handleWhatsAppOrder = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
-    setPaymentMethod("whatsapp");
-    
+
     let whatsappLink: string | undefined;
     
     try {
@@ -249,7 +248,6 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       }
     } finally {
       setIsSubmitting(false);
-      setPaymentMethod(null);
     }
   };
 
@@ -568,10 +566,10 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       {/* Checkout Button */}
       <button
         type="submit"
-        disabled={isSubmitting || isProcessingStk}
+        disabled={isSubmitting}
         className="w-full bg-brand-green hover:bg-brand-green/90 text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mb-3"
       >
-        {isSubmitting || isProcessingStk 
+        {isSubmitting 
           ? "Processing..." 
           : `Proceed to Checkout - ${formatCurrency(total)}`}
       </button>
