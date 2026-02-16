@@ -28,7 +28,9 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
-  // Webpack configuration for path aliases
+  // Satisfy Next.js 16: Turbopack is default when webpack is present
+  turbopack: {},
+  // Webpack configuration for path aliases (used when running with --webpack)
   webpack: (config) => {
     // Ensure @/ alias resolves correctly
     config.resolve.alias = {

@@ -13,7 +13,8 @@ const config: Config = {
       },
       colors: {
         brand: {
-          green: "#28a745",
+          sage: "#9CAF88",
+          green: "#9CAF88",
           pink: "#E91E63",
           purple: "#9C27B0",
           gold: "#D4AF37",
@@ -28,7 +29,8 @@ const config: Config = {
             800: "#1f2937",
             900: "#111827",
           },
-          cream: "#FFFBF7",
+          cream: "#F9F2E8",
+          "cream-light": "#FFFBF7",
         },
       },
       fontFamily: {

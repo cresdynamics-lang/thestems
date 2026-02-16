@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Client theme: Sage Green + Cream */
+  --color-sage: #9CAF88;
+  --color-cream: #F9F2E8;
+}
+
 @layer base {
   html {
     @apply scroll-smooth;
@@ -10,7 +16,8 @@
   }
   
   body {
-    @apply bg-brand-cream text-brand-gray-900 font-body antialiased;
+    background-color: var(--color-cream);
+    @apply text-brand-gray-900 font-body antialiased;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
     /* Ensure minimum width for very small screens */

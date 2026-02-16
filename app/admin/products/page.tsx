@@ -99,7 +99,8 @@ export default function AdminProductsPage() {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="card overflow-hidden">
-          <table className="min-w-full divide-y divide-brand-gray-200">
+          <div className="overflow-x-auto -mx-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-brand-gray-100">
+            <table className="min-w-[640px] w-full divide-y divide-brand-gray-200">
             <thead className="bg-brand-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-brand-gray-500 uppercase tracking-wider">
@@ -177,6 +178,7 @@ export default function AdminProductsPage() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       </main>
     </div>

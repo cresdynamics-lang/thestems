@@ -507,7 +507,7 @@ Whether you're celebrating a university graduation, high school completion, or a
   const latestPosts = allPosts.slice(0, 8);
 
   return (
-    <section className="py-10 md:py-14 lg:py-16 bg-brand-gray-50 relative overflow-hidden">
+    <section className="py-10 md:py-14 lg:py-16 bg-white relative overflow-hidden">
       {/* Magazine-style background pattern */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
            style={{
@@ -941,7 +941,7 @@ export default async function HomePage() {
         <ProductSection
           title="Birthday Surprises - Make Their Day Extraordinary"
           products={holidayFamilyProducts.length >= 8 ? holidayFamilyProducts : getFallbackProducts("mixed")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-white"
           linkHref="/collections"
         />
 
@@ -957,7 +957,7 @@ export default async function HomePage() {
         <ProductSection
           title="Apology Flowers - Say Sorry with Beautiful Blooms"
           products={sayItWithFlowers.length >= 8 ? sayItWithFlowers : getFallbackProducts("flowers")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-white"
           linkHref="/collections/flowers"
         />
 
@@ -973,7 +973,7 @@ export default async function HomePage() {
         <ProductSection
           title="Just Because - Spontaneous Gestures of Love"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-white"
           linkHref="/collections"
         />
 
@@ -989,7 +989,7 @@ export default async function HomePage() {
         <ProductSection
           title="Cuddly Teddy Bears - Warm Hugs, Lasting Memories"
           products={teddyBears}
-          bgColor="bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50"
+          bgColor="bg-white"
           linkHref="/collections/teddy-bears"
         />
 
@@ -1002,7 +1002,7 @@ export default async function HomePage() {
         />
 
         {/* Explore Collections Section */}
-        <section className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-brand-gray-50 via-white to-brand-gray-50 relative overflow-hidden">
+        <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
                style={{
                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)`,
