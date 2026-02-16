@@ -1,0 +1,46 @@
+{
+  "name": "the-stems",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
+    "build:low-memory": "NODE_OPTIONS='--max-old-space-size=2048' next build --webpack",
+    "start": "next start",
+    "lint": "next lint",
+    "preview": "next start -p 3001",
+    "export-sitemap": "node scripts/generate-sitemap.js"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
+    "@hookform/resolvers": "^3.3.4",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.81.1",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "autoprefixer": "^10.4.18",
+    "axios": "^1.6.7",
+    "clsx": "^2.1.0",
+    "date-fns": "^3.3.1",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "next": "^16.1.6",
+    "next-seo": "^6.6.0",
+    "postcss": "^8.4.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.50.1",
+    "resend": "^6.5.2",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^3.4.1",
+    "yup": "^1.4.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "typescript": "^5.3.3"
+  }
+}
