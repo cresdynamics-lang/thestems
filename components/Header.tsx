@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import CartSidebar from "./CartSidebar";
@@ -14,118 +14,12 @@ import { SHOP_INFO } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/db";
 
-interface NavItem {
-  name: string;
-  href: string;
-  children?: {
-    title: string;
-    items: { name: string; href: string }[];
-  }[];
-}
-
-const navigation: NavItem[] = [
-  {
-    name: "Flower Bouquets",
-    href: "/collections/flowers",
-    children: [
-      {
-        title: "By Occasion",
-        items: [
-          { name: "View all", href: "/collections/flowers" },
-          { name: "Anniversary Flowers", href: "/collections/flowers?tags=anniversary" },
-          { name: "Birthday Flowers", href: "/collections/flowers?tags=birthday" },
-          { name: "Romantic Flowers", href: "/collections/flowers?tags=romantic" },
-          { name: "I'm Sorry Flowers", href: "/collections/flowers?tags=sorry" },
-          { name: "Get Well Soon Flowers", href: "/collections/flowers?tags=get well soon" },
-          { name: "Condolence Flowers", href: "/collections/flowers?tags=funeral" },
-        ],
-      },
-      {
-        title: "Flower Arrangements",
-        items: [
-          { name: "View all", href: "/collections/flowers" },
-          { name: "Heart Box Arrangements", href: "/collections/flowers" },
-          { name: "Vase Flowers", href: "/collections/flowers" },
-          { name: "Flower Baskets", href: "/collections/flowers" },
-          { name: "Hat Box Arrangements", href: "/collections/flowers" },
-          { name: "Hand-tied Bouquets", href: "/collections/flowers" },
-          { name: "Envelope Arrangements", href: "/collections/flowers" },
-          { name: "Square Box Arrangements", href: "/collections/flowers" },
-        ],
-      },
-      {
-        title: "By Type",
-        items: [
-          { name: "Carnations", href: "/collections/flowers" },
-          { name: "Roses", href: "/collections/flowers" },
-          { name: "Gerberas", href: "/collections/flowers" },
-          { name: "Sunflowers", href: "/collections/flowers" },
-          { name: "Lilies", href: "/collections/flowers" },
-          { name: "Chrysanthemums", href: "/collections/flowers" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Teddy Bears",
-    href: "/collections/teddy-bears",
-    children: [
-      {
-        title: "By Size",
-        items: [
-          { name: "View all", href: "/collections/teddy-bears" },
-          { name: "25cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "50cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "100cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "120cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "160cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "180cm Teddy Bears", href: "/collections/teddy-bears" },
-          { name: "200cm Teddy Bears", href: "/collections/teddy-bears" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Gift Hampers",
-    href: "/collections/gift-hampers",
-    children: [
-      {
-        title: "Gift Hampers",
-        items: [
-          { name: "View all", href: "/collections/gift-hampers" },
-          { name: "Gift Baskets", href: "/collections/gift-hampers" },
-          { name: "Fruit Baskets", href: "/collections/gift-hampers" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Cards",
-    href: "/collections/cards",
-    children: [
-      {
-        title: "Occasions",
-        items: [
-          { name: "View all", href: "/collections/cards" },
-          { name: "Birthdays", href: "/collections/cards" },
-          { name: "Graduations", href: "/collections/cards" },
-          { name: "Anniversaries", href: "/collections/cards" },
-        ],
-      },
-      {
-        title: "Sentiment",
-        items: [
-          { name: "Congrats", href: "/collections/cards" },
-          { name: "Sympathy", href: "/collections/cards" },
-          { name: "Good Luck", href: "/collections/cards" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Contact",
-    href: "/contact",
-  },
+const navigation: { name: string; href: string }[] = [
+  { name: "Flower Bouquets", href: "/collections/flowers" },
+  { name: "Teddy Bears", href: "/collections/teddy-bears" },
+  { name: "Gift Hampers", href: "/collections/gift-hampers" },
+  { name: "Cards", href: "/collections/cards" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
@@ -135,13 +29,10 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
   const [mounted, setMounted] = useState(false);
   const { cartOpen, setCartOpen } = useUIStore();
   const { getItemCount } = useCartStore();
   const itemCount = getItemCount();
-  const dropdownRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
@@ -227,21 +118,6 @@ export default function Header() {
     setSearchResults([]);
   };
 
-  const handleMouseEnter = (itemName: string) => {
-    if (navigation.find((item) => item.name === itemName)?.children) {
-      setActiveDropdown(itemName);
-    }
-  };
-
-  const handleMouseLeave = (itemName: string) => {
-    setTimeout(() => {
-      const dropdown = dropdownRefs.current[itemName];
-      if (dropdown && !dropdown.matches(":hover")) {
-        setActiveDropdown(null);
-      }
-    }, 100);
-  };
-
   return (
     <>
       <header className="bg-white border-b border-brand-gray-200 sticky top-0 z-50">
@@ -257,63 +133,13 @@ export default function Header() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex lg:items-center lg:space-x-6 xl:space-x-8">
               {navigation.map((item) => (
-                <div
+                <Link
                   key={item.name}
-                  className="relative"
-                  onMouseEnter={() => handleMouseEnter(item.name)}
-                  onMouseLeave={() => handleMouseLeave(item.name)}
+                  href={item.href}
+                  className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-sm xl:text-base"
                 >
-                  <Link
-                    href={item.href}
-                    className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-sm xl:text-base flex items-center gap-1 group"
-                  >
-                    {item.name}
-                    {item.children && (
-                      <ChevronDownIcon
-                        className={`h-4 w-4 transition-transform ${
-                          activeDropdown === item.name ? "rotate-180" : ""
-                        }`}
-                      />
-                    )}
-                  </Link>
-
-                  {/* Dropdown Menu */}
-                  {item.children && activeDropdown === item.name && (
-                    <div
-                      ref={(el) => {
-                        dropdownRefs.current[item.name] = el;
-                      }}
-                      className="absolute top-full left-0 mt-2 bg-white border border-brand-gray-200 rounded-lg shadow-lg p-6 z-[100]"
-                      style={{
-                        width: item.children.length === 3 ? "900px" : item.children.length === 2 ? "600px" : "400px",
-                      }}
-                      onMouseEnter={() => setActiveDropdown(item.name)}
-                      onMouseLeave={() => setActiveDropdown(null)}
-                    >
-                      <div className="grid grid-cols-3 gap-8">
-                        {item.children.map((section, sectionIndex) => (
-                          <div key={sectionIndex}>
-                            <h3 className="font-semibold text-brand-gray-900 mb-3 text-sm uppercase tracking-wide">
-                              {section.title}
-                            </h3>
-                            <ul className="space-y-2">
-                              {section.items.map((subItem) => (
-                                <li key={subItem.name}>
-                                  <Link
-                                    href={subItem.href}
-                                    className="text-brand-gray-700 hover:text-brand-red transition-colors text-sm block py-1"
-                                  >
-                                    {subItem.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  {item.name}
+                </Link>
               ))}
             </div>
 
@@ -469,67 +295,15 @@ export default function Header() {
                 </div>
                 <nav className="flex flex-col space-y-1">
                   {navigation.map((item) => (
-                    <div key={item.name}>
-                      {item.children ? (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setMobileExpanded({
-                                ...mobileExpanded,
-                                [item.name]: !mobileExpanded[item.name],
-                              })
-                            }
-                            className="w-full px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium flex items-center justify-between"
-                          >
-                            <span>{item.name}</span>
-                            <ChevronDownIcon
-                              className={`h-4 w-4 transition-transform ${mobileExpanded[item.name] ? "rotate-180" : ""}`}
-                            />
-                          </button>
-                          {mobileExpanded[item.name] && (
-                            <div className="pl-4 mt-2 space-y-1">
-                              {item.children.map((section, sectionIndex) => (
-                                <div key={sectionIndex} className="mb-4">
-                                  <h4 className="font-semibold text-brand-gray-900 mb-2 text-sm uppercase">
-                                    {section.title}
-                                  </h4>
-                                  <ul className="space-y-1">
-                                    {section.items.map((subItem) => (
-                                      <li key={subItem.name}>
-                                        <Link
-                                          href={subItem.href}
-                                          onClick={() => setMobileMenuOpen(false)}
-                                          className="px-4 py-2 rounded-lg text-brand-gray-700 hover:text-brand-red hover:bg-brand-gray-50 transition-all text-sm block"
-                                        >
-                                          {subItem.name}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
-                        >
-                          {item.name}
-                        </Link>
-                      )}
-                    </div>
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
+                    >
+                      {item.name}
+                    </Link>
                   ))}
-                  <Link
-                    href="/contact"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
-                  >
-                    Contact
-                  </Link>
                 </nav>
                 <div className="mt-8 pt-6 border-t border-brand-gray-200">
                   <div className="flex items-center justify-center space-x-4">
