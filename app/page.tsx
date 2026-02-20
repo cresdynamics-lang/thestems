@@ -507,7 +507,7 @@ Whether you're celebrating a university graduation, high school completion, or a
   const latestPosts = allPosts.slice(0, 8);
 
   return (
-    <section className="py-10 md:py-14 lg:py-16 bg-white relative overflow-hidden">
+    <section className="py-10 md:py-14 lg:py-16 bg-brand-blush relative overflow-hidden">
       {/* Magazine-style background pattern */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
            style={{
@@ -874,7 +874,7 @@ export default async function HomePage() {
         />
 
         {/* Circular Collection Cards */}
-        <section className="py-8 md:py-12 bg-white">
+        <section className="py-8 md:py-12 bg-brand-blush">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center gap-6 md:gap-8 lg:gap-12">
               {/* Flowers Card */}
