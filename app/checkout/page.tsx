@@ -243,83 +243,11 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Handle M-Pesa STK and Card Payments via Pesapal
+      // Pesapal (M-Pesa STK and Card) – disabled for now
       if (paymentMethod === "pesapal") {
-        // Create order in database
-        const orderResponse = await axios.post("/api/orders", {
-          items: (orderData?.items || items).map((item) => ({
-            productId: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            options: item.options,
-          })),
-          total: total,
-          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          phone: formatPhone(phoneNumber || phone),
-          email: email || null,
-          delivery_address: address || "To be confirmed",
-          delivery_city: city || "Nairobi",
-          delivery_date: new Date().toISOString(),
-          payment_method: "card",
-          notes: `M-Pesa STK and Card payment initiated via Pesapal`,
-        });
-
-        const orderId = orderResponse.data.id;
-
-        // Prepare billing address for Pesapal
-        const billingAddress = {
-          email_address: email || "",
-          phone_number: formatPhone(phoneNumber || phone),
-          country_code: "KE",
-          first_name: firstName || "Customer",
-          middle_name: "",
-          last_name: lastName || "",
-          line_1: address || "To be confirmed",
-          line_2: apartment || "",
-          city: city || "Nairobi",
-          state: city || "Nairobi",
-          postal_code: postalCode || "",
-          zip_code: postalCode || "",
-        };
-
-        // Initiate Pesapal payment
-        const callbackUrl = typeof window !== 'undefined'
-          ? `${window.location.origin}/api/pesapal/callback`
-          : "https://the.stems.ke/api/pesapal/callback";
-
-        const pesapalResponse = await axios.post("/api/pesapal/payment", {
-          orderId: orderId,
-          amount: total / 100, // Convert cents to KES
-          currency: "KES",
-          description: `The Stems Order #${orderId.slice(0, 8)}`,
-          callbackUrl: callbackUrl,
-          customerEmail: email || null,
-          customerPhone: formatPhone(phoneNumber || phone),
-          customerName: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
-          billingAddress: billingAddress,
-        });
-
-        if (pesapalResponse.data.success && pesapalResponse.data.data?.redirect_url) {
-          // Store order ID in session for callback handling
-          sessionStorage.setItem("pendingOrder", JSON.stringify({
-            id: orderId,
-            total: total,
-            paymentMethod: "pesapal",
-            orderTrackingId: pesapalResponse.data.data.order_tracking_id,
-          }));
-
-          // Track the purchase attempt
-          Analytics.trackPurchase(orderId, total, "card");
-
-          // Redirect to Pesapal payment page
-          window.location.href = pesapalResponse.data.data.redirect_url;
-          return;
-        } else {
-          setError(pesapalResponse.data.message || "Failed to initiate card payment. Please try again.");
-          setIsProcessing(false);
-          return;
-        }
+        setError("M-Pesa STK and Card payments are coming soon. Please use M-Pesa Till or Paybill for now.");
+        setIsProcessing(false);
+        return;
       }
     } catch (err: any) {
       console.error("❌ Checkout: Order submission error:", {
@@ -514,9 +442,9 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-                {/* M-Pesa STK and Card Payments */}
+                {/* M-Pesa STK and Card Payments – Coming soon */}
                 <div>
-                  <label className="flex items-start gap-3 p-4 border-2 border-brand-green rounded-md cursor-pointer bg-brand-green/5 hover:bg-brand-green/10">
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50 opacity-90">
                     <input
                       type="radio"
                       name="payment"
@@ -526,11 +454,12 @@ export default function CheckoutPage() {
                       className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
                     />
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <CreditCardIcon className="w-6 h-6 text-brand-green" />
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <CreditCardIcon className="w-6 h-6 text-brand-gray-400" />
                         <span className="font-medium text-sm text-brand-gray-900">M-Pesa STK and Card Payments</span>
+                        <span className="text-xs font-semibold text-brand-gray-500 bg-brand-gray-100 px-2 py-0.5 rounded">Coming soon</span>
                       </div>
-                      <p className="text-xs text-brand-gray-600 mt-1">Pay via M-Pesa STK Push or Credit/Debit Card (Visa, Mastercard, PayPal)</p>
+                      <p className="text-xs text-brand-gray-500 mt-1">Pay via M-Pesa STK Push or Credit/Debit Card (Visa, Mastercard) — available soon</p>
                     </div>
                   </label>
                 </div>
@@ -546,7 +475,7 @@ export default function CheckoutPage() {
                 {isProcessing
                   ? "Processing..."
                   : paymentMethod === "pesapal"
-                    ? `Pay with M-Pesa STK or Card - ${formatCurrency(total)}`
+                    ? "Coming soon"
                     : paymentMethod === "till" || paymentMethod === "paybill"
                       ? `Complete Order - ${formatCurrency(total)}`
                       : "Select Payment Method"}
