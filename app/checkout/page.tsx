@@ -151,7 +151,7 @@ export default function CheckoutPage() {
   // Show loading only while redirecting or if cart is empty
   if (items.length === 0 || !orderData) {
     return (
-      <div className="py-12 bg-white min-h-screen">
+      <div className="py-12 bg-brand-blush min-h-screen">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-brand-gray-600">{items.length === 0 ? "Redirecting to cart..." : "Loading..."}</p>
         </div>
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-brand-blush">
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Logo */}
         <div className="text-center mb-6">

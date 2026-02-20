@@ -162,7 +162,7 @@ function OrderSuccessContent() {
 
   if (isLoading) {
     return (
-      <div className="py-12 bg-white min-h-screen">
+      <div className="py-12 bg-brand-blush min-h-screen">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-brand-gray-600">Loading order details...</p>
         </div>
@@ -172,7 +172,7 @@ function OrderSuccessContent() {
 
   if (!order) {
     return (
-      <div className="py-12 bg-white min-h-screen">
+      <div className="py-12 bg-brand-blush min-h-screen">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-4">
             Order Not Found
@@ -186,7 +186,7 @@ function OrderSuccessContent() {
   }
 
   return (
-    <div className="py-12 bg-white min-h-screen">
+    <div className="py-12 bg-brand-blush min-h-screen">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-4">
@@ -360,7 +360,7 @@ function OrderSuccessContent() {
 export default function OrderSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="py-12 bg-white min-h-screen">
+      <div className="py-12 bg-brand-blush min-h-screen">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-brand-gray-600">Loading...</p>
         </div>

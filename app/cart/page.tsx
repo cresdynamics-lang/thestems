@@ -13,7 +13,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="py-12 bg-white min-h-screen">
+      <div className="py-12 bg-brand-blush min-h-screen">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-4">
             Your Cart is Empty
@@ -30,7 +30,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="py-6 sm:py-12 bg-white min-h-screen">
+    <div className="py-6 sm:py-12 bg-brand-blush min-h-screen">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl text-brand-gray-900 mb-8 sm:mb-12">
           Cart

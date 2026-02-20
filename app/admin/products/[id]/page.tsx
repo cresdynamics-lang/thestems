@@ -197,7 +197,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-brand-gray-600">Loading product...</div>
       </div>
     );
@@ -205,7 +205,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (error) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-center">
           <p className="text-brand-red mb-4">{error}</p>
           <Link href="/admin/products" className="btn-primary">
@@ -218,7 +218,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (!productId) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-brand-gray-600">Loading product ID...</div>
       </div>
     );
@@ -432,7 +432,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-brand-gray-600">Loading product...</div>
       </div>
     );
@@ -440,7 +440,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-center">
           <p className="text-brand-gray-600 mb-4">Product not found</p>
           <Link href="/admin/products" className="btn-primary">
@@ -452,7 +452,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray-50">
+    <div className="min-h-screen bg-brand-blush">
       <header className="bg-white border-b border-brand-gray-200">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">

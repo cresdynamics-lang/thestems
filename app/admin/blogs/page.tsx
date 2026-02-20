@@ -269,14 +269,14 @@ export default function AdminBlogsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-brand-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
         <div className="text-brand-gray-600">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-brand-gray-50">
+    <div className="min-h-screen bg-brand-blush">
       <header className="bg-white border-b border-brand-gray-200">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">

@@ -199,7 +199,7 @@ function ProductSection({
   title,
   subtitle,
   products,
-  bgColor = "bg-white",
+  bgColor = "bg-brand-blush",
   linkHref,
 }: {
   title: string;
@@ -869,7 +869,7 @@ export default async function HomePage() {
         <ProductSection
           title="Anniversary Gifts - Celebrate Love, Every Year"
           products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/flowers?tags=anniversary"
         />
 
@@ -941,7 +941,7 @@ export default async function HomePage() {
         <ProductSection
           title="Birthday Surprises - Make Their Day Extraordinary"
           products={holidayFamilyProducts.length >= 8 ? holidayFamilyProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections"
         />
 
@@ -949,7 +949,7 @@ export default async function HomePage() {
         <ProductSection
           title="Same-Day Flower Delivery - Express Your Feelings Today"
           products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/flowers"
         />
 
@@ -957,7 +957,7 @@ export default async function HomePage() {
         <ProductSection
           title="Apology Flowers - Say Sorry with Beautiful Blooms"
           products={sayItWithFlowers.length >= 8 ? sayItWithFlowers : getFallbackProducts("flowers")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/flowers"
         />
 
@@ -965,7 +965,7 @@ export default async function HomePage() {
         <ProductSection
           title="Surprise Gift Hampers - Unexpected Joy, Delivered"
           products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/gift-hampers"
         />
 
@@ -973,7 +973,7 @@ export default async function HomePage() {
         <ProductSection
           title="Just Because - Spontaneous Gestures of Love"
           products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections"
         />
 
@@ -981,7 +981,7 @@ export default async function HomePage() {
         <ProductSection
           title="Premium Gift Hampers - Thoughtful Combinations"
           products={giftHampers.length >= 8 ? giftHampers : getFallbackProducts("hampers")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/gift-hampers"
         />
 
@@ -989,7 +989,7 @@ export default async function HomePage() {
         <ProductSection
           title="Cuddly Teddy Bears - Warm Hugs, Lasting Memories"
           products={teddyBears}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/teddy-bears"
         />
 
@@ -997,7 +997,7 @@ export default async function HomePage() {
         <ProductSection
           title="Celebration Gifts - Mark Every Milestone"
           products={formFourResultsProducts.length >= 8 ? formFourResultsProducts : getFallbackProducts("mixed")}
-          bgColor="bg-white"
+          bgColor="bg-brand-blush"
           linkHref="/collections/gift-hampers"
         />
 

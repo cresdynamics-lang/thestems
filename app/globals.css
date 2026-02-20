@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  /* Client theme: Sage Green + Cream */
-  --color-sage: #9CAF88;
-  --color-cream: #F9F2E8;
+  /* Flower-focused theme: soft blush + deep rose */
+  --color-blush: #F8C8DC;
+  --color-rose-deep: #E75480;
 }
 
 @layer base {
@@ -16,7 +16,7 @@
   }
   
   body {
-    background-color: var(--color-cream);
+    background-color: var(--color-blush);
     @apply text-brand-gray-900 font-body antialiased;
     /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;

@@ -98,9 +98,9 @@ export default async function BlogPage() {
   return (
     <>
       <JsonLd data={blogJsonLd} />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-brand-blush">
         {/* Page Title */}
-        <div className="bg-white border-b border-brand-gray-200">
+        <div className="bg-brand-blush border-b border-brand-gray-200">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
             <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-brand-gray-900 mb-4">
               Blog

@@ -186,7 +186,7 @@ export default function ServicesPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-brand-blush">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">

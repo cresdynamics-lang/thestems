@@ -13,14 +13,16 @@ const config: Config = {
       },
       colors: {
         brand: {
+          blush: "#F8C8DC",
+          "rose-deep": "#E75480",
           sage: "#9CAF88",
-          green: "#9CAF88",
-          pink: "#E91E63",
+          green: "#E75480",
+          pink: "#E75480",
           purple: "#9C27B0",
           gold: "#D4AF37",
           teal: "#17a2b8",
           orange: "#ff4d00",
-          red: "#E91E63",
+          red: "#E75480",
           white: "#ffffff",
           gray: {
             50: "#f9fafb",

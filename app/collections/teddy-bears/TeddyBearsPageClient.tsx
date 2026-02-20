@@ -177,7 +177,7 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
 
 
   return (
-    <div className="py-6 md:py-8 lg:py-12 bg-white">
+    <div className="py-6 md:py-8 lg:py-12 bg-brand-blush">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">

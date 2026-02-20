@@ -129,9 +129,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <>
       <JsonLd data={articleJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
-      <article className="min-h-screen bg-white">
+      <article className="min-h-screen bg-brand-blush">
         {/* Breadcrumb */}
-        <div className="bg-white border-b border-brand-gray-200">
+        <div className="bg-brand-blush border-b border-brand-gray-200">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4">
             <nav className="flex items-center gap-2 text-sm text-brand-gray-600">
               <Link href="/" className="hover:text-brand-green transition-colors">

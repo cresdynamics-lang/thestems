@@ -54,7 +54,7 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
   }, [allDisplayItems.length]);
 
   return (
-    <div className="py-12 bg-white">
+    <div className="py-12 bg-brand-blush">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
