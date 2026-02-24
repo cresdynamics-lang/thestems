@@ -229,7 +229,7 @@ INSERT INTO site_settings (key, value, description) VALUES
 ('site_name', 'The Stems', 'Name of the website'),
 ('site_email', 'thestemsflowers.ke@gmail.com', 'Contact email for the site'),
 ('site_phone', '254725707143', 'Contact phone number'),
-('site_url', 'https://the.stems.ke', 'Main website URL')
+('site_url', 'https://thestemsflowers.co.ke', 'Main website URL')
 ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, description = EXCLUDED.description, updated_at = NOW();
 
 -- ============================================

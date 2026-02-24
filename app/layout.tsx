@@ -221,14 +221,14 @@ export const metadata: Metadata = {
   authors: [{ name: "The Stems" }],
   creator: "The Stems",
   publisher: "The Stems",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke"),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke",
+    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke",
   },
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke",
+    url: process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke",
     siteName: "The Stems Nairobi",
     title:
       "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | The Stems",
@@ -267,7 +267,7 @@ export const metadata: Metadata = {
   },
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 const organizationJsonLd = {
   "@context": "https://schema.org",

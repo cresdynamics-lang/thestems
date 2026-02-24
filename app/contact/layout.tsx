@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Contact The Stems | Valentine's Orders & Same-Day Delivery Nairobi | Phone: +254721554393",

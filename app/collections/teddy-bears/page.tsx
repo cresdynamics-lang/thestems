@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Valentine's Teddy Bears Nairobi | Cuddly Romantic Teddy Bears for Wife, Girlfriend, Mom | Sizes 25cm-200cm | Same-Day Delivery",

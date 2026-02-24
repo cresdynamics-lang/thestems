@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://the.stems.ke';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thestemsflowers.co.ke';
 
 const staticPages = [
   '',

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import GiftHampersPageClient from "./GiftHampersPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Gift Hampers Nairobi | Anniversary Hampers, Birthday Surprises & Apology Gifts | Chocolate, Wine, Flowers | Same-Day Delivery",

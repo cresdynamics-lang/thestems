@@ -72,19 +72,19 @@ pm2 startup   # run the command it prints to start PM2 on boot
 
 ### 7. (Optional) Nginx and HTTPS
 
-To serve on port 80/443 and use a domain (e.g. the.stems.ke):
+To serve on port 80/443 and use a domain (e.g. thestemsflowers.co.ke):
 
 ```bash
 sudo apt install -y nginx certbot python3-certbot-nginx
 sudo nano /etc/nginx/sites-available/thestems
 ```
 
-Example config (replace `the.stems.ke` with your domain):
+Example config (replace `thestemsflowers.co.ke` with your domain):
 
 ```nginx
 server {
     listen 80;
-    server_name the.stems.ke 178.128.70.10;
+    server_name thestemsflowers.co.ke 178.128.70.10;
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
@@ -105,7 +105,7 @@ Then:
 sudo ln -s /etc/nginx/sites-available/thestems /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 # HTTPS (when DNS points to 178.128.70.10):
-# sudo certbot --nginx -d the.stems.ke
+# sudo certbot --nginx -d thestemsflowers.co.ke
 ```
 
 ---

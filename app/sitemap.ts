@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/db";
+import { getBlogPosts } from "@/lib/blogData";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Use environment variable or default to correct domain
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -75,7 +76,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const products = await getProducts({});
+    const [products, blogPosts] = await Promise.all([
+      getProducts({}),
+      getBlogPosts().catch(() => []),
+    ]);
+
     const productPages: MetadataRoute.Sitemap = products.map((product) => ({
       url: `${baseUrl}/product/${product.slug}`,
       lastModified: new Date(product.updated_at),
@@ -83,7 +88,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    return [...staticPages, ...productPages];
+    const blogIndex: MetadataRoute.Sitemap[number] = {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    };
+
+    const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    }));
+
+    return [...staticPages, blogIndex, ...productPages, ...blogPages];
   } catch (error) {
     console.error("Error generating sitemap:", error);
     return staticPages;

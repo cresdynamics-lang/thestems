@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
 import { getProducts } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Fresh Flowers Nairobi | Anniversary Roses, Birthday Bouquets, Apology Flowers & Surprise Arrangements | Same-Day Delivery",

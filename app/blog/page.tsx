@@ -5,7 +5,7 @@ import { getBlogPosts, getBlogTags } from "@/lib/blogData";
 import JsonLd from "@/components/JsonLd";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Valentine's Gift Guide Nairobi | Romantic Flowers, Chocolates & Gift Ideas | The Stems Blog",

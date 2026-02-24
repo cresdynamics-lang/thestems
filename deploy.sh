@@ -46,6 +46,6 @@ else
 fi
 
 echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
-echo -e "${GREEN}🌐 Site: http://${SERVER_IP}:3000 or https://the.stems.ke (if DNS/nginx configured)${NC}"
+echo -e "${GREEN}🌐 Site: http://${SERVER_IP}:3000 or https://thestemsflowers.co.ke (if DNS/nginx configured)${NC}"
 
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Flower & Gift Delivery Services Nairobi | Same-Day Anniversary Flowers, Birthday Gifts & Apology Bouquets | The Stems",
@@ -88,7 +88,7 @@ const services = [
     title: "Wedding Flowers",
     description:
       "Complete wedding floral services including bridal bouquets, centerpieces, ceremony arrangements, and reception decorations. Let us bring your dream wedding to life.",
-    image: "/images/products/flowers/BouquetFlowers4.jpg",
+    image: "/weddingblog.jpeg",
     features: [
       "Bridal bouquets",
       "Bridal party flowers",
@@ -101,7 +101,7 @@ const services = [
     title: "Graduation Celebrations",
     description:
       "Celebrate academic achievements with stunning graduation bouquets and gift hampers. Perfect for congratulating graduates on their success.",
-    image: "/images/products/flowers/BouquetFlowers3.jpg",
+    image: "/graduation.jpeg",
     features: [
       "Graduation bouquets",
       "Congratulations hampers",
@@ -114,6 +114,8 @@ const services = [
     description:
       "Professional gift solutions for your business needs. Luxury hampers, elegant arrangements, and branded gifts that impress clients and employees.",
     image: "/images/products/hampers/GiftAmper3.jpg",
+    // Video demonstrating corporate gifting – served from public/corporate-gifting.mp4
+    video: "/corporate-gifting.mp4",
     features: [
       "Corporate gift hampers",
       "Executive bouquets",
@@ -127,6 +129,8 @@ const services = [
     description:
       "Professional floral design services for events, parties, and special occasions. Custom arrangements tailored to your style and theme.",
     image: "/images/products/flowers/BouquetFlowers4.jpg",
+    // Video demonstrating flower styling – served from public/flower-styling.mp4
+    video: "/flower-styling.mp4",
     features: [
       "Event styling",
       "Custom arrangements",
@@ -139,7 +143,7 @@ const services = [
     title: "Sympathy & Condolences",
     description:
       "Thoughtful and respectful arrangements for expressing condolences. Elegant funeral flowers and sympathy bouquets delivered with care.",
-    image: "/images/products/flowers/BouquetFlowers5.jpg",
+    image: "/sympathy.jpeg",
     features: [
       "Funeral wreaths",
       "Sympathy bouquets",
@@ -201,14 +205,27 @@ export default function ServicesPage() {
           {services.map((service, index) => (
             <div key={index} className="flex-shrink-0 w-[70vw] sm:w-[65vw] md:w-auto card overflow-hidden group">
               <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={`${service.title} - The Stems Nairobi`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 70vw, (max-width: 1024px) 50vw, 33vw"
-                  loading="lazy"
-                />
+                {"video" in service && service.video ? (
+                  <video
+                    src={service.video}
+                    poster={service.image}
+                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <Image
+                    src={service.image}
+                    alt={`${service.title} - The Stems Nairobi`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 70vw, (max-width: 1024px) 50vw, 33vw"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="p-6">
                 <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-3 group-hover:text-brand-green transition-colors">

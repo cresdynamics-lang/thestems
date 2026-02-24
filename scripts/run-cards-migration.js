@@ -60,7 +60,7 @@ async function runCardsMigration() {
       // The constraint needs to be updated. Since we can't use exec_sql,
       // let's try a different approach - we'll update via the API route
       console.log('📞 Calling migration API...');
-      const response = await fetch('https://the.stems.ke/api/migrate?type=cards', {
+      const response = await fetch('https://thestemsflowers.co.ke/api/migrate?type=cards', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

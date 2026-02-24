@@ -6,7 +6,7 @@ Disallow: /cart
 Disallow: /order/
 
 # Sitemap
-Sitemap: https://floralwhispersgifts.co.ke/sitemap.xml
+Sitemap: https://thestemsflowers.co.ke/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1

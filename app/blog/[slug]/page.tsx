@@ -7,7 +7,7 @@ import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
 import JsonLd from "@/components/JsonLd";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;

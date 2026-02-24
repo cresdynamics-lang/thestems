@@ -4,7 +4,7 @@ import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
 import { SHOP_INFO } from "@/lib/constants";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "About The Stems Gifts | Nairobi's Top Valentine's Florist | 5+ Years Experience, 25K+ Orders Delivered",

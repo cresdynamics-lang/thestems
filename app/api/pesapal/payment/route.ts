@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use default callback URL if not provided
-    const defaultCallbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke"}/api/pesapal/callback`;
+    const defaultCallbackUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke"}/api/pesapal/callback`;
 
     // Prepare billing address
     let billingAddressObj = null;

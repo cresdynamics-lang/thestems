@@ -9,7 +9,7 @@ import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
   title: "Express Love & Celebrate Moments | Anniversary Flowers, Birthday Gifts, Surprise Hampers & Apology Flowers Nairobi | The Stems Flowers",

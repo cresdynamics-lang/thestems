@@ -77,7 +77,7 @@ const STATIC_BLOG_POSTS: BlogPost[] = [
 <h2>Pre-Order for Valentine's Day</h2>
 <p>Book early to secure your preferred arrangement. We deliver on Valentine's Day across Nairobi CBD, Westlands, Karen, Lavington, Kilimani, and more. Pay with M-Pesa (Till 4202044 or Paybill 880100, Account 433587) or contact us on 0725 707 143.</p>
 <h2>Gift Hampers</h2>
-<p>Combine flowers with chocolates, wine, or teddy bears for the ultimate Valentine's surprise. Visit our shop at Delta Hotel Building, University Way, or order online at the.stems.ke.</p>
+<p>Combine flowers with chocolates, wine, or teddy bears for the ultimate Valentine's surprise. Visit our shop at Delta Hotel Building, University Way, or order online at thestemsflowers.co.ke.</p>
     `.trim(),
     author: "The Stems",
     publishedAt: new Date().toISOString().split("T")[0],
@@ -115,7 +115,7 @@ const STATIC_BLOG_POSTS: BlogPost[] = [
 <h2>What We Offer</h2>
 <p>Fresh bouquets, mixed arrangements, gift hampers with chocolates and wine, and teddy bears. All can be paired with a personalised message. Order online or call 0725 707 143. Pay via M-Pesa Till 4202044 or Paybill 880100, Account 433587.</p>
 <h2>Visit Us</h2>
-<p>Delta Hotel Building, University Way, Nairobi CBD. Mon–Sat 8AM–8PM. Email: thestemsflowers.ke@gmail.com. Find us on the map: the.stems.ke</p>
+<p>Delta Hotel Building, University Way, Nairobi CBD. Mon–Sat 8AM–8PM. Email: thestemsflowers.ke@gmail.com. Find us on the map: thestemsflowers.co.ke</p>
     `.trim(),
     author: "The Stems",
     publishedAt: new Date().toISOString().split("T")[0],

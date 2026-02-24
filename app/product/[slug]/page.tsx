@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
   const productUrl = `${baseUrl}/product/${slug}`;
   const categoryKeywords: Record<string, string[]> = {
     flowers: [
@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://the.stems.ke";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
   const productUrl = `${baseUrl}/product/${product.slug}`;
   const categoryMap: Record<string, string> = {
     flowers: "Florist",
