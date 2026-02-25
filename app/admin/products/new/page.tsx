@@ -23,11 +23,9 @@ const schema = yup.object({
     otherwise: (schema) => schema.nullable().optional(),
   }),
   teddy_size: yup.number().nullable().optional(),
-  teddy_color: yup.string().nullable().when("category", {
-    is: "teddy",
-    then: (schema) => schema.required("Color is required for teddy bears"),
-    otherwise: (schema) => schema.nullable().optional(),
-  }),
+  // Color is validated via custom UI state (selectedColors) and onSubmit,
+  // so we keep this optional to avoid blocking submit when it's not set in the form.
+  teddy_color: yup.string().nullable().optional(),
 });
 
 type ProductFormData = yup.InferType<typeof schema>;

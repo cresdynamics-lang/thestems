@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 export interface BlogPost {
   slug: string;
   title: string;
@@ -47,7 +49,7 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
   };
 }
 
-// Static blog posts for The Stems (no Supabase required)
+// Static blog posts for The Stems (seed/evergreen content)
 const STATIC_BLOG_POSTS: BlogPost[] = [
   {
     slug: "fresh-flowers-nairobi-same-day-delivery",
@@ -146,9 +148,44 @@ const STATIC_BLOG_POSTS: BlogPost[] = [
   },
 ];
 
+async function getDatabaseBlogPosts(): Promise<BlogPost[]> {
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("published_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching blog posts from database:", error);
+      return [];
+    }
+
+    return (data as BlogPostDB[]).map(convertBlogPost);
+  } catch (error) {
+    console.error("Unexpected error fetching blog posts from database:", error);
+    return [];
+  }
+}
+
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
-  const post = STATIC_BLOG_POSTS.find((p) => p.slug === slug);
-  return post ?? undefined;
+  // 1. Try database first
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (!error && data) {
+      return convertBlogPost(data as BlogPostDB);
+    }
+  } catch (error) {
+    console.error("Error fetching blog post from database:", error);
+  }
+
+  // 2. Fallback to static posts
+  const staticPost = STATIC_BLOG_POSTS.find((p) => p.slug === slug);
+  return staticPost ?? undefined;
 }
 
 export async function getBlogPosts(filters?: {
@@ -156,7 +193,22 @@ export async function getBlogPosts(filters?: {
   tag?: string;
   featured?: boolean;
 }): Promise<BlogPost[]> {
-  let posts = [...STATIC_BLOG_POSTS].sort(
+  // Merge database posts (primary) with static posts (fallback/seed), de-duplicated by slug
+  const [dbPosts, staticPosts] = await Promise.all([
+    getDatabaseBlogPosts(),
+    Promise.resolve(STATIC_BLOG_POSTS),
+  ]);
+
+  const combinedMap = new Map<string, BlogPost>();
+  // Prefer DB posts when slugs collide
+  for (const post of staticPosts) {
+    combinedMap.set(post.slug, post);
+  }
+  for (const post of dbPosts) {
+    combinedMap.set(post.slug, post);
+  }
+
+  let posts = Array.from(combinedMap.values()).sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
