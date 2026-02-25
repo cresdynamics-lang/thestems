@@ -215,83 +215,106 @@ export default function NewProductPage() {
     }
   };
 
-  const onSubmit = handleSubmit(async (data) => {
-    // Validate colors for teddy bears
-    if (category === "teddy" && selectedColors.length === 0) {
-      alert("Please select at least one color for teddy bears.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    const token = localStorage.getItem("admin_token");
-
-    if (!token) {
-      alert("Authentication required. Please log in again.");
-      router.push("/admin/login");
-      return;
-    }
-
-    try {
-      // Handle subcategories: single for teddy bears, multiple for flowers
-      let subcategoryValue: string | null = null;
-      let tagsArray: string[] = [];
-      
-      if (category === "teddy") {
-        // Teddy bears: single selection only
-        subcategoryValue = selectedSubcategories.length > 0 ? selectedSubcategories[0] : null;
-        tagsArray = subcategoryValue ? [subcategoryValue] : [];
-      } else if (category === "flowers") {
-        // Flowers: multiple selection allowed
-        tagsArray = selectedSubcategories.length > 0 ? selectedSubcategories : [];
-        subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
+  const onSubmit = handleSubmit(
+    async (data) => {
+      // Extra validation for teddy bears (colors via custom state)
+      if (category === "teddy" && selectedColors.length === 0) {
+        alert("Please select at least one color for teddy bears.");
+        return;
       }
 
-      // Handle colors: store first color for backward compatibility, all colors in tags
-      let teddyColorValue: string | null = null;
-      if (category === "teddy") {
-        teddyColorValue = selectedColors.length > 0 ? selectedColors[0] : null;
-        // Add color tags to tags array
-        const colorTags = selectedColors.map(c => `color:${c}`);
-        tagsArray = [...tagsArray, ...colorTags];
-      }
+      setIsSubmitting(true);
+      const token = localStorage.getItem("admin_token");
 
-      const response = await axios.post(
-        "/api/admin/products",
-        {
-          ...data,
-          price: Math.round(data.price * 100), // Convert to cents
-          images,
-          tags: tagsArray,
-          category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates" | "cards",
-          subcategory: subcategoryValue,
-          teddy_size: category === "teddy" ? data.teddy_size : null,
-          teddy_color: teddyColorValue,
-          included_items: category === "hampers" && includedItems.length > 0 ? includedItems : null,
-          upsells: null,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      
-      if (response.data) {
-        alert("Product created successfully! It will appear on the frontend immediately.");
-        router.push("/admin/products");
-      }
-    } catch (error: any) {
-      console.error("Create error:", error);
-      if (error.response?.status === 401) {
-        alert("Authentication failed. Please log in again.");
-        localStorage.removeItem("admin_token");
+      if (!token) {
+        alert("Authentication required. Please log in again.");
         router.push("/admin/login");
-      } else {
-        const errorMessage = error.response?.data?.message || error.message || "Failed to create product. Please check the console for details.";
-        alert(errorMessage);
+        return;
       }
-    } finally {
-      setIsSubmitting(false);
+
+      try {
+        // Handle subcategories: single for teddy bears, multiple for flowers
+        let subcategoryValue: string | null = null;
+        let tagsArray: string[] = [];
+        
+        if (category === "teddy") {
+          // Teddy bears: single selection only
+          subcategoryValue = selectedSubcategories.length > 0 ? selectedSubcategories[0] : null;
+          tagsArray = subcategoryValue ? [subcategoryValue] : [];
+        } else if (category === "flowers") {
+          // Flowers: multiple selection allowed
+          tagsArray = selectedSubcategories.length > 0 ? selectedSubcategories : [];
+          subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
+        }
+
+        // Handle colors: store first color for backward compatibility, all colors in tags
+        let teddyColorValue: string | null = null;
+        if (category === "teddy") {
+          teddyColorValue = selectedColors.length > 0 ? selectedColors[0] : null;
+          // Add color tags to tags array
+          const colorTags = selectedColors.map(c => `color:${c}`);
+          tagsArray = [...tagsArray, ...colorTags];
+        }
+
+        const response = await axios.post(
+          "/api/admin/products",
+          {
+            ...data,
+            price: Math.round(data.price * 100), // Convert to cents
+            images,
+            tags: tagsArray,
+            category: data.category as "flowers" | "hampers" | "teddy" | "wines" | "chocolates" | "cards",
+            subcategory: subcategoryValue,
+            teddy_size: category === "teddy" ? data.teddy_size : null,
+            teddy_color: teddyColorValue,
+            included_items: category === "hampers" && includedItems.length > 0 ? includedItems : null,
+            upsells: null,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        
+        if (response.data) {
+          alert("Product created successfully! It will appear on the frontend immediately.");
+          router.push("/admin/products");
+        }
+      } catch (error: any) {
+        console.error("Create error:", error);
+        if (error.response?.status === 401) {
+          alert("Authentication failed. Please log in again.");
+          localStorage.removeItem("admin_token");
+          router.push("/admin/login");
+        } else {
+          const errorMessage = error.response?.data?.message || error.message || "Failed to create product. Please check the console for details.";
+          alert(errorMessage);
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    (formErrors) => {
+      const messages: string[] = [];
+
+      if (formErrors.slug) messages.push("Please add a valid slug.");
+      if (formErrors.title) messages.push("Please add a product title.");
+      if (formErrors.short_description) messages.push("Please add a short description.");
+      if (formErrors.description) messages.push("Please add a full description.");
+      if (formErrors.price) messages.push("Please add a price greater than 0.");
+      if (formErrors.category) messages.push("Please select a category.");
+      if (formErrors.subcategory && category === "teddy") messages.push("Please select a teddy bear size.");
+
+      if (category === "teddy" && selectedColors.length === 0) {
+        messages.push("Please select at least one teddy bear color.");
+      }
+
+      if (messages.length > 0) {
+        alert("Product cannot be created yet. Please fix the following:\n\n- " + messages.join("\n- "));
+      } else {
+        alert("Product cannot be created. Please check the highlighted fields in the form.");
+      }
     }
-  });
+  );
 
   const removeImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
@@ -564,6 +587,7 @@ export default function NewProductPage() {
                       alt={`Preview ${index + 1}`}
                       fill
                       className="object-cover"
+                      sizes="64px"
                       onLoad={() => console.log("Image loaded successfully:", url)}
                       onError={(e) => {
                         console.error("Image failed to load:", url);
