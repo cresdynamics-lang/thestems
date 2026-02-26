@@ -308,15 +308,15 @@ export default function Footer() {
               </a>
               .
             </p>
-            <div className="flex items-center gap-6 text-sm">
-              <Link href="/privacy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
+            <div className="flex items-center gap-6 text-xs sm:text-sm flex-wrap justify-center md:justify-end">
+              <Link href="/terms-of-service" className="text-brand-gray-400 hover:text-brand-red transition-colors">
+                Terms &amp; Conditions
+              </Link>
+              <Link href="/refund-policy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
+                Refund Policy
+              </Link>
+              <Link href="/privacy-policy" className="text-brand-gray-400 hover:text-brand-red transition-colors">
                 Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-brand-gray-400 hover:text-brand-red transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/returns" className="text-brand-gray-400 hover:text-brand-red transition-colors">
-                Returns
               </Link>
             </div>
           </div>
