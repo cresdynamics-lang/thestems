@@ -32,6 +32,9 @@ yarn-error.log*
 .env.local.update
 .env
 
+# ignore environment directory or file
+environment
+
 # vercel
 .vercel
 
