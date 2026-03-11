@@ -10,11 +10,12 @@ import JsonLd from "@/components/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 interface BlogPostPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
   if (!post) return {};
 
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title,
       description,
       images: post.image ? [{ url: post.image }] : [],
-      url: `${baseUrl}/blog/${params.slug}`,
+      url: `${baseUrl}/blog/${slug}`,
       type: "article",
       publishedTime: post.publishedAt,
     },
@@ -45,7 +46,7 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const post = await getBlogPost(slug);
 
   if (!post) {

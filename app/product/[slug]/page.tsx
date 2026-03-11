@@ -7,11 +7,12 @@ import { formatCurrency } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 
 interface ProductPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) return {};
 
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
               },
             ]
           : [],
-      url: `${baseUrl}/product/${params.slug}`,
+      url: `${baseUrl}/product/${slug}`,
     },
   };
 }
@@ -47,7 +48,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
