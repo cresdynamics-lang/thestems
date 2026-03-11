@@ -4,8 +4,9 @@ import CardsPageClient from "./CardsPageClient";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Cards Nairobi | Romantic Love Messages, Personalized Valentine's Cards & Gift Cards | Same-Day Delivery",
-  description: "Best Valentine's cards Nairobi: romantic love messages, personalized Valentine's cards, gift cards for your wife, husband, girlfriend. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+  title: "Greeting Cards Nairobi — Delivered with Flowers & Hampers | The Stems Flowers",
+  description:
+    "Greeting cards delivered in Nairobi together with fresh flowers and gift hampers. Add a personal message to every bouquet, teddy bear or gift hamper order from The Stems Flowers, Nairobi CBD.",
   keywords: [
     // Valentine's Cards Core Keywords
     "valentine's cards Nairobi",

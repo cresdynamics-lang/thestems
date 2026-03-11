@@ -290,93 +290,31 @@ const organizationJsonLd = {
 
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Florist",
+  "@type": "LocalBusiness",
   "@id": `${baseUrl}#business`,
-  name: SHOP_INFO.name,
+  name: "The Stems Flowers",
   image: `${baseUrl}/images/logo/thestemslogo.jpeg`,
   url: baseUrl,
   telephone: `+${SHOP_INFO.phone}`,
   email: SHOP_INFO.email,
   address: {
     "@type": "PostalAddress",
-    streetAddress: SHOP_INFO.address,
-    addressLocality: "Nairobi",
-    addressRegion: "Nairobi",
+    streetAddress: "Delta Hotel, University Way",
+    addressLocality: "Nairobi CBD",
     addressCountry: "KE",
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: "-1.2921",
-    longitude: "36.8219",
+    latitude: -1.2833,
+    longitude: 36.8172,
   },
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "09:00",
-      closes: "19:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Sunday",
-      opens: "10:00",
-      closes: "17:00",
-    },
-  ],
-  priceRange: "$$",
+  areaServed: { "@type": "City", name: "Nairobi" },
+  openingHours: "Mo-Sa 08:00-20:00",
+  description:
+    "The Stems Flowers — Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, flower bouquets, gift hampers and teddy bears with same-day delivery across Nairobi. Pay with M-Pesa.",
+  priceRange: "KSh KSh",
   paymentAccepted: "M-Pesa, Cash, Card",
-  currenciesAccepted: "KES",
-  areaServed: [
-    {
-      "@type": "City",
-      name: "Nairobi",
-    },
-    {
-      "@type": "Country",
-      name: "Kenya",
-    },
-  ],
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Flowers, Gift Hampers, and Teddy Bears",
-    itemListElement: [
-      {
-        "@type": "OfferCatalog",
-        name: "Flowers",
-        url: `${baseUrl}/collections/flowers`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Money Bouquet",
-        url: `${baseUrl}/collections/flowers`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Gift Hampers",
-        url: `${baseUrl}/collections/gift-hampers`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Corporate Gift Hampers",
-        url: `${baseUrl}/collections/gift-hampers`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Teddy Bears",
-        url: `${baseUrl}/collections/teddy-bears`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Wines",
-        url: `${baseUrl}/collections/wines`,
-      },
-      {
-        "@type": "OfferCatalog",
-        name: "Chocolates",
-        url: `${baseUrl}/collections/chocolates`,
-      },
-    ],
-  },
+  hasMap: "https://maps.google.com/?q=Delta+Hotel+University+Way+Nairobi",
 };
 
 const modernGiftsItemListJsonLd = {

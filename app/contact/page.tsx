@@ -90,7 +90,7 @@ export default function ContactPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
-            Contact Us
+            Contact The Stems Flowers Nairobi
           </h1>
           <p className="text-brand-gray-600 text-lg">
             We&apos;d love to hear from you. Get in touch with us today.

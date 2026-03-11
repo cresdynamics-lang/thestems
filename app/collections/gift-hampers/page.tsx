@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Gift Hampers Nairobi | Anniversary Hampers, Birthday Surprises & Apology Gifts | Chocolate, Wine, Flowers | Same-Day Delivery",
+  title: "Gift Hampers Nairobi — Luxury Hampers Delivered Same Day | The Stems Flowers",
   description:
-    "Luxury gift hampers Nairobi: anniversary hampers, birthday surprises, apology gifts & thoughtful combinations with flowers, chocolates, wine, teddy bears. Same-day delivery across CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Luxury gift hampers delivered in Nairobi. Birthday hampers, anniversary hampers, care packages and celebration baskets from KSh 8,500. Pay with M-Pesa. The Stems Flowers.",
   keywords: [
     // Occasion-based Gift Hampers Keywords
     "gift hampers Nairobi",

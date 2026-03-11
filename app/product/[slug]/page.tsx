@@ -4,112 +4,50 @@ import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
 import { getProductBySlug } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 interface ProductPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const product = await getProductBySlug(params.slug);
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-    };
-  }
+  if (!product) return {};
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
-  const productUrl = `${baseUrl}/product/${slug}`;
-  const categoryKeywords: Record<string, string[]> = {
-    flowers: [
-      // Valentine's Flowers Keywords
-      "valentine's flowers Nairobi", "valentine's roses Nairobi", "romantic valentine's flowers Nairobi", "valentine's bouquet Nairobi", "valentine's money bouquet Nairobi",
-      "valentine's flowers for wife Nairobi", "valentine's flowers for girlfriend Nairobi", "valentine's flowers for mom Nairobi",
-      "pre valentine's flowers Nairobi", "valentine's flower delivery Nairobi", "same day valentine's flowers Nairobi",
-      // Traditional Keywords
-      "flower delivery Nairobi", "roses Nairobi", "bouquet Nairobi", "money bouquet Nairobi", "romantic flowers Nairobi", "surprise flowers Nairobi",
-      "flower delivery Nairobi CBD", "flower delivery Westlands", "flower delivery Karen", "flower delivery Lavington", "flower delivery Kilimani"
-    ],
-    teddy: [
-      // Valentine's Teddy Bears Keywords
-      "valentine's teddy bears Nairobi", "valentine's cuddly teddy bears Nairobi", "romantic valentine's teddy bears Nairobi",
-      "valentine's teddy bear for wife Nairobi", "valentine's teddy bear for girlfriend Nairobi", "valentine's teddy bear for mom Nairobi",
-      "large valentine's teddy bears Nairobi", "big valentine's teddy bears Nairobi", "25cm valentine's teddy bear Nairobi",
-      "pre valentine's teddy bears Nairobi", "valentine's teddy bear delivery Nairobi", "same day valentine's teddy bears Nairobi",
-      // Traditional Keywords
-      "teddy bears Kenya", "teddy bear gift", "teddy bears Nairobi", "best gifts for children Nairobi", "gifts for kids Nairobi"
-    ],
-    hampers: [
-      // Valentine's Gift Hampers Keywords
-      "valentine's gift hampers Nairobi", "valentine's luxury hampers Nairobi", "romantic valentine's hampers Nairobi",
-      "valentine's hamper for wife Nairobi", "valentine's hamper for husband Nairobi", "valentine's hamper for girlfriend Nairobi",
-      "valentine's chocolate hamper Nairobi", "valentine's wine hamper Nairobi", "valentine's flower hamper Nairobi",
-      "pre valentine's hampers Nairobi", "valentine's hamper delivery Nairobi", "same day valentine's hampers Nairobi",
-      // Traditional Keywords
-      "gift hampers Kenya", "luxury gift hampers Nairobi", "corporate gift hampers Nairobi", "best gifts for men Nairobi", "best gifts for women Nairobi", "best gifts for colleagues Nairobi", "gift hampers Nairobi CBD", "gift hampers Westlands"
-    ],
-    wines: [
-      // Valentine's Wine Keywords
-      "valentine's wine gifts Nairobi", "valentine's wine hampers Nairobi", "romantic valentine's wines Nairobi",
-      "valentine's wine for wife Nairobi", "valentine's wine for husband Nairobi", "valentine's wine for girlfriend Nairobi",
-      "valentine's belaire brut Nairobi", "valentine's robertson red wine Nairobi", "valentine's rosso nobile red wine Nairobi",
-      "pre valentine's wine gifts Nairobi", "valentine's wine delivery Nairobi", "same day valentine's wine Nairobi",
-      // Traditional Keywords
-      "wines Nairobi", "wine gift hampers Kenya", "corporate gifts Nairobi", "wines Nairobi CBD", "wines Westlands"
-    ],
-    chocolates: [
-      // Valentine's Chocolates Keywords
-      "valentine's chocolates Nairobi", "valentine's chocolate hampers Nairobi", "romantic valentine's chocolates Nairobi",
-      "valentine's chocolates for wife Nairobi", "valentine's chocolates for girlfriend Nairobi", "valentine's chocolates for mom Nairobi",
-      "valentine's ferrero rocher Nairobi", "premium valentine's chocolates Nairobi", "luxury valentine's chocolates Nairobi",
-      "pre valentine's chocolates Nairobi", "valentine's chocolate delivery Nairobi", "same day valentine's chocolates Nairobi",
-      // Traditional Keywords
-      "chocolates Kenya", "chocolate gift hampers Nairobi", "corporate gifts Nairobi", "chocolates Nairobi CBD", "chocolates Westlands"
-    ],
-  };
-
-  const categoryAltDescriptions: Record<string, string> = {
-    flowers: "Premium flower delivery Nairobi CBD, Westlands, Karen",
-    teddy: "Teddy bears Kenya, Nairobi gift delivery",
-    hampers: "Gift hampers Kenya, Nairobi CBD delivery",
-    wines: "Premium wines Nairobi, Westlands delivery",
-    chocolates: "Chocolates Kenya, Nairobi gift delivery",
-  };
-
-  const imageAlt = `${product.title} - ${categoryAltDescriptions[product.category] || "The Stems Nairobi"}`;
+  const title = `${product.title} — ${product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : "Gifts"} Delivered in Nairobi | The Stems Flowers`;
+  const description = `${
+    product.short_description || product.description || product.title
+  } — Same-day delivery across Nairobi. Pay with M-Pesa and order from The Stems Flowers at Delta Hotel, University Way, Nairobi CBD.`;
 
   return {
-    title: `${product.title} | Valentine's ${product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : product.category === "wines" ? "Wine Gifts" : "Chocolates"} Nairobi | The Stems`,
-    description: `${product.short_description || product.description} - Perfect Valentine's gift for your wife, husband, or girlfriend. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.`,
-    keywords: categoryKeywords[product.category] || [],
-    alternates: {
-      canonical: productUrl,
-    },
+    title,
+    description,
     openGraph: {
-      title: product.title,
-      description: product.short_description || product.description,
-      url: productUrl,
-      images: product.images.length > 0 ? product.images.map(img => ({
-        url: img.startsWith("http") ? img : `${baseUrl}${img}`,
-        width: 1200,
-        height: 630,
-        alt: imageAlt,
-      })) : [],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: product.title,
-      description: product.short_description || product.description,
-      images: product.images.length > 0 ? [product.images[0]] : [],
+      title,
+      description,
+      images:
+        product.images && product.images.length > 0
+          ? [
+              {
+                url: product.images[0].startsWith("http") ? product.images[0] : `${baseUrl}${product.images[0]}`,
+              },
+            ]
+          : [],
+      url: `${baseUrl}/product/${params.slug}`,
     },
   };
+}
+
+export async function generateStaticParams() {
+  const { data, error } = await supabase.from("products").select("slug");
+  if (error || !data) return [];
+  return data.map((p: { slug: string }) => ({ slug: p.slug }));
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlug(params.slug);
 
   if (!product) {
     notFound();
@@ -159,33 +97,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": productUrl,
     name: product.title,
     description: product.description || product.short_description,
-    image: product.images.map(img => img.startsWith("http") ? img : `${baseUrl}${img}`),
-    category: categoryMap[product.category] || "Product",
-    brand: {
-      "@type": "Brand",
-      name: "The Stems",
-    },
+    image: product.images && product.images.length > 0 ? product.images[0] : undefined,
+    brand: { "@type": "Brand", name: "The Stems Flowers" },
     offers: {
       "@type": "Offer",
-      url: productUrl,
-      priceCurrency: "KES",
       price: product.price / 100,
+      priceCurrency: "KES",
       availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      areaServed: { "@type": "City", name: "Nairobi" },
+      availableDeliveryMethod: "https://schema.org/DeliveryModeDirectDownload",
       seller: {
-        "@type": "Organization",
-        name: "The Stems",
+        "@type": "LocalBusiness",
+        name: "The Stems Flowers",
+        address: "Delta Hotel, University Way, Nairobi CBD",
       },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "5.0",
-      reviewCount: "0",
-      bestRating: "5",
-      worstRating: "1",
     },
   };
 
@@ -208,7 +135,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             <div>
               <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-4">
-                {product.title}
+                {product.title} — Nairobi Flowers & Gifts
               </h1>
 
               <div className="mb-6">

@@ -3,9 +3,9 @@ import { Metadata } from "next";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Contact The Stems | Valentine's Orders & Same-Day Delivery Nairobi | Phone: +254721554393",
+  title: "Contact The Stems Flowers — Delta Hotel, University Way, Nairobi CBD",
   description:
-    "Contact The Stems for Valentine's orders & premium flower delivery Nairobi. Phone: 0725 707 143, Email: thestemsflowers.ke@gmail.com. Pre-Valentine's bookings, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Contact The Stems Flowers in Nairobi CBD for fresh flowers, roses, gift hampers and teddy bears with same-day delivery. Visit us at Delta Hotel, University Way or call +254 725 707 143. Pay with M-Pesa or card.",
   keywords: [
     // Valentine's Contact Keywords
     "contact valentine's florist Nairobi",

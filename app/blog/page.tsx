@@ -103,7 +103,7 @@ export default async function BlogPage() {
         <div className="bg-brand-blush border-b border-brand-gray-200">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
             <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-brand-gray-900 mb-4">
-              Blog
+              Flower & Gift Blog — Nairobi
             </h1>
             <p className="text-lg md:text-xl text-brand-gray-600 max-w-3xl">
               Flower care tips, gift ideas, and delivery guides for Nairobi and all of Kenya. 

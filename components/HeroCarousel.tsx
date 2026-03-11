@@ -76,11 +76,11 @@ export default function HeroCarousel() {
           <div className="absolute inset-0 bg-black/40 flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="flex items-center justify-between gap-4 md:gap-8">
-                {/* Left side - Text content */}
+                {/* Left side - Text content (no H1 here to keep homepage H1 focused on Nairobi SEO) */}
                 <div className="text-left text-white max-w-2xl flex-1">
-                  <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
+                  <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
                     {slide.title}
-                  </h1>
+                  </h2>
                   <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">{slide.subtitle}</p>
                   <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
                     {slide.ctaText}

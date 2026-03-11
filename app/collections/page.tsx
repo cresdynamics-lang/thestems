@@ -68,10 +68,11 @@ export default function CollectionsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
-            Our Collections
+            Flower & Gift Collections in Nairobi
           </h1>
           <p className="text-brand-gray-600 text-lg">
-            Explore our beautiful range of flowers, teddy bears, gift hampers, wines, and chocolates
+            Explore our Nairobi collections of fresh flowers, teddy bears, gift hampers, wines and chocolates — all available
+            for same-day delivery with M-Pesa payment from The Stems Flowers at Delta Hotel, University Way, Nairobi CBD.
           </p>
         </div>
 

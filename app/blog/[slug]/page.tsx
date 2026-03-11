@@ -10,50 +10,29 @@ import JsonLd from "@/components/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 interface BlogPostPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getBlogPost(slug);
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getBlogPost(params.slug);
 
-  if (!post) {
-    return {
-      title: "Post Not Found",
-    };
-  }
+  if (!post) return {};
+
+  const title = `${post.title} | The Stems Flowers Nairobi`;
+  const description =
+    post.excerpt ??
+    `${post.title} — flower and gift ideas from The Stems Flowers, Nairobi's CBD florist at Delta Hotel, University Way.`;
 
   return {
-    title: `${post.title} | The Stems Blog`,
-    description: post.excerpt,
-    keywords: post.tags,
-    alternates: {
-      canonical: `${baseUrl}/blog/${slug}`,
-    },
+    title,
+    description,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      url: `${baseUrl}/blog/${slug}`,
-      siteName: "The Stems",
-      images: [
-        {
-          url: post.image,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
-      locale: "en_KE",
+      title,
+      description,
+      images: post.image ? [{ url: post.image }] : [],
+      url: `${baseUrl}/blog/${params.slug}`,
       type: "article",
       publishedTime: post.publishedAt,
-      authors: [post.author],
-      tags: post.tags,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
-      images: [post.image],
     },
   };
 }
@@ -66,7 +45,7 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const post = await getBlogPost(slug);
 
   if (!post) {

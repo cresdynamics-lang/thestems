@@ -119,10 +119,13 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Flower Collections
+            Flowers in Nairobi — Bouquets, Roses & Same-Day Delivery
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base">
-            Beautiful bouquets for every occasion
+            The Stems Flowers delivers fresh flower bouquets across Nairobi — same day. Our collection includes red roses, pink
+            roses, white roses, mixed bouquets and anniversary arrangements. Based at Delta Hotel, University Way, Nairobi CBD,
+            we deliver to Westlands, Karen, Kilimani, Lavington, South B, Parklands and all Nairobi areas. Order online, pay
+            securely with M-Pesa and we&apos;ll handle the rest.
           </p>
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>

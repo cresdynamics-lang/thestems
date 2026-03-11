@@ -181,10 +181,12 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Teddy Bears
+            Teddy Bears in Nairobi — Same-Day Delivery
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base">
-            Cuddly teddy bears in various sizes. Available in brown, white, red, pink, and blue.
+            The Stems Flowers delivers teddy bears across Nairobi — same day. From our 25cm Dream Soft Teddy (KSh 3,500) to our
+            120cm Tender Heart Bear (KSh 12,500), every bear can be paired with a flower bouquet or gift hamper. Order with
+            M-Pesa and we deliver to your door anywhere in Nairobi from our shop at Delta Hotel, University Way, Nairobi CBD.
           </p>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>

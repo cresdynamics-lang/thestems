@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Teddy Bears Nairobi | Cuddly Romantic Teddy Bears for Wife, Girlfriend, Mom | Sizes 25cm-200cm | Same-Day Delivery",
+  title: "Teddy Bears Nairobi — Same-Day Delivery from KSh 3,500 | The Stems Flowers",
   description:
-    "Best Valentine's teddy bears Nairobi: cuddly romantic teddy bears (25cm-200cm) in red, white, brown, pink, blue for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Teddy bears delivered across Nairobi same day. Giant teddy bears, soft toys, and teddy bear + flower combos from KSh 3,500. Order with M-Pesa. The Stems Flowers, Nairobi CBD.",
   keywords: [
     // Valentine's Teddy Bears Core Keywords
     "valentine's teddy bears Nairobi",

@@ -1,13 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
+Disallow: /_next/
 Disallow: /api/
-Disallow: /cart
-Disallow: /order/
+Disallow: /admin/
+Disallow: /collections/flowers?*
+Disallow: /collections/teddy-bears?*
+Disallow: /collections/gift-hampers?*
 
-# Sitemap
 Sitemap: https://thestemsflowers.co.ke/sitemap.xml
-
-# Crawl-delay
-Crawl-delay: 1
 

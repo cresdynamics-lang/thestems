@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Fresh Flowers Nairobi | Anniversary Roses, Birthday Bouquets, Apology Flowers & Surprise Arrangements | Same-Day Delivery",
+  title: "Flowers Nairobi — Fresh Bouquets, Roses & Same-Day Delivery | The Stems Flowers",
   description:
-    "Beautiful flowers for every occasion: anniversary roses, birthday bouquets, apology flowers & surprise arrangements in Nairobi. Same-day delivery across CBD, Westlands, Karen, Lavington, Kilimani. Order flowers online with M-Pesa.",
+    "Order fresh flowers in Nairobi with same-day delivery. Red roses, pink roses, white roses, mixed bouquets and anniversary flowers from The Stems Flowers, Nairobi CBD. Pay with M-Pesa.",
   keywords: [
     // Occasion-based Flower Keywords
     "anniversary flowers Nairobi",
