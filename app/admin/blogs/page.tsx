@@ -269,39 +269,35 @@ export default function AdminBlogsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="text-brand-gray-600">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-brand-blush">
-      <header className="bg-white border-b border-brand-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-brand-gray-600 hover:text-brand-green">
-                ← Back to Dashboard
-              </Link>
-              <h1 className="font-heading font-bold text-xl text-brand-gray-900">Manage Blog Posts</h1>
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setShowForm(true);
-                setEditingPost(null);
-                resetForm();
-              }}
-              className="btn-primary"
-            >
-              + New Post
-            </button>
-          </div>
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Link href="/admin" className="text-brand-gray-600 hover:text-brand-green text-sm">
+            ← Back to Dashboard
+          </Link>
+          <h1 className="font-heading font-bold text-xl md:text-2xl text-brand-gray-900">
+            Manage Blog Posts
+          </h1>
         </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(true);
+            setEditingPost(null);
+            resetForm();
+          }}
+          className="btn-primary text-sm"
+        >
+          + New Post
+        </button>
+      </div>
         {showForm && (
           <div className="card p-6 mb-8">
             <h2 className="font-heading font-bold text-xl mb-4">
@@ -615,8 +611,7 @@ export default function AdminBlogsPage() {
             </table>
           </div>
         </div>
-      </main>
-    </div>
+    </>
   );
 }
 

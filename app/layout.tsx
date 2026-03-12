@@ -45,178 +45,47 @@ const playfairDisplay = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | The Stems",
-    template: "%s | The Stems Nairobi",
+      "Florist Nairobi CBD | Flowers, Teddy Bears & Gift Hampers | The Stems Flowers",
+    template: "%s | The Stems Flowers Nairobi",
   },
   description:
-    "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's Day orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Order online with M-Pesa.",
+    "The Stems Flowers is a Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, flower bouquets, teddy bears and luxury gift hampers with same-day delivery across Nairobi. Order online and pay with M-Pesa.",
   keywords: [
-    // Valentine's Day Priority Keywords
-    "valentine's gifts Nairobi",
-    "valentine's day gifts Kenya",
-    "best valentine's gifts for wife Nairobi",
-    "valentine's gifts for husband Nairobi",
-    "valentine's gifts for girlfriend Nairobi",
-    "romantic valentine's gifts Nairobi",
-    "surprise valentine's gifts Nairobi",
-    "pre valentine's day gifts Nairobi",
-    "valentine's flowers Nairobi",
-    "valentine's chocolates Nairobi",
-    "valentine's wine gifts Nairobi",
-    "valentine's teddy bears Nairobi",
-    "valentine's gift hampers Nairobi",
-    "valentine's cards Nairobi",
-
-    // Valentine's Relationship Searches
-    "what to gift my wife on valentine's day Nairobi",
-    "valentine's gift for my husband Nairobi",
-    "valentine's surprise for girlfriend Nairobi",
-    "best valentine's gift for mom Nairobi",
-    "valentine's gift for dad Nairobi",
-    "valentine's gifts for couples Nairobi",
-    "romantic gifts for wife valentine's Nairobi",
-    "gifts to surprise husband valentine's Nairobi",
-    "valentine's day gifts for her Nairobi",
-    "valentine's day gifts for him Nairobi",
-
-    // Valentine's Planning & Timing
-    "pre valentine's orders Nairobi",
-    "early valentine's gifts Nairobi",
-    "plan valentine's surprise Nairobi",
-    "valentine's day preparation Nairobi",
-    "book valentine's gifts early Nairobi",
-    "same day valentine's gifts Nairobi",
-    "last minute valentine's gifts Nairobi",
-    "urgent valentine's delivery Nairobi",
-
-    // Valentine's AI Search Patterns
-    "where to buy valentine's gifts Nairobi",
-    "best florist for valentine's Nairobi",
-    "valentine's gift ideas Nairobi",
-    "how to surprise partner valentine's Nairobi",
-    "valentine's romantic gestures Nairobi",
-    "affordable valentine's gifts Nairobi",
-    "luxury valentine's gifts Nairobi",
-
-    // Valentine's Voice Search
-    "find valentine's gifts near me Nairobi",
-    "valentine's florist near me Kenya",
-    "order valentine's flowers online Nairobi",
-    "valentine's gift delivery near me",
-
-    // Valentine's Long-tail Keywords
-    "beautiful valentine's flower arrangements Nairobi",
-    "personalized valentine's gift hampers Nairobi",
-    "romantic valentine's surprise packages Nairobi",
-    "valentine's day luxury gifts Nairobi",
-    "thoughtful valentine's presents Nairobi",
-    "memorable valentine's gifts Nairobi",
-    "unique valentine's gift ideas Nairobi",
-
-    // Valentine's Seasonal Keywords
-    "2025 valentine's gifts Nairobi",
-    "february valentine's gifts Nairobi",
-    "love month gifts Nairobi Kenya",
-
-    // Valentine's Corporate & Business
-    "corporate valentine's gifts Nairobi",
-    "valentine's team gifts Nairobi",
-    "office valentine's celebrations Nairobi",
-
-    // Existing core services
-    "best gifts for men Nairobi",
-    "best gifts for wives Nairobi",
-    "best gifts for couples Nairobi",
-    "best gifts for children Nairobi",
-    "best gifts for colleagues Nairobi",
-    "surprise gifts for wife Nairobi",
-    "money bouquet Nairobi",
-    "money bouquet Kenya",
+    // Core florist & location
+    "florist Nairobi",
+    "florist Nairobi CBD",
+    "flower shop Nairobi",
+    "online flower shop Nairobi",
+    "Nairobi CBD flower delivery",
     "flowers Nairobi",
     "flower delivery Nairobi",
     "same-day flower delivery Nairobi",
+    "M-Pesa flower delivery Nairobi",
+
+    // Product pillars
+    "roses Nairobi",
+    "red roses Nairobi",
+    "pink roses Nairobi",
+    "white roses Nairobi",
+    "mixed bouquets Nairobi",
     "gift hampers Nairobi",
-    "corporate gifts Nairobi",
+    "teddy bears Nairobi",
+
+    // Occasion keywords
     "birthday flowers Nairobi",
-    "anniversary flowers Kenya",
-    "romantic flowers Nairobi",
-    "florist Nairobi",
-    
-    // AI Search: Conversational/Question-based keywords
-    "where to buy flowers in Nairobi",
-    "how to send flowers in Nairobi",
-    "what are the best flower shops in Nairobi",
-    "where can I get same day flower delivery",
-    "how much does flower delivery cost in Nairobi",
-    "what is a money bouquet",
-    "where to buy money bouquet in Kenya",
-    "how to surprise someone with flowers Nairobi",
-    "what flowers are good for birthdays",
-    "where to get corporate gifts in Nairobi",
-    "how to order flowers online in Kenya",
-    "what are the best romantic gifts in Nairobi",
-    "where to buy teddy bears in Nairobi",
-    "how to send gifts to someone in Nairobi",
-    "what are good anniversary gifts",
-    
-    // AI Search: Natural language patterns
-    "I need flowers delivered today in Nairobi",
-    "looking for flower delivery near me Nairobi",
-    "want to send flowers to girlfriend Nairobi",
-    "need gift hampers for office colleagues",
-    "searching for money bouquet services Kenya",
-    "require same day gift delivery Nairobi",
-    "looking for romantic surprise ideas Nairobi",
-    "need corporate gifts for employees Kenya",
-    "want fresh flowers delivered Westlands",
-    "searching for birthday gift ideas Nairobi",
-    
-    // AI Search: Intent-based keywords
+    "anniversary flowers Nairobi",
+    "apology flowers Nairobi",
+    "get well soon flowers Nairobi",
+    "wedding flowers Nairobi",
+    "wedding car decor Nairobi",
+
+    // Intent & neighbourhoods
+    "same day flowers Nairobi",
     "urgent flower delivery Nairobi",
-    "emergency gift delivery Kenya",
-    "last minute flowers Nairobi",
-    "express flower delivery CBD",
-    "quick gift delivery Westlands",
-    "instant flower ordering Nairobi",
-    "fast gift hampers delivery Karen",
-    "immediate flower service Lavington",
-    "rush delivery flowers Kilimani",
-    "priority gift delivery Nairobi",
-    
-    // AI Search: Semantic search optimization
-    "premium florist services Nairobi",
-    "luxury flower arrangements Kenya",
-    "artisan gift hampers Nairobi",
-    "bespoke flower designs Kenya",
-    "curated gift collections Nairobi",
-    "handcrafted flower bouquets Kenya",
-    "personalized gift services Nairobi",
-    "custom flower arrangements Kenya",
-    "exclusive gift hampers Nairobi",
-    "boutique flower shop Kenya",
-    
-    // Voice search optimization
-    "flower delivery near me Nairobi",
-    "find florist near me Kenya",
-    "money bouquet services near me",
-    "same day flower delivery near me",
-    "gift delivery near me Nairobi",
-    
-    // Location-specific existing keywords
     "flower delivery Westlands",
     "flower delivery Karen",
     "flower delivery Lavington",
     "flower delivery Kilimani",
-    "Nairobi CBD flower delivery",
-    "roses Nairobi",
-    "bouquet delivery Nairobi",
-    "online flower shop Nairobi",
-    "M-Pesa flower delivery Nairobi",
-    "teddy bears Nairobi",
-    "wedding flowers Nairobi",
-    "funeral wreaths Nairobi",
-    "sympathy flowers Nairobi",
-    "graduation flowers Nairobi",
   ],
   authors: [{ name: "The Stems" }],
   creator: "The Stems",
@@ -229,26 +98,26 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_KE",
     url: process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke",
-    siteName: "The Stems Nairobi",
+    siteName: "The Stems Flowers Nairobi",
     title:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | The Stems",
+      "Florist Nairobi CBD | Flowers, Teddy Bears & Gift Hampers | The Stems Flowers",
     description:
-      "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+      "Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, bouquets, teddy bears and luxury gift hampers with same-day delivery across Nairobi. Pay with M-Pesa.",
     images: [
       {
         url: "/images/logo/thestemslogo.jpeg",
         width: 1200,
         height: 630,
-        alt: "The Stems - Premium Flowers & Gifts in Nairobi",
+        alt: "The Stems Flowers - Florist in Nairobi CBD",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Best Valentine's Gifts Nairobi | Romantic Flowers, Chocolates & Gift Hampers | The Stems",
+      "Florist Nairobi CBD | Flowers, Teddy Bears & Gift Hampers | The Stems Flowers",
     description:
-      "Best Valentine's gifts Nairobi: romantic flowers, premium chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend, mom, dad. Pre-Valentine's Day orders, same-day delivery across Nairobi.",
+      "Nairobi CBD florist at Delta Hotel, University Way. Fresh flowers, teddy bears and gift hampers delivered same day across Nairobi. Order online and pay with M-Pesa.",
     images: ["/images/logo/thestemslogo.jpeg"],
   },
   robots: {

@@ -4,34 +4,20 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const heroSlides = [
-  {
-    id: 1,
-    image: "/images/carrousell/Carrousell1.jpeg",
-    title: "Every Moment Deserves to Bloom",
-    subtitle: "Flowers, hampers & teddy bears. Same-day delivery Nairobi. Order online with M-Pesa.",
-    ctaText: "Shop Now",
-    ctaLink: "/collections",
-  },
-  {
-    id: 2,
-    image: "/images/carrousell/Carrousell2.jpeg",
-    title: "Anniversary Flowers That Speak Your Heart",
-    subtitle: "Roses, bouquets & hampers. Same-day delivery. Till 4202044 • Paybill 880100.",
-    ctaText: "Anniversary Gifts",
-    ctaLink: "/collections/flowers",
-  },
-  {
-    id: 3,
-    image: "/images/carrousell/Carrousell3.jpeg",
-    title: "Surprise Someone Special Today",
-    subtitle: "Fresh flowers, chocolates & hampers. Delta Hotel, University Way, Nairobi CBD. Mon–Sat 8AM–8PM.",
-    ctaText: "View Collections",
-    ctaLink: "/collections/gift-hampers",
-  },
-];
+export interface HeroSlideConfig {
+  id: string | number;
+  image: string;
+  title: string;
+  subtitle: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
 
-export default function HeroCarousel() {
+interface HeroCarouselProps {
+  slides: HeroSlideConfig[];
+}
+
+export default function HeroCarousel({ slides }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -57,7 +43,7 @@ export default function HeroCarousel() {
   return (
     <section className="relative h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] overflow-hidden">
       {/* Slides */}
-      {heroSlides.map((slide, index) => (
+      {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -81,20 +67,30 @@ export default function HeroCarousel() {
                   <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
                     {slide.title}
                   </h2>
-                  <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">{slide.subtitle}</p>
-                  <Link href={slide.ctaLink} className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4">
-                    {slide.ctaText}
-                  </Link>
+                  <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">
+                    {slide.subtitle}
+                  </p>
+                  {slide.ctaText && slide.ctaLink && (
+                    <Link
+                      href={slide.ctaLink}
+                      className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4"
+                    >
+                      {slide.ctaText}
+                    </Link>
+                  )}
                 </div>
                 
                 {/* Right side - Two overlapping images */}
                 <div className="hidden md:flex items-center justify-end flex-shrink-0 relative">
                   <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
                     {/* First image - behind, positioned at top-left, bottom-right corner overlaps second image's top-left by 68px */}
-                    <div className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-10" style={{ transform: 'translate(68px, 68px)' }}>
+                    <div
+                      className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-10"
+                      style={{ transform: "translate(68px, 68px)" }}
+                    >
                       <Image
-                        src={heroSlides[(index + 1) % heroSlides.length].image}
-                        alt={heroSlides[(index + 1) % heroSlides.length].title}
+                        src={slides[(index + 1) % slides.length].image}
+                        alt={slides[(index + 1) % slides.length].title}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
@@ -103,10 +99,13 @@ export default function HeroCarousel() {
                       />
                     </div>
                     {/* Second image - in front, positioned so its top-left corner overlaps first image's bottom-right corner by 68px */}
-                    <div className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-20" style={{ transform: 'translate(-68px, -68px)' }}>
+                    <div
+                      className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-20"
+                      style={{ transform: "translate(-68px, -68px)" }}
+                    >
                       <Image
-                        src={heroSlides[(index + 2) % heroSlides.length].image}
-                        alt={heroSlides[(index + 2) % heroSlides.length].title}
+                        src={slides[(index + 2) % slides.length].image}
+                        alt={slides[(index + 2) % slides.length].title}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
@@ -124,7 +123,7 @@ export default function HeroCarousel() {
 
       {/* Dots Indicator */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {heroSlides.map((_, index) => (
+        {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

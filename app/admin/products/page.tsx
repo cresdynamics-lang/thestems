@@ -73,32 +73,29 @@ export default function AdminProductsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-brand-blush flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <div className="text-brand-gray-600">Loading products...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-brand-blush">
-      <header className="bg-white border-b border-brand-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-brand-gray-600 hover:text-brand-green">
-                ← Dashboard
-              </Link>
-              <h1 className="font-heading font-bold text-xl text-brand-gray-900">Products</h1>
-            </div>
-            <Link href="/admin/products/new" className="btn-primary">
-              Add Product
-            </Link>
-          </div>
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Link href="/admin" className="text-brand-gray-600 hover:text-brand-green text-sm">
+            ← Dashboard
+          </Link>
+          <h1 className="font-heading font-bold text-xl md:text-2xl text-brand-gray-900">
+            Products
+          </h1>
         </div>
-      </header>
+        <Link href="/admin/products/new" className="btn-primary text-sm">
+          Add Product
+        </Link>
+      </div>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="card overflow-hidden">
+      <div className="card overflow-hidden">
           <div className="overflow-x-auto -mx-0 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-brand-gray-100">
             <table className="min-w-[640px] w-full divide-y divide-brand-gray-200">
             <thead className="bg-brand-gray-50">
@@ -179,9 +176,8 @@ export default function AdminProductsPage() {
             </tbody>
           </table>
           </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }
 
