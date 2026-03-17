@@ -243,10 +243,106 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Pesapal (M-Pesa STK and Card) – disabled for now
       if (paymentMethod === "pesapal") {
-        setError("M-Pesa STK and Card payments are coming soon. Please use M-Pesa Till or Paybill for now.");
-        setIsProcessing(false);
+        // Validate phone
+        const msisdn = formatPhone(phoneNumber || phone);
+        if (!msisdn || !validatePhone(msisdn)) {
+          setError("Please enter a valid Kenyan phone number for payment.");
+          setIsProcessing(false);
+          return;
+        }
+
+        // 1) Create order in database with card payment method
+        const customerName =
+          (firstName && lastName ? `${firstName} ${lastName}`.trim() : orderData?.customer?.name) ||
+          "Customer";
+
+        const orderResponse = await axios.post("/api/orders", {
+          items: (orderData?.items || items).map((item) => ({
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            options: item.options,
+          })),
+          total: total,
+          customer_name: customerName,
+          phone: msisdn,
+          email: email || null,
+          delivery_address: address || orderData?.delivery?.address || "To be confirmed",
+          delivery_city: city || orderData?.delivery?.location || "Nairobi",
+          delivery_date: new Date().toISOString(),
+          payment_method: "card",
+          notes: `Payment via Pesapal (card / M-Pesa STK). Total: ${formatCurrency(total)}`,
+        });
+
+        const orderId = orderResponse.data.id as string;
+
+        // 2) Initiate Pesapal payment
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+
+        const paymentResponse = await axios.post("/api/pesapal/payment", {
+          orderId,
+          amount: total / 100, // convert cents to KES
+          currency: "KES",
+          description: `The Stems Order ${orderId.slice(0, 8)}`,
+          callbackUrl: `${baseUrl}/api/pesapal/callback`,
+          customerEmail: email || null,
+          customerPhone: msisdn,
+          customerName,
+          billingAddress: {
+            email_address: email || "",
+            phone_number: msisdn,
+            country_code: "KE",
+            first_name: firstName || customerName.split(" ")[0] || "Customer",
+            middle_name: "",
+            last_name:
+              lastName ||
+              customerName
+                .split(" ")
+                .slice(1)
+                .join(" ") ||
+              "Customer",
+            line_1: address || orderData?.delivery?.address || "To be confirmed",
+            line_2: apartment || "",
+            city: city || orderData?.delivery?.location || "Nairobi",
+            state: city || "Nairobi",
+            postal_code: postalCode || "",
+            zip_code: postalCode || "",
+          },
+        });
+
+        if (!paymentResponse.data?.success || !paymentResponse.data.data?.redirect_url) {
+          throw new Error(
+            paymentResponse.data?.message || "Failed to start Pesapal payment."
+          );
+        }
+
+        const { redirect_url, order_tracking_id } = paymentResponse.data
+          .data as {
+          redirect_url: string;
+          order_tracking_id?: string;
+        };
+
+        // 3) Store Pesapal tracking ID on order (for status polling)
+        if (order_tracking_id) {
+          axios
+            .patch(`/api/orders/${orderId}`, {
+              pesapal_order_tracking_id: order_tracking_id,
+            })
+            .catch((err) =>
+              console.error("Failed to store Pesapal tracking ID:", err)
+            );
+        }
+
+        // 4) Track checkout and redirect to Pesapal hosted page
+        Analytics.trackCheckoutStart(total, (orderData?.items || items).length);
+
+        // Mark as pending so success page can treat this as payment flow
+        sessionStorage.setItem("pendingOrderId", orderId);
+
+        window.location.href = redirect_url;
         return;
       }
     } catch (err: any) {
@@ -356,7 +452,32 @@ export default function CheckoutPage() {
               {/* Payment Methods */}
               <div className="mt-6 space-y-3">
                 <h3 className="font-semibold text-base text-brand-gray-900 mb-4">Payment Method</h3>
-                
+
+                {/* M-Pesa STK & Card (Pesapal) – FIRST OPTION */}
+                <div>
+                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="pesapal"
+                      checked={paymentMethod === "pesapal"}
+                      onChange={() => setPaymentMethod("pesapal")}
+                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <CreditCardIcon className="w-6 h-6 text-brand-gray-400" />
+                        <span className="font-medium text-sm text-brand-gray-900">
+                          M-Pesa / Card via Pesapal
+                        </span>
+                      </div>
+                      <p className="text-xs text-brand-gray-500 mt-1">
+                        Pay securely via Pesapal using M-Pesa STK Push or Credit/Debit Card (Visa, Mastercard).
+                      </p>
+                    </div>
+                  </label>
+                </div>
+
                 {/* Till Number */}
                 <div>
                   <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50">
@@ -442,27 +563,6 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-                {/* M-Pesa STK and Card Payments – Coming soon */}
-                <div>
-                  <label className="flex items-start gap-3 p-4 border border-brand-gray-200 rounded-md cursor-pointer hover:bg-brand-gray-50 opacity-90">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="pesapal"
-                      checked={paymentMethod === "pesapal"}
-                      onChange={() => setPaymentMethod("pesapal")}
-                      className="w-4 h-4 mt-1 text-brand-green focus:ring-brand-green"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <CreditCardIcon className="w-6 h-6 text-brand-gray-400" />
-                        <span className="font-medium text-sm text-brand-gray-900">M-Pesa STK and Card Payments</span>
-                        <span className="text-xs font-semibold text-brand-gray-500 bg-brand-gray-100 px-2 py-0.5 rounded">Coming soon</span>
-                      </div>
-                      <p className="text-xs text-brand-gray-500 mt-1">Pay via M-Pesa STK Push or Credit/Debit Card (Visa, Mastercard) — available soon</p>
-                    </div>
-                  </label>
-                </div>
               </div>
 
               {/* Complete Payment Button */}
@@ -475,7 +575,7 @@ export default function CheckoutPage() {
                 {isProcessing
                   ? "Processing..."
                   : paymentMethod === "pesapal"
-                    ? "Coming soon"
+                    ? `Pay Securely - ${formatCurrency(total)}`
                     : paymentMethod === "till" || paymentMethod === "paybill"
                       ? `Complete Order - ${formatCurrency(total)}`
                       : "Select Payment Method"}

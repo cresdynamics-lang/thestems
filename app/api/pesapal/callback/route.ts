@@ -219,12 +219,12 @@ export async function POST(request: NextRequest) {
 // Handle GET requests for Pesapal redirects (optional)
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const orderTrackingId = searchParams.get('OrderTrackingId');
-  const orderMerchantReference = searchParams.get('OrderMerchantReference');
+  const orderTrackingId = searchParams.get("OrderTrackingId");
+  const orderMerchantReference = searchParams.get("OrderMerchantReference");
 
   if (orderTrackingId && orderMerchantReference) {
-    // Redirect to order success page
-    const redirectUrl = `/order/success?id=${orderMerchantReference}&pesapal_tracking_id=${orderTrackingId}`;
+    // Redirect to order success page and mark as pending so we can poll + WhatsApp redirect
+    const redirectUrl = `/order/success?id=${orderMerchantReference}&pesapal_tracking_id=${orderTrackingId}&pending=true`;
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   }
 

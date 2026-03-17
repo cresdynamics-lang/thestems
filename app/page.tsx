@@ -656,15 +656,13 @@ export default async function HomePage() {
   // Fetch hero slides from Supabase (fallback to hard-coded slides if empty)
   const heroSlides: HeroSlideConfig[] = await (async () => {
     try {
-      const res = await fetch(`${baseUrl}/api/admin/hero`, {
-        // this will hit the same server; no auth required for public read
+      const res = await fetch(`${baseUrl}/api/hero`, {
         next: { revalidate: 60 },
       });
       if (!res.ok) return [];
       const data = (await res.json()) as any[];
-      const activeSlides = data.filter((s) => s.is_active);
-      if (!activeSlides.length) return [];
-      return activeSlides.map((s) => ({
+      if (!data.length) return [];
+      return data.map((s) => ({
         id: s.id,
         image: s.image_url,
         title: s.title,
