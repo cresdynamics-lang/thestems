@@ -26,14 +26,50 @@ export async function POST(request: NextRequest) {
           );
 
         if (error) {
-          console.error("[Analytics] Failed to upsert analytics_sessions:", error);
+          console.error(
+            "[Analytics] Failed to upsert analytics_sessions:",
+            error
+          );
         }
       } catch (err) {
-        console.error("[Analytics] Unexpected error upserting analytics_sessions:", err);
+        console.error(
+          "[Analytics] Unexpected error upserting analytics_sessions:",
+          err
+        );
       }
     }
 
-    // You can store other events as well if needed
+    // Store all analytics events (page views, product clicks, etc.)
+    try {
+      const { error: insertError } = await (supabaseAdmin
+        .from("analytics_events") as any)
+        .insert({
+          event: data.event ?? null,
+          session_id: data.sessionId ?? null,
+          user_id: data.userId ?? null,
+          path: data.path ?? null,
+          title: data.title ?? null,
+          product_id: data.productId ?? null,
+          product_name: data.productName ?? null,
+          category: data.category ?? null,
+          price: data.price ?? null,
+          quantity: data.quantity ?? null,
+          metadata: data,
+        });
+
+      if (insertError) {
+        console.error(
+          "[Analytics] Failed to insert into analytics_events:",
+          insertError
+        );
+      }
+    } catch (err) {
+      console.error(
+        "[Analytics] Unexpected error inserting analytics_events:",
+        err
+      );
+    }
+
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     // Silently fail - analytics should not break the app
