@@ -50,7 +50,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!category || !["flowers", "hampers", "teddy", "wines", "chocolates", "cards"].includes(category)) {
+    if (
+      !category ||
+      !["flowers", "hampers", "teddy", "wines", "chocolates", "cards", "hero"].includes(
+        category
+      )
+    ) {
       return NextResponse.json(
         { message: "Please select a valid category" },
         { 

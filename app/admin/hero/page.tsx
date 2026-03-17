@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -20,6 +20,8 @@ export default function AdminHeroPage() {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editing, setEditing] = useState<HeroSlide | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [form, setForm] = useState({
     title: "",
@@ -92,6 +94,51 @@ export default function AdminHeroPage() {
     } catch (error: any) {
       console.error("Error saving hero slide", error);
       alert(error.response?.data?.message || "Failed to save hero slide");
+    }
+  };
+
+  const handleHeroImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      alert("Please log in again to upload images.");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("category", "hero");
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data?.url) {
+        throw new Error(data?.message || "Failed to upload hero image.");
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        image_url: data.url as string,
+      }));
+    } catch (error: any) {
+      console.error("Hero image upload error:", error);
+      alert(error.message || "Failed to upload hero image. Please try again.");
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -173,16 +220,26 @@ export default function AdminHeroPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-brand-gray-900 mb-1">
-                Background Image URL *
+                Background Image *
               </label>
-              <input
-                type="text"
-                value={form.image_url}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                required
-                className="input-field"
-                placeholder="/images/carrousell/Carrousell1.jpeg or Supabase URL"
-              />
+              <div className="space-y-2">
+                {form.image_url && (
+                  <p className="text-xs text-brand-gray-600 break-all">
+                    Current image: <span className="font-mono">{form.image_url}</span>
+                  </p>
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleHeroImageUpload}
+                  className="block w-full text-sm text-brand-gray-700"
+                  disabled={isUploading}
+                />
+                <p className="text-[11px] text-brand-gray-500">
+                  Choose an image from your phone or laptop. It will be uploaded and linked to this slide automatically.
+                </p>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
