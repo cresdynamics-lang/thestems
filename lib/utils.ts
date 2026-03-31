@@ -48,7 +48,11 @@ export function validatePhone(phone: string): boolean {
   // - 07xx (2547xxxxxxxx) - 12 digits total
   // - 011x (25411xxxxxxx) - 12 digits total
   // - 01xx (2541xxxxxxxx) - 12 digits total (other 01 prefixes)
-  return /^254(7\d{8}|1\d{8})$/.test(cleaned);
+  return cleaned.length === 12 && cleaned.startsWith("254") && /^254(7\d{8}|1\d{8})$/.test(cleaned);
+}
+
+export function generateId(): string {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 export function sanitizeInput(input: string): string {

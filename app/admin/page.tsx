@@ -172,26 +172,31 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <Link href="/admin/products" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Products</h2>
             <p className="text-brand-gray-600 mb-4">Add, edit, or remove products from your catalog</p>
             <span className="text-brand-green font-medium">Go to Products →</span>
-          </Link>
+        </Link>
 
         <Link href="/admin/orders" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Orders</h2>
             <p className="text-brand-gray-600 mb-4">View orders, update status, and process payments</p>
             <span className="text-brand-green font-medium">Go to Orders →</span>
-          </Link>
+        </Link>
+
+        <Link href="/admin/payment-links" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
+            <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Payment Links</h2>
+            <p className="text-brand-gray-600 mb-4">Create payment links for walk-in customers and phone orders</p>
+            <span className="text-brand-green font-medium">Create Links →</span>
+        </Link>
 
         <Link href="/admin/blogs" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Blog</h2>
             <p className="text-brand-gray-600 mb-4">Create, edit, or delete blog posts</p>
             <span className="text-brand-green font-medium">Go to Blog →</span>
-          </Link>
+        </Link>
       </div>
     </>
   );
 }
-

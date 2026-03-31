@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Links Test - The Stems</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fdf2f8;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #ec4899;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #374151;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .btn {
+            background: #ec4899;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .btn:hover {
+            background: #db2777;
+        }
+        .btn:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        .result {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #6b7280;
+        }
+        .payment-link-result {
+            background: #f0fdf4;
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .copy-btn {
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #059669;
+        }
+        .item-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: end;
+        }
+        .item-row input {
+            margin-bottom: 0;
+        }
+        .item-row .remove-btn {
+            background: #ef4444;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .add-item-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .total-display {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💳 Payment Links Creator</h1>
+        
+        <div class="info">
+            <strong>🌸 Create Payment Links for:</strong><br>
+            • Walk-in customers at your shop<br>
+            • Phone orders and customer inquiries<br>
+            • Social media order requests<br>
+            • Quick payment collection without full website checkout
+        </div>
+
+        <form id="paymentLinkForm">
+            <div class="form-group">
+                <label for="customerName">Customer Name *</label>
+                <input type="text" id="customerName" required placeholder="Enter customer name">
+            </div>
+
+            <div class="form-group">
+                <label for="customerPhone">Phone Number *</label>
+                <input type="tel" id="customerPhone" required placeholder="07xxxxxxxx or 2547xxxxxxxx">
+            </div>
+
+            <div class="form-group">
+                <label for="customerEmail">Email Address (Optional)</label>
+                <input type="email" id="customerEmail" placeholder="customer@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (Ksh) *</label>
+                <input type="number" id="amount" step="0.01" min="1" placeholder="Enter amount or add items below">
+                <small style="color: #6b7280;">Enter direct amount OR add items below to calculate total</small>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" rows="2" placeholder="Order description (optional)"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Order Items (Optional)</label>
+                <div id="itemsContainer">
+                    <div class="item-row">
+                        <input type="text" placeholder="Item name" class="item-name">
+                        <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1" style="width: 80px;">
+                        <input type="number" placeholder="Price (Ksh)" class="item-price" min="0" style="width: 120px;">
+                        <button type="button" class="remove-btn" onclick="removeItem(this)" style="display: none;">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="add-item-btn" onclick="addItem()">+ Add Item</button>
+                <div id="totalDisplay" class="total-display" style="display: none;">
+                    Total: Ksh <span id="totalAmount">0</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Additional Notes</label>
+                <textarea id="notes" rows="2" placeholder="Special instructions or notes (optional)"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="sendEmail" checked> Send payment link via email (if email provided)
+                </label>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                💳 Create Payment Link
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            <p>⏳ Creating payment link...</p>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let itemCount = 1;
+
+        function addItem() {
+            itemCount++;
+            const container = document.getElementById('itemsContainer');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-row';
+            newItem.innerHTML = `
+                <input type="text" placeholder="Item name" class="item-name">
+                <input type="number" placeholder="Qty" class="item-quantity" value="1" min="1" style="width: 80px;">
+                <input type="number" placeholder="Price (Ksh)" class="item-price" min="0" style="width: 120px;">
+                <button type="button" class="remove-btn" onclick="removeItem(this)">Remove</button>
+            `;
+            container.appendChild(newItem);
+            
+            // Add event listeners to new inputs
+            newItem.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', calculateTotal);
+            });
+            
+            // Show remove button for all items when more than 1
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+            calculateTotal();
+            
+            // Hide remove button if only one item left
+            const items = document.querySelectorAll('.item-row');
+            if (items.length === 1) {
+                document.querySelector('.remove-btn').style.display = 'none';
+            }
+        }
+
+        function calculateTotal() {
+            const itemRows = document.querySelectorAll('.item-row');
+            let total = 0;
+            let hasValidItems = false;
+
+            itemRows.forEach(row => {
+                const name = row.querySelector('.item-name').value.trim();
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                
+                if (name && price > 0 && quantity > 0) {
+                    total += price * quantity;
+                    hasValidItems = true;
+                }
+            });
+
+            const totalDisplay = document.getElementById('totalDisplay');
+            const totalAmount = document.getElementById('totalAmount');
+            const amountInput = document.getElementById('amount');
+
+            if (hasValidItems) {
+                totalDisplay.style.display = 'block';
+                totalAmount.textContent = total.toFixed(2);
+                amountInput.value = ''; // Clear manual amount if items are used
+            } else {
+                totalDisplay.style.display = 'none';
+            }
+        }
+
+        // Add event listeners to initial inputs
+        document.querySelectorAll('.item-row input').forEach(input => {
+            input.addEventListener('input', calculateTotal);
+        });
+
+        document.getElementById('paymentLinkForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            // Disable button and show loading
+            btn.disabled = true;
+            loading.style.display = 'block';
+            result.innerHTML = '';
+
+            try {
+                // Collect form data
+                const customerName = document.getElementById('customerName').value.trim();
+                const customerPhone = document.getElementById('customerPhone').value.trim();
+                const customerEmail = document.getElementById('customerEmail').value.trim();
+                const amount = document.getElementById('amount').value;
+                const description = document.getElementById('description').value.trim();
+                const notes = document.getElementById('notes').value.trim();
+                const sendEmail = document.getElementById('sendEmail').checked;
+
+                // Collect items
+                const items = [];
+                const itemRows = document.querySelectorAll('.item-row');
+                itemRows.forEach(row => {
+                    const name = row.querySelector('.item-name').value.trim();
+                    const quantity = parseInt(row.querySelector('.item-quantity').value) || 1;
+                    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                    
+                    if (name && price > 0) {
+                        items.push({ name, quantity, price });
+                    }
+                });
+
+                // Determine final amount
+                const finalAmount = amount ? parseFloat(amount) : 
+                    items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                if (finalAmount <= 0) {
+                    throw new Error('Please enter an amount or add items with prices');
+                }
+
+                const data = {
+                    customerName,
+                    customerPhone,
+                    customerEmail: customerEmail || null,
+                    amount: finalAmount,
+                    currency: "KES",
+                    description: description || `Payment for ${customerName}`,
+                    items,
+                    notes: notes || "",
+                    sendEmail: sendEmail && customerEmail !== ""
+                };
+
+                console.log('🔄 Creating payment link:', data);
+
+                const response = await fetch('/api/payment-links', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const resultData = await response.json();
+
+                if (resultData.success) {
+                    result.innerHTML = `
+                        <div class="payment-link-result">
+                            <h3>✅ Payment Link Created Successfully!</h3>
+                            <div style="margin: 20px 0;">
+                                <p><strong>Payment Link:</strong></p>
+                                <div style="display: flex; align-items: center; margin: 10px 0;">
+                                    <input type="text" value="${resultData.data.paymentUrl}" readonly 
+                                           style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" 
+                                           id="paymentUrlInput">
+                                    <button class="copy-btn" onclick="copyPaymentLink()">Copy Link</button>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                                <div>
+                                    <strong>Order ID:</strong><br>
+                                    ${resultData.data.orderId.slice(0, 8)}
+                                </div>
+                                <div>
+                                    <strong>Customer:</strong><br>
+                                    ${resultData.data.customerName}
+                                </div>
+                                <div>
+                                    <strong>Amount:</strong><br>
+                                    Ksh ${resultData.data.amount / 100}
+                                </div>
+                                <div>
+                                    <strong>Email Sent:</strong><br>
+                                    ${resultData.data.emailSent ? '✅ Yes' : '❌ No'}
+                                </div>
+                            </div>
+                            <div style="margin: 20px 0;">
+                                <button class="btn" onclick="window.open('${resultData.data.paymentUrl}', '_blank')">
+                                    🔗 Test Payment Link
+                                </button>
+                            </div>
+                            ${resultData.data.items.length > 0 ? `
+                                <div style="margin: 20px 0;">
+                                    <h4>Order Items:</h4>
+                                    ${resultData.data.items.map(item => 
+                                        `• ${item.name} x${item.quantity} - Ksh ${item.price / 100}`
+                                    ).join('<br>')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Failed to Create Payment Link</h3>
+                            <p><strong>Error:</strong> ${resultData.error || resultData.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Please make sure the development server is running.</p>
+                    </div>
+                `;
+            } finally {
+                // Re-enable button and hide loading
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function copyPaymentLink() {
+            const input = document.getElementById('paymentUrlInput');
+            input.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            btn.style.background = '#059669';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#10b981';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

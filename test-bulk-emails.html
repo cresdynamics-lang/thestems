@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Order Emails - The Stems</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0fdf4;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #10b981;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #374151;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .btn {
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .btn:hover {
+            background: #059669;
+        }
+        .btn:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        .btn-danger {
+            background: #ef4444;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        .result {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #6b7280;
+        }
+        .order-summary {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Bulk Order Emails</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> This will send order confirmation emails to your business email for paid orders. Use this to resend notifications for orders that may have been missed.
+        </div>
+
+        <div class="info">
+            <strong>📦 What this does:</strong><br>
+            • Finds all paid orders that haven't been processed<br>
+            • Sends detailed order confirmation emails<br>
+            • Includes all order details, payment info, and action items<br>
+            • Helps ensure no paid orders are missed
+        </div>
+
+        <form id="bulkEmailForm">
+            <div class="form-group">
+                <label>What would you like to do?</label>
+                <div class="checkbox-group">
+                    <input type="radio" id="sendAllPaid" name="action" value="all" checked>
+                    <label for="sendAllPaid">Send emails for ALL paid orders</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="radio" id="sendSpecific" name="action" value="specific">
+                    <label for="sendSpecific">Send emails for specific order IDs (comma-separated)</label>
+                </div>
+            </div>
+
+            <div id="specificOrders" style="display: none;" class="form-group">
+                <label for="orderIds">Order IDs (comma-separated)</label>
+                <textarea id="orderIds" rows="3" placeholder="e.g., abc123-def456, ghi789-jkl012"></textarea>
+                <small style="color: #6b7280;">Enter the full order IDs or just the first 8 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Order Status</label>
+                <select id="status">
+                    <option value="paid">Paid Orders Only</option>
+                    <option value="pending">Pending Orders Only</option>
+                    <option value="shipped">Shipped Orders Only</option>
+                    <option value="delivered">Delivered Orders Only</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="minAmount">Minimum Amount (Ksh) - Optional</label>
+                <input type="number" id="minAmount" placeholder="e.g., 1000">
+                <small style="color: #6b7280;">Only send emails for orders above this amount</small>
+            </div>
+
+            <div class="form-group">
+                <label for="dateRange">Date Range - Optional</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="date" id="startDate" placeholder="Start date">
+                    <input type="date" id="endDate" placeholder="End date">
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                📧 Send Bulk Order Emails
+            </button>
+        </form>
+
+        <div id="loading" class="loading">
+            <p>⏳ Processing bulk email request...</p>
+            <p style="font-size: 12px; margin-top: 10px;">This may take a few minutes depending on the number of orders.</p>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Show/hide specific orders field based on selection
+        document.querySelectorAll('input[name="action"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const specificOrders = document.getElementById('specificOrders');
+                specificOrders.style.display = this.value === 'specific' ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('bulkEmailForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            // Disable button and show loading
+            btn.disabled = true;
+            loading.style.display = 'block';
+            result.innerHTML = '';
+
+            try {
+                // Collect form data
+                const action = document.querySelector('input[name="action"]:checked').value;
+                const status = document.getElementById('status').value;
+                const minAmount = document.getElementById('minAmount').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                let sendAllPaid = false;
+                let orderIds = [];
+
+                if (action === 'all') {
+                    sendAllPaid = true;
+                } else {
+                    const orderIdsText = document.getElementById('orderIds').value.trim();
+                    if (orderIdsText) {
+                        orderIds = orderIdsText.split(',').map(id => id.trim()).filter(id => id);
+                    }
+                }
+
+                // Prepare date range
+                let dateRange = null;
+                if (startDate || endDate) {
+                    dateRange = {
+                        start: startDate || new Date(0).toISOString(),
+                        end: endDate || new Date().toISOString()
+                    };
+                }
+
+                const data = {
+                    sendAllPaid,
+                    orderIds,
+                    status,
+                    minAmount: minAmount ? parseFloat(minAmount) : null,
+                    dateRange
+                };
+
+                console.log('🔄 Sending bulk email request:', data);
+
+                const response = await fetch('/api/bulk-order-emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const resultData = await response.json();
+
+                if (resultData.success) {
+                    const summary = resultData.summary;
+                    
+                    result.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Bulk Email Processing Complete!</h3>
+                            
+                            <div class="stats">
+                                <div class="stat-card">
+                                    <div class="stat-number">${summary.totalOrders}</div>
+                                    <div class="stat-label">Total Orders</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${summary.successCount}</div>
+                                    <div class="stat-label">Emails Sent</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${summary.errorCount}</div>
+                                    <div class="stat-label">Failed</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">Ksh ${(summary.totalRevenue / 100).toFixed(0)}</div>
+                                    <div class="stat-label">Total Revenue</div>
+                                </div>
+                            </div>
+
+                            <div class="order-summary">
+                                <h4>📧 Processing Summary:</h4>
+                                <p><strong>Message:</strong> ${resultData.message}</p>
+                                <p><strong>Processing Time:</strong> ${new Date().toLocaleString()}</p>
+                            </div>
+
+                            ${resultData.orders.length > 0 ? `
+                                <div class="order-summary">
+                                    <h4>📋 Order Details:</h4>
+                                    ${resultData.orders.map(order => `
+                                        <div style="margin: 10px 0; padding: 10px; background: ${order.success ? '#f0fdf4' : '#fef2f2'}; border-radius: 4px; border-left: 3px solid ${order.success ? '#10b981' : '#ef4444'};">
+                                            <strong>Order #${order.orderId.slice(0, 8)}</strong> - ${order.customerName}
+                                            ${order.total ? `- ${order.total}` : ''}
+                                            ${order.success ? '✅' : '❌'}
+                                            ${order.error ? `<br><small style="color: #ef4444;">Error: ${order.error}</small>` : ''}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Bulk Email Processing Failed</h3>
+                            <p><strong>Error:</strong> ${resultData.error || resultData.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Please make sure the development server is running.</p>
+                    </div>
+                `;
+            } finally {
+                // Re-enable button and hide loading
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

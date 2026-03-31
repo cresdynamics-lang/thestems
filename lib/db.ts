@@ -28,6 +28,8 @@ export interface Order {
     quantity: number;
     price: number;
     options?: Record<string, string>;
+    image?: string;
+    slug?: string;
   }>;
   total?: number; // alias for total_amount (for backward compatibility)
   total_amount: number;
@@ -44,10 +46,13 @@ export interface Order {
   pesapal_order_tracking_id?: string | null;
   pesapal_payment_method?: string | null;
   pesapal_confirmation_code?: string | null;
-  status: "pending" | "paid" | "failed" | "cancelled" | "shipped";
+  status: "pending" | "paid" | "failed" | "cancelled" | "shipped" | "delivered";
   notes?: string | null;
   created_at: string;
   updated_at: string;
+  paid_at?: string | null;
+  shipped_at?: string | null;
+  delivered_at?: string | null;
 }
 
 export async function getProducts(filters?: {
