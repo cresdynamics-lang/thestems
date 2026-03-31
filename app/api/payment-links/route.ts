@@ -110,13 +110,22 @@ export async function POST(request: NextRequest) {
     let emailResult = null;
     if (sendEmail && customerEmail) {
       try {
+        // Define proper interface for items
+        interface PaymentLinkItem {
+          name: string;
+          quantity: string | number;
+          price: string | number;
+          slug?: string;
+          image?: string;
+        }
+
         // Prepare items data
-        const validItems = items
-          .filter(item => item.name.trim() && item.price)
-          .map(item => ({
+        const validItems = (items as PaymentLinkItem[])
+          .filter((item: PaymentLinkItem) => item.name.trim() && item.price)
+          .map((item: PaymentLinkItem) => ({
             name: item.name.trim(),
-            quantity: parseInt(item.quantity) || 1,
-            price: parseFloat(item.price) * 100, // Convert to cents
+            quantity: typeof item.quantity === 'string' ? parseInt(item.quantity) || 1 : item.quantity,
+            price: typeof item.price === 'string' ? parseFloat(item.price) * 100 : item.price * 100, // Convert to cents
             slug: item.slug || null, // Add slug field
             image: item.image || null, // Add image field
           }));
