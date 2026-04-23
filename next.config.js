@@ -28,6 +28,19 @@ const nextConfig = {
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: "/_next/image",
+        headers: [
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
+    ];
+  },
   // Satisfy Next.js 16: Turbopack is default when webpack is present
   turbopack: {},
   // Webpack configuration for path aliases (used when running with --webpack)

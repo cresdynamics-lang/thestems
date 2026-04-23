@@ -2,6 +2,19 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  const isHttp = forwardedProto ? forwardedProto !== "https" : request.nextUrl.protocol === "http:";
+  const isWww = host.startsWith("www.");
+
+  // Force a single canonical origin to avoid split indexing authority.
+  if (isHttp || isWww) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.protocol = "https:";
+    redirectUrl.host = host.replace(/^www\./, "");
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
   const response = NextResponse.next();
 
   // Add CORS headers for Chrome compatibility (only for API routes)

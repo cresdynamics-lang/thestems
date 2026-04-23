@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
+import { getProducts, type Product } from "@/lib/db";
+import { getPredefinedProducts } from "@/lib/predefinedProducts";
 
 export const metadata: Metadata = {
   title: "Same Day Flower Delivery Nairobi — Order by 4PM | The Stems Flowers",
@@ -7,10 +10,35 @@ export const metadata: Metadata = {
     "Same-day flower delivery anywhere in Nairobi. Order by 4PM for delivery today. Fresh roses, bouquets and gift hampers. Pay with M-Pesa. The Stems Flowers, Nairobi CBD.",
 };
 
-export default function SameDayFlowerDeliveryNairobiPage() {
+const hamperFallback: Product[] = [
+  {
+    id: "same-day-hamper-signature",
+    slug: "signature-celebration-basket",
+    title: "Signature Celebration Basket",
+    description: "Same-day gift hamper with curated items",
+    short_description: "Same-day gift hamper with curated items",
+    price: 1050000,
+    category: "hampers",
+    tags: ["same-day"],
+    images: ["/images/products/hampers/GiftAmper6.jpg"],
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
+
+export default async function SameDayFlowerDeliveryNairobiPage() {
+  const [dbFlowers, dbHampers] = await Promise.all([
+    getProducts({ category: "flowers" }),
+    getProducts({ category: "hampers" }),
+  ]);
+
+  const flowers = dbFlowers.length > 0 ? dbFlowers : getPredefinedProducts("flowers");
+  const hampers = dbHampers.length > 0 ? dbHampers : hamperFallback;
+  const featuredProducts = [...flowers.slice(0, 6), ...hampers.slice(0, 2)];
+
   return (
     <div className="py-10 md:py-16 lg:py-20 bg-brand-blush">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-brand-gray-900 mb-4">
           Same-Day Flower Delivery in Nairobi — Order by 4PM
         </h1>
@@ -52,6 +80,22 @@ export default function SameDayFlowerDeliveryNairobiPage() {
           immediately on your flowers or gift hamper. You can also pay in-store by card or cash if you prefer to walk into our
           Nairobi CBD florist and book delivery in person.
         </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 mb-10">
+          {featuredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              name={product.title}
+              price={product.price}
+              image={product.images?.[0] || "/images/products/flowers/BouquetFlowers3.jpg"}
+              slug={product.slug}
+              shortDescription={product.short_description}
+              category={product.category}
+              hideDetailsButton={product.category !== "hampers"}
+            />
+          ))}
+        </div>
 
         <div className="flex flex-wrap gap-4 items-center mb-10">
           <Link href="/collections/flowers" className="btn-primary text-sm md:text-base">

@@ -6,8 +6,8 @@ import JsonLd from "@/components/JsonLd";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Collections | The Stems - Flowers, Teddy Bears, Gift Hampers Nairobi",
-  description: "Browse our collections: premium flowers Nairobi, teddy bears Kenya, gift hampers Kenya, wines Nairobi, chocolates Kenya. Christmas gifts, holiday collections, December specials. Same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani. Fast delivery across Nairobi.",
+  title: "Flower & Gift Collections Nairobi | Same Day Delivery | The Stems",
+  description: "Browse flowers, teddy bears, gift hampers, wines and chocolates in Nairobi. Same-day delivery and WhatsApp ordering available from The Stems Flowers.",
   keywords: [
     "flower collections Nairobi",
     "teddy bear collections Kenya",

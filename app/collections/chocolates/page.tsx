@@ -6,9 +6,9 @@ import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProdu
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Chocolate Hampers & Romantic Gifts for Wife, Girlfriend | Same-Day Delivery",
+  title: "Chocolate Delivery Nairobi | Ferrero Rocher & Gift Chocolates | The Stems",
   description:
-    "Best Valentine's chocolates Nairobi: premium Ferrero Rocher (8, 16, 24 pieces), romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Order chocolates in Nairobi with same-day delivery. Ferrero Rocher gift boxes and chocolate hampers from KSh 1,500. WhatsApp +254113700549 to order.",
   keywords: [
     // Valentine's Chocolates Core Keywords
     "valentine's chocolates Nairobi",
@@ -77,15 +77,15 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/chocolates`,
   },
   openGraph: {
-    title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Chocolate Hampers & Romantic Gifts for Wife, Girlfriend",
-    description: "Best Valentine's chocolates Nairobi: premium Ferrero Rocher, romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Chocolate Delivery Nairobi | Ferrero Rocher & Gift Chocolates",
+    description: "Shop premium chocolates and gift boxes in Nairobi with same-day delivery and WhatsApp ordering.",
     url: `${baseUrl}/collections/chocolates`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Chocolates Nairobi | Premium Ferrero Rocher Hampers",
-    description: "Best Valentine's chocolates Nairobi: premium Ferrero Rocher, romantic chocolate hampers for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Chocolate Delivery Nairobi | Ferrero Rocher & Gift Chocolates",
+    description: "Order chocolates in Nairobi with same-day delivery and WhatsApp ordering.",
   },
 };
 

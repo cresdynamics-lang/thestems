@@ -21,6 +21,8 @@ export default async function sitemap() {
     { url: `${base}/white-roses-nairobi`, priority: 0.9 },
     { url: `${base}/anniversary-flowers-nairobi`, priority: 0.9 },
     { url: `${base}/birthday-flowers-nairobi`, priority: 0.9 },
+    { url: `${base}/wedding-flowers-nairobi`, priority: 0.9 },
+    { url: `${base}/corporate-gift-hampers-nairobi`, priority: 0.9 },
     { url: `${base}/apology-flowers-nairobi`, priority: 0.85 },
     { url: `${base}/same-day-flower-delivery-nairobi`, priority: 0.9 },
     { url: `${base}/get-well-soon-flowers-nairobi`, priority: 0.85 },

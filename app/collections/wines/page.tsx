@@ -6,9 +6,9 @@ import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Valentine's Wine Gifts Nairobi | Premium Wine Hampers & Romantic Celebration Wines for Wife, Husband | Same-Day Delivery",
+  title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day | The Stems",
   description:
-    "Best Valentine's wine gifts Nairobi: premium Belaire brut, Robertson Red Wine, Rosso Nobile Red Wine hampers for your wife, husband, girlfriend. Romantic celebration wines, pre-Valentine's orders, same-day delivery Nairobi CBD, Westlands, Karen, Lavington, Kilimani.",
+    "Order wine online in Nairobi with same-day delivery. Shop Robertson, Luc Belaire and Rosso Nobile wine gifts from KSh 2,000. Order via WhatsApp +254113700549.",
   keywords: [
     // Valentine's Wine Core Keywords
     "valentine's wine gifts Nairobi",
@@ -78,15 +78,15 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/wines`,
   },
   openGraph: {
-    title: "Valentine's Wine Gifts Nairobi | Premium Wine Hampers & Romantic Celebration Wines for Wife, Husband",
-    description: "Best Valentine's wine gifts Nairobi: premium Belaire brut, Robertson Red Wine, Rosso Nobile Red Wine hampers for your wife, husband, girlfriend. Romantic celebration wines, pre-Valentine's orders.",
+    title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day",
+    description: "Order wine gifts online in Nairobi with same-day delivery. Robertson, Luc Belaire and Rosso Nobile available with WhatsApp ordering.",
     url: `${baseUrl}/collections/wines`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Wine Gifts Nairobi | Premium Wine Hampers",
-    description: "Best Valentine's wine gifts Nairobi: premium Belaire brut, Robertson Red Wine, Rosso Nobile Red Wine hampers for your wife, husband, girlfriend. Romantic celebration wines, pre-Valentine's orders.",
+    title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day",
+    description: "Order wine gifts online in Nairobi. Same-day delivery and WhatsApp ordering with The Stems Flowers.",
   },
 };
 

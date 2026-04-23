@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Gift Hampers Nairobi — Luxury Hampers Delivered Same Day | The Stems Flowers",
+  title: "Gift Hampers Nairobi | Flowers, Wine & Chocolate | Same Day Delivery | The Stems",
   description:
-    "Luxury gift hampers delivered in Nairobi. Birthday hampers, anniversary hampers, care packages and celebration baskets from KSh 8,500. Pay with M-Pesa. The Stems Flowers.",
+    "Order luxury gift hampers in Nairobi with flowers, wine and chocolates. Same-day delivery across Nairobi from KSh 8,500. Order via WhatsApp +254113700549. The Stems Flowers.",
   keywords: [
     // Occasion-based Gift Hampers Keywords
     "gift hampers Nairobi",
@@ -81,15 +81,15 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/gift-hampers`,
   },
   openGraph: {
-    title: "Gift Hampers Nairobi | Anniversary Hampers, Birthday Surprises & Apology Gifts | Chocolate, Wine, Flowers",
-    description: "Luxury gift hampers Nairobi: anniversary hampers, birthday surprises, apology gifts & thoughtful combinations with flowers, chocolates, wine, teddy bears. Same-day delivery across Nairobi.",
+    title: "Gift Hampers Nairobi | Flowers, Wine & Chocolate | Same Day Delivery",
+    description: "Luxury gift hampers in Nairobi with flowers, wine, chocolates and teddy bears. Same-day delivery and WhatsApp ordering available.",
     url: `${baseUrl}/collections/gift-hampers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gift Hampers Nairobi | Anniversary Hampers, Birthday Surprises & Apology Gifts",
-    description: "Luxury gift hampers Nairobi: anniversary hampers, birthday surprises, apology gifts & thoughtful combinations with flowers, chocolates, wine, teddy bears. Same-day delivery.",
+    title: "Gift Hampers Nairobi | Flowers, Wine & Chocolate | Same Day Delivery",
+    description: "Order luxury gift hampers in Nairobi. Same-day delivery and WhatsApp ordering with The Stems Flowers.",
   },
 };
 

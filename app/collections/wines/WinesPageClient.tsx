@@ -58,10 +58,13 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="font-heading font-bold text-4xl md:text-5xl text-brand-gray-900 mb-4">
-            Wine Collections
+            Wine Delivery Nairobi - Premium Wine Gifts & Same-Day Delivery
           </h1>
-          <p className="text-brand-gray-600 text-lg">
-            Premium wines for every occasion
+          <p className="text-brand-gray-600 text-base md:text-lg">
+            The Stems Flowers offers premium wine delivery in Nairobi with same-day service for gifts, celebrations and surprise moments. Shop Robertson,
+            Luc Belaire and Rosso Nobile wines from our Nairobi CBD store at Delta Hotel, University Way. Combine wines with flowers, chocolates or teddy
+            bears for curated gift hampers and pay securely with M-Pesa. We deliver across Westlands, Kilimani, Karen, Lavington, Parklands and surrounding
+            Nairobi neighbourhoods. For quick ordering and last-minute gifts, contact us on WhatsApp and our team will help you choose the right wine gift.
           </p>
           <p className="text-brand-gray-500 text-sm mt-2">
             Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}

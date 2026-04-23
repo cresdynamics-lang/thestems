@@ -5,9 +5,9 @@ import { getProducts } from "@/lib/db";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Teddy Bears Nairobi — Same-Day Delivery from KSh 3,500 | The Stems Flowers",
+  title: "Teddy Bears Nairobi | Same Day Delivery from KSh 3,500 | The Stems",
   description:
-    "Teddy bears delivered across Nairobi same day. Giant teddy bears, soft toys, and teddy bear + flower combos from KSh 3,500. Order with M-Pesa. The Stems Flowers, Nairobi CBD.",
+    "Order teddy bears in Nairobi with same-day delivery from KSh 3,500. Giant teddy bears and teddy plus flower combos. WhatsApp +254113700549 to order.",
   keywords: [
     // Valentine's Teddy Bears Core Keywords
     "valentine's teddy bears Nairobi",
@@ -83,15 +83,15 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/teddy-bears`,
   },
   openGraph: {
-    title: "Valentine's Teddy Bears Nairobi | Cuddly Romantic Teddy Bears for Wife, Girlfriend, Mom | Sizes 25cm-200cm",
-    description: "Best Valentine's teddy bears Nairobi: cuddly romantic teddy bears (25cm-200cm) in red, white, brown, pink, blue for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Teddy Bears Nairobi | Cuddly Gift Teddy Bears | Same Day Delivery",
+    description: "Shop teddy bears in Nairobi with same-day delivery. Sizes from 25cm to 200cm in multiple colors, plus teddy and flower gift combos.",
     url: `${baseUrl}/collections/teddy-bears`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Teddy Bears Nairobi | Cuddly Romantic Teddy Bears",
-    description: "Best Valentine's teddy bears Nairobi: cuddly romantic teddy bears (25cm-200cm) for your wife, girlfriend, mom. Pre-Valentine's orders, same-day delivery across Nairobi.",
+    title: "Teddy Bears Nairobi | Cuddly Gift Teddy Bears | Same Day Delivery",
+    description: "Order teddy bears in Nairobi with same-day delivery and easy WhatsApp ordering.",
   },
 };
 
