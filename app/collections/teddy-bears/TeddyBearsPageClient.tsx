@@ -196,6 +196,16 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
               }
             </span>
           </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
+          </div>
         </div>
 
         {/* Size Filter Bar */}

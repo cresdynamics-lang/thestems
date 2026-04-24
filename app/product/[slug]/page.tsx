@@ -108,8 +108,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
       price: product.price / 100,
       priceCurrency: "KES",
       availability: "https://schema.org/InStock",
+      url: productUrl,
       areaServed: { "@type": "City", name: "Nairobi" },
-      availableDeliveryMethod: "https://schema.org/DeliveryModeDirectDownload",
+      availableDeliveryMethod: "https://schema.org/DeliveryModeOnSitePickup",
       seller: {
         "@type": "LocalBusiness",
         name: "The Stems Flowers",

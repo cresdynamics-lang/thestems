@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+
+# Block Next.js image optimizer endpoints from indexing/crawling
+Disallow: /_next/image
+Disallow: /_next/image?
 Disallow: /_next/image*
 Disallow: /_next/static/
 Disallow: /api/

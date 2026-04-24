@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import WinesPageClient from "./WinesPageClient";
-import { getProducts } from "@/lib/db";
+import { getProducts, type Product } from "@/lib/db";
 import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day | The Stems",
+  title: "Wine Gifts Nairobi from KSh 2,000 | Same-Day Delivery | The Stems",
   description:
-    "Order wine online in Nairobi with same-day delivery. Shop Robertson, Luc Belaire and Rosso Nobile wine gifts from KSh 2,000. Order via WhatsApp +254113700549.",
+    "Shop premium wine gifts in Nairobi from KSh 2,000. Robertson, Luc Belaire and Rosso Nobile bottles with same-day delivery in CBD and fast citywide delivery from The Stems.",
   keywords: [
     // Valentine's Wine Core Keywords
     "valentine's wine gifts Nairobi",
@@ -78,20 +78,58 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/wines`,
   },
   openGraph: {
-    title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day",
-    description: "Order wine gifts online in Nairobi with same-day delivery. Robertson, Luc Belaire and Rosso Nobile available with WhatsApp ordering.",
+    title: "Wine Gifts Nairobi from KSh 2,000 | Same-Day Delivery",
+    description: "Buy premium wines in Nairobi with same-day delivery. Robertson, Luc Belaire and Rosso Nobile available from The Stems.",
     url: `${baseUrl}/collections/wines`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wine Delivery Nairobi | Robertson, Belaire & More | Same Day",
-    description: "Order wine gifts online in Nairobi. Same-day delivery and WhatsApp ordering with The Stems Flowers.",
+    title: "Wine Gifts Nairobi from KSh 2,000 | The Stems",
+    description: "Order wine gifts online in Nairobi with same-day delivery. Premium bottles for celebrations and gifting.",
   },
 };
 
 // Extract just the image URLs for backward compatibility
 const WINE_IMAGES = WINE_PRODUCTS.map(p => p.image);
+
+function toAbsoluteImageUrl(imagePath?: string) {
+  if (!imagePath) return `${baseUrl}/images/products/wines/Wines1.jpg`;
+  return imagePath.startsWith("http") ? imagePath : `${baseUrl}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
+}
+
+function buildWinesItemListJsonLd(products: Product[]) {
+  const normalized = products
+    .filter((product) => product.slug && product.title && typeof product.price === "number")
+    .slice(0, 12);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Wine Gifts in Nairobi",
+    description: "Premium wine gifts and celebration bottles in Nairobi.",
+    url: `${baseUrl}/collections/wines`,
+    itemListElement: normalized.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: product.title,
+        description: product.short_description || product.description,
+        image: toAbsoluteImageUrl(product.images?.[0]),
+        url: `${baseUrl}/product/${product.slug}`,
+        brand: { "@type": "Brand", name: "The Stems Flowers" },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "KES",
+          price: (product.price / 100).toFixed(0),
+          availability: "https://schema.org/InStock",
+          url: `${baseUrl}/product/${product.slug}`,
+        },
+      },
+    })),
+  };
+}
 
 export default async function WinesPage() {
   try {
@@ -100,10 +138,28 @@ export default async function WinesPage() {
     const dbSlugs = new Set(dbProducts.map(p => p.slug));
     const uniquePredefined = predefinedProducts.filter(p => !dbSlugs.has(p.slug));
     const allProducts = [...dbProducts, ...uniquePredefined];
-    return <WinesPageClient products={allProducts} allWineImages={WINE_IMAGES} wineProducts={WINE_PRODUCTS} />;
+    const itemListJsonLd = buildWinesItemListJsonLd(allProducts);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+        <WinesPageClient products={allProducts} allWineImages={WINE_IMAGES} wineProducts={WINE_PRODUCTS} />
+      </>
+    );
   } catch (error) {
     const predefinedProducts = getPredefinedProducts("wines");
-    return <WinesPageClient products={predefinedProducts} allWineImages={WINE_IMAGES} wineProducts={WINE_PRODUCTS} />;
+    const itemListJsonLd = buildWinesItemListJsonLd(predefinedProducts);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+        <WinesPageClient products={predefinedProducts} allWineImages={WINE_IMAGES} wineProducts={WINE_PRODUCTS} />
+      </>
+    );
   }
 }
 

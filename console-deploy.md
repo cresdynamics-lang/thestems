@@ -249,23 +249,65 @@ echo "✅ Verification complete"
 
 ---
 
-## Step 12: Verify Nginx Configuration
+## Step 12: Enforce Canonical Domain Redirects (Critical SEO)
 
 ```bash
-# Check Nginx config
-sudo grep proxy_pass /etc/nginx/sites-available/floralwhispersgifts.co.ke
+# Create canonical Nginx config:
+# - All HTTP -> HTTPS
+# - All www -> non-www
+# - Final canonical origin: https://thestemsflowers.co.ke
+sudo tee /etc/nginx/sites-available/thestemsflowers.co.ke > /dev/null << 'NGINXEOF'
+server {
+    listen 80;
+    listen [::]:80;
+    server_name thestemsflowers.co.ke www.thestemsflowers.co.ke;
+    return 301 https://thestemsflowers.co.ke$request_uri;
+}
 
-# Should show: proxy_pass http://localhost:3001;
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.thestemsflowers.co.ke;
+    return 301 https://thestemsflowers.co.ke$request_uri;
+}
 
-# If it shows port 3000, update it:
-sudo nano /etc/nginx/sites-available/floralwhispersgifts.co.ke
-# Change: proxy_pass http://localhost:3000;
-# To:     proxy_pass http://localhost:3001;
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name thestemsflowers.co.ke;
+
+    # SSL cert paths are usually added/managed by certbot.
+    ssl_certificate /etc/letsencrypt/live/thestemsflowers.co.ke/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/thestemsflowers.co.ke/privkey.pem;
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+NGINXEOF
+
+sudo ln -sf /etc/nginx/sites-available/thestemsflowers.co.ke /etc/nginx/sites-enabled/thestemsflowers.co.ke
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Optional: issue/refresh cert for both hostnames
+sudo certbot --nginx -d thestemsflowers.co.ke -d www.thestemsflowers.co.ke
 
 # Test and restart Nginx
 sudo nginx -t
 sudo systemctl restart nginx
 sudo systemctl status nginx
+
+# Validate redirects (must all return Location: https://thestemsflowers.co.ke/)
+curl -I http://thestemsflowers.co.ke/
+curl -I http://www.thestemsflowers.co.ke/
+curl -I https://www.thestemsflowers.co.ke/
 ```
 
 ---

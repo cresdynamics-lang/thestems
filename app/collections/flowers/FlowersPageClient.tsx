@@ -119,13 +119,12 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Flowers in Nairobi — Bouquets, Roses & Same-Day Delivery
+            Flower Delivery Nairobi - Fresh Roses & Bouquets
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base">
-            The Stems Flowers delivers fresh flower bouquets across Nairobi — same day. Our collection includes red roses, pink
-            roses, white roses, mixed bouquets and anniversary arrangements. Based at Delta Hotel, University Way, Nairobi CBD,
-            we deliver to Westlands, Karen, Kilimani, Lavington, South B, Parklands and all Nairobi areas. Order online, pay
-            securely with M-Pesa and we&apos;ll handle the rest.
+            Buy fresh flowers in Nairobi from The Stems Flowers, including red roses, pink roses, white roses and mixed
+            bouquets for birthdays, anniversaries and romantic surprises. We offer same-day delivery in Nairobi CBD and fast
+            delivery to Westlands, Karen, Kilimani, Lavington, South B, Parklands and nearby areas.
           </p>
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>
@@ -134,6 +133,16 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
                 : `Showing ${filteredProducts.length} ${filteredProducts.length === 1 ? 'product' : 'products'}`
               }
             </span>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
           </div>
         </div>
 

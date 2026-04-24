@@ -74,6 +74,16 @@ export default function CollectionsPage() {
             Explore our Nairobi collections of fresh flowers, teddy bears, gift hampers, wines and chocolates — all available
             for same-day delivery with M-Pesa payment from The Stems Flowers at Delta Hotel, University Way, Nairobi CBD.
           </p>
+          <div className="mt-4 flex justify-center">
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">

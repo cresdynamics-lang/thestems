@@ -156,6 +156,34 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
           />
 
+          <div className="mt-10 rounded-xl border border-brand-gray-200 bg-white p-5 md:p-6">
+            <h2 className="font-heading font-semibold text-xl md:text-2xl text-brand-gray-900 mb-2">
+              Ready to send flowers or a gift today?
+            </h2>
+            <p className="text-brand-gray-700 text-sm md:text-base mb-4">
+              Order quickly on WhatsApp or browse our most searched collections.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://wa.me/254113700549"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+              >
+                Order on WhatsApp
+              </a>
+              <Link href="/collections/flowers" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
+                Shop Flowers
+              </Link>
+              <Link href="/collections/gift-hampers" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
+                Shop Gift Hampers
+              </Link>
+              <Link href="/collections/wines" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
+                Shop Wines
+              </Link>
+            </div>
+          </div>
+
           {/* Tags */}
           {post.tags.length > 0 && (
             <div className="mt-12 pt-8 border-t border-brand-gray-200">

@@ -114,6 +114,23 @@ export default async function BlogPage() {
 
         {/* Blog Posts List */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="mb-8 rounded-xl border border-brand-gray-200 bg-white p-5 md:p-6">
+            <h2 className="font-heading font-semibold text-xl md:text-2xl text-brand-gray-900 mb-2">
+              Need to order now?
+            </h2>
+            <p className="text-brand-gray-700 text-sm md:text-base mb-4">
+              Talk to The Stems team on WhatsApp for quick recommendations and same-day flower and gift delivery in Nairobi.
+            </p>
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
+          </div>
+
           <div className="space-y-8 md:space-y-12">
             {allPosts.map((post) => (
               <article key={post.slug} className="border-b border-brand-gray-200 pb-8 md:pb-12 last:border-b-0">

@@ -38,6 +38,16 @@ export default function CardsPageClient() {
           <p className="text-brand-gray-600 text-lg max-w-2xl mx-auto">
             Perfect gift cards for any occasion. Let them choose their favorite flowers, teddy bears, and gifts from our collection.
           </p>
+          <div className="mt-4 flex justify-center">
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
+          </div>
         </div>
 
         {loading ? (

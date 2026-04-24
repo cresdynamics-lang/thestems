@@ -57,17 +57,26 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-2">
-            Gift Hampers in Nairobi — Luxury Same-Day Delivery
+            Gift Hampers Nairobi - Luxury Baskets Delivered Same Day
           </h1>
           <p className="text-brand-gray-600 text-sm md:text-base">
-            The Stems Flowers creates luxury gift hampers delivered across Nairobi same day. From the Care Package Gift Hamper
-            (around KSh 8,500) to the GentlePaw Hamper (around KSh 20,500) — each hamper is curated and delivered beautifully.
-            Order with M-Pesa from our Nairobi CBD shop at Delta Hotel, University Way and we deliver across all Nairobi
-            neighbourhoods.
+            Send premium gift hampers in Nairobi with flowers, wine, chocolates and teddy bears. Prices start from around KSh
+            8,500, with same-day delivery in Nairobi CBD and fast delivery across the city. Every hamper is hand-curated by The
+            Stems Flowers for birthdays, anniversaries, apologies and corporate gifting.
           </p>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}
           </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <a
+              href="https://wa.me/254113700549"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
+            >
+              Order on WhatsApp
+            </a>
+          </div>
         </div>
 
         {allDisplayItems.length === 0 ? (

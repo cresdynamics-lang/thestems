@@ -8,6 +8,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import { SHOP_INFO } from "@/lib/constants";
 
+const CANONICAL_BASE_URL = "https://thestemsflowers.co.ke";
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -90,14 +92,14 @@ export const metadata: Metadata = {
   authors: [{ name: "The Stems" }],
   creator: "The Stems",
   publisher: "The Stems",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke"),
+  metadataBase: new URL(CANONICAL_BASE_URL),
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke",
+    canonical: CANONICAL_BASE_URL,
   },
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke",
+    url: CANONICAL_BASE_URL,
     siteName: "The Stems Flowers Nairobi",
     title:
       "Florist Nairobi CBD | Flowers, Teddy Bears & Gift Hampers | The Stems Flowers",
@@ -136,7 +138,7 @@ export const metadata: Metadata = {
   },
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+const baseUrl = CANONICAL_BASE_URL;
 
 const organizationJsonLd = {
   "@context": "https://schema.org",

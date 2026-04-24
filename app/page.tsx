@@ -14,7 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.
 export const metadata: Metadata = {
   title: "Florist Nairobi CBD | Red Roses, Gift Hampers & Same-Day Delivery | The Stems Flowers",
   description:
-    "The Stems Flowers — Nairobi CBD's florist at Delta Hotel, University Way. Fresh red roses, pink roses, gift hampers and teddy bears with same-day delivery across Nairobi. Pay with M-Pesa. Order now.",
+    "Fresh flowers, gift hampers, wines and teddy bears delivered across Nairobi same day. Visit The Stems at Delta Hotel, University Way or order online with M-Pesa for fast delivery.",
   keywords: [
     // Occasion-based Core Keywords
     "anniversary flowers Nairobi",

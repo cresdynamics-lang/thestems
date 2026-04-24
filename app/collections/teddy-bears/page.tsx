@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
-import { getProducts } from "@/lib/db";
+import { getProducts, type Product } from "@/lib/db";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
@@ -165,13 +165,84 @@ const TEDDY_PRODUCTS = [
 // Extract just the image URLs for backward compatibility
 const TEDDY_IMAGES = TEDDY_PRODUCTS.map(p => p.image);
 
+function toAbsoluteImageUrl(imagePath?: string) {
+  if (!imagePath) return `${baseUrl}/images/products/teddies/Teddybear1.jpg`;
+  return imagePath.startsWith("http") ? imagePath : `${baseUrl}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
+}
+
+function buildTeddyItemListJsonLd(products: Product[]) {
+  const normalized = products
+    .filter((product) => product.slug && product.title && typeof product.price === "number")
+    .slice(0, 12);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Teddy Bears in Nairobi",
+    description: "Gift teddy bears in different sizes with same-day delivery in Nairobi.",
+    url: `${baseUrl}/collections/teddy-bears`,
+    itemListElement: normalized.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: product.title,
+        description: product.short_description || product.description,
+        image: toAbsoluteImageUrl(product.images?.[0]),
+        url: `${baseUrl}/product/${product.slug}`,
+        brand: { "@type": "Brand", name: "The Stems Flowers" },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "KES",
+          price: (product.price / 100).toFixed(0),
+          availability: "https://schema.org/InStock",
+          url: `${baseUrl}/product/${product.slug}`,
+        },
+      },
+    })),
+  };
+}
+
 export default async function TeddyBearsPage() {
   try {
     const products = await getProducts({ category: "teddy" });
     const safeProducts = Array.isArray(products) ? products : [];
-    return <TeddyBearsPageClient products={safeProducts} allTeddyImages={TEDDY_IMAGES} teddyProducts={TEDDY_PRODUCTS} />;
+    const itemListJsonLd = buildTeddyItemListJsonLd(safeProducts);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+        <TeddyBearsPageClient products={safeProducts} allTeddyImages={TEDDY_IMAGES} teddyProducts={TEDDY_PRODUCTS} />
+      </>
+    );
   } catch (error) {
-    return <TeddyBearsPageClient products={[]} allTeddyImages={TEDDY_IMAGES} teddyProducts={TEDDY_PRODUCTS} />;
+    const fallbackProducts = TEDDY_PRODUCTS.map((teddy) => ({
+      id: `fallback-${teddy.slug}`,
+      slug: teddy.slug,
+      title: teddy.title,
+      description: teddy.description,
+      short_description: teddy.description,
+      price: teddy.price,
+      category: "teddy" as const,
+      tags: [],
+      images: [teddy.image],
+      teddy_size: teddy.size,
+      teddy_color: teddy.color,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }));
+    const itemListJsonLd = buildTeddyItemListJsonLd(fallbackProducts);
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+        <TeddyBearsPageClient products={[]} allTeddyImages={TEDDY_IMAGES} teddyProducts={TEDDY_PRODUCTS} />
+      </>
+    );
   }
 }
 

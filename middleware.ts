@@ -2,16 +2,20 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const host = request.headers.get("host") || "";
+  const hostHeader = request.headers.get("host") || "";
+  const host = hostHeader.split(":")[0].toLowerCase();
   const forwardedProto = request.headers.get("x-forwarded-proto");
   const isHttp = forwardedProto ? forwardedProto !== "https" : request.nextUrl.protocol === "http:";
-  const isWww = host.startsWith("www.");
+  const canonicalHost = "thestemsflowers.co.ke";
+  const isCanonicalHost = host === canonicalHost;
+  const isWwwHost = host === `www.${canonicalHost}`;
+  const isCanonicalVariant = isCanonicalHost || isWwwHost;
 
-  // Force a single canonical origin to avoid split indexing authority.
-  if (isHttp || isWww) {
+  // Force one canonical origin for SEO signal consolidation.
+  if (isCanonicalVariant && (!isCanonicalHost || isHttp)) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.protocol = "https:";
-    redirectUrl.host = host.replace(/^www\./, "");
+    redirectUrl.host = canonicalHost;
     return NextResponse.redirect(redirectUrl, 301);
   }
 

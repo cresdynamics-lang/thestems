@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase";
 
 export default async function sitemap() {
-  const base = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+  const base = "https://thestemsflowers.co.ke";
 
   const [{ data: products }, { data: posts }] = await Promise.all([
     (supabaseAdmin.from("products") as any).select("slug, updated_at"),
@@ -27,6 +27,8 @@ export default async function sitemap() {
     { url: `${base}/same-day-flower-delivery-nairobi`, priority: 0.9 },
     { url: `${base}/get-well-soon-flowers-nairobi`, priority: 0.85 },
     { url: `${base}/wedding-car-decor-nairobi`, priority: 0.85 },
+    { url: `${base}/flower-wine-hamper-nairobi`, priority: 0.9 },
+    { url: `${base}/send-gifts-to-kenya`, priority: 0.85 },
     { url: `${base}/contact`, priority: 0.7 },
   ];
 
