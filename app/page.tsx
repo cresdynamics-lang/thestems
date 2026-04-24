@@ -1330,56 +1330,61 @@ export default async function HomePage() {
               <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-brand-gray-900 mb-6 md:mb-8">
                 Frequently Asked Questions — The Stems Flowers Nairobi
               </h2>
-              <div className="space-y-6 md:space-y-8">
-                <div>
-                  <h3 className="font-heading font-semibold text-lg md:text-xl text-brand-gray-900 mb-2">
-                    Where is The Stems Flowers located?
-                  </h3>
-                  <p className="text-brand-gray-700 text-sm md:text-base">
+              <div className="divide-y divide-brand-gray-200">
+                <details className="group py-4">
+                  <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                    <span>Where is The Stems Flowers located?</span>
+                    <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     We are at Delta Hotel, University Way, Nairobi CBD — open Monday to Saturday, 8AM to 8PM. From our central
                     Nairobi location we deliver fresh flowers, gift hampers and teddy bears across all Nairobi areas.
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg md:text-xl text-brand-gray-900 mb-2">
-                    Do you offer same-day flower delivery in Nairobi?
-                  </h3>
-                  <p className="text-brand-gray-700 text-sm md:text-base">
+                </details>
+                <details className="group py-4">
+                  <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                    <span>Do you offer same-day flower delivery in Nairobi?</span>
+                    <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     Yes — The Stems Flowers delivers fresh flowers, roses and gift hampers across Nairobi the same day. Order by
                     4PM for same-day delivery to Westlands, Karen, Kilimani, Lavington, South B, Runda and all Nairobi
                     neighbourhoods.
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg md:text-xl text-brand-gray-900 mb-2">
-                    How do I pay for flowers at The Stems?
-                  </h3>
-                  <p className="text-brand-gray-700 text-sm md:text-base">
+                </details>
+                <details className="group py-4">
+                  <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                    <span>How do I pay for flowers at The Stems?</span>
+                    <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     You can pay with M-Pesa (Till 4202044, Paybill 880100), card payments or cash in-store at Delta Hotel,
                     University Way, Nairobi CBD. M-Pesa is available at checkout for fast, secure payment and instant
                     confirmation.
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg md:text-xl text-brand-gray-900 mb-2">
-                    What types of roses do you sell in Nairobi?
-                  </h3>
-                  <p className="text-brand-gray-700 text-sm md:text-base">
+                </details>
+                <details className="group py-4">
+                  <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                    <span>What types of roses do you sell in Nairobi?</span>
+                    <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     We stock red roses, pink roses, white roses, yellow roses and mixed rose bouquets — from single rose
                     surprises to large 80-stem anniversary bouquets. All our roses are sourced fresh in Nairobi and delivered
                     the same day across the city.
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg md:text-xl text-brand-gray-900 mb-2">
-                    Can I send apology or I&apos;m sorry flowers in Nairobi?
-                  </h3>
-                  <p className="text-brand-gray-700 text-sm md:text-base">
+                </details>
+                <details className="group py-4">
+                  <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                    <span>Can I send apology or I&apos;m sorry flowers in Nairobi?</span>
+                    <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     Yes — The Stems has a dedicated I&apos;m Sorry flower collection. Red roses and mixed bouquets are delivered
                     with your personal message, same day anywhere in Nairobi, to help you say &quot;I&apos;m sorry&quot; in the
                     most thoughtful way.
                   </p>
-                </div>
+                </details>
               </div>
             </div>
           </div>

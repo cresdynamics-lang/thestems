@@ -109,6 +109,34 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
     return productsBySubcategory[selectedSubcategory] || [];
   }, [productsBySubcategory, selectedSubcategory, allDisplayItems]);
 
+  const flowersFaqs = [
+    {
+      question: "Where is The Stems Flowers located?",
+      answer:
+        "We are at Delta Hotel, University Way, Nairobi CBD — open Monday to Saturday, 8AM to 8PM. From our central Nairobi location we deliver fresh flowers, gift hampers and teddy bears across all Nairobi areas.",
+    },
+    {
+      question: "Do you offer same-day flower delivery in Nairobi?",
+      answer:
+        "Yes — The Stems Flowers delivers fresh flowers, roses and gift hampers across Nairobi the same day. Order by 4PM for same-day delivery to Westlands, Karen, Kilimani, Lavington, South B, Runda and all Nairobi neighbourhoods.",
+    },
+    {
+      question: "How do I pay for flowers at The Stems?",
+      answer:
+        "You can pay with M-Pesa (Till 4202044, Paybill 880100), card payments or cash in-store at Delta Hotel, University Way, Nairobi CBD. M-Pesa is available at checkout for fast, secure payment and instant confirmation.",
+    },
+    {
+      question: "What types of roses do you sell in Nairobi?",
+      answer:
+        "We stock red roses, pink roses, white roses, yellow roses and mixed rose bouquets — from single rose surprises to large 80-stem anniversary bouquets. All our roses are sourced fresh in Nairobi and delivered the same day across the city.",
+    },
+    {
+      question: "Can I send apology or I'm sorry flowers in Nairobi?",
+      answer:
+        "Yes — The Stems has a dedicated I'm Sorry flower collection. Red roses and mixed bouquets are delivered with your personal message, same day anywhere in Nairobi, to help you say \"I'm sorry\" in the most thoughtful way.",
+    },
+  ];
+
   // Track collection view
   useEffect(() => {
     Analytics.trackCollectionView("flowers", allDisplayItems.length);
@@ -214,6 +242,23 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
             })}
           </div>
         )}
+
+        <section className="mt-10 md:mt-14 rounded-xl border border-brand-gray-200 bg-white p-5 md:p-6">
+          <h2 className="font-heading font-bold text-xl md:text-2xl text-brand-gray-900 mb-4">
+            Flowers Nairobi - Frequently Asked Questions
+          </h2>
+          <div className="divide-y divide-brand-gray-200">
+            {flowersFaqs.map((faq) => (
+              <details key={faq.question} className="group py-4">
+                <summary className="cursor-pointer list-none font-heading font-semibold text-brand-gray-900 flex items-start justify-between gap-3">
+                  <span>{faq.question}</span>
+                  <span className="text-brand-green text-lg leading-none group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="mt-3 text-sm md:text-base text-brand-gray-700">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
