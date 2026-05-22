@@ -1,4 +1,11 @@
 import { supabase, supabaseAdmin } from "./supabase";
+import { normalizeProduct } from "./productDisplay";
+import {
+  formatSupabaseError,
+  isSupabaseConfigured,
+  isSupabaseServiceRoleConfigured,
+  warnIfSupabaseNotConfigured,
+} from "./supabaseConfig";
 
 export interface Product {
   id: string;
@@ -62,6 +69,11 @@ export async function getProducts(filters?: {
   teddy_size?: number[];
   teddy_color?: string[];
 }): Promise<Product[]> {
+  if (!isSupabaseConfigured()) {
+    warnIfSupabaseNotConfigured("getProducts");
+    return [];
+  }
+
   try {
     let query = supabase.from("products").select("*").order("created_at", { ascending: false });
 
@@ -88,25 +100,32 @@ export async function getProducts(filters?: {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching products:", formatSupabaseError(error));
       return [];
     }
 
-    return (data || []).map((row: any) => ({
-      ...row,
-      tags: row.tags || [],
-      images: row.images || [],
-      included_items: row.included_items || null,
-      upsells: row.upsells || null,
-      subcategory: row.subcategory || null,
-    })) as Product[];
+    return (data || []).map((row: any) =>
+      normalizeProduct({
+        ...row,
+        tags: row.tags || [],
+        images: row.images || [],
+        included_items: row.included_items || null,
+        upsells: row.upsells || null,
+        subcategory: row.subcategory || null,
+      } as Product)
+    );
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("Error fetching products:", formatSupabaseError(error));
     return [];
   }
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
+  if (!isSupabaseConfigured()) {
+    warnIfSupabaseNotConfigured("getProductBySlug");
+    return null;
+  }
+
   try {
     const { data, error } = await supabase
       .from("products")
@@ -115,52 +134,69 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       .single();
 
     if (error) {
-      console.error("Error fetching product:", error);
+      console.error("Error fetching product:", formatSupabaseError(error));
       return null;
     }
 
     if (!data) return null;
 
-    return {
+    return normalizeProduct({
       ...(data as any),
       tags: (data as any).tags || [],
       images: (data as any).images || [],
       included_items: (data as any).included_items || null,
       upsells: (data as any).upsells || null,
       subcategory: (data as any).subcategory || null,
-    } as Product;
+    } as Product);
   } catch (error) {
-    console.error("Error fetching product:", error);
+    console.error("Error fetching product:", formatSupabaseError(error));
     return null;
   }
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
+  if (!isSupabaseConfigured()) {
+    warnIfSupabaseNotConfigured("getProductById");
+    return null;
+  }
+
   try {
     const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
 
     if (error) {
-      console.error("Error fetching product:", error);
+      console.error("Error fetching product:", formatSupabaseError(error));
       return null;
     }
 
     if (!data) return null;
 
-    return {
+    return normalizeProduct({
       ...(data as any),
       tags: (data as any).tags || [],
       images: (data as any).images || [],
       included_items: (data as any).included_items || null,
       upsells: (data as any).upsells || null,
       subcategory: (data as any).subcategory || null,
-    } as Product;
+    } as Product);
   } catch (error) {
-    console.error("Error fetching product:", error);
+    console.error("Error fetching product:", formatSupabaseError(error));
     return null;
   }
 }
 
 export async function createOrder(order: Omit<Order, "id" | "created_at" | "updated_at">): Promise<Order | null> {
+  if (!isSupabaseConfigured()) {
+    throw new Error(
+      "Database is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local and restart the dev server."
+    );
+  }
+
+  if (!isSupabaseServiceRoleConfigured()) {
+    throw new Error(
+      "Cannot save orders: SUPABASE_SERVICE_ROLE_KEY is missing from .env.local. Copy it from Supabase → Project Settings → API → service_role key."
+    );
+  }
+
   try {
     const insertData: any = {
       items: order.items,
@@ -185,20 +221,22 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
       .select()
       .single();
 
-    if (data) {
-      // Add total alias for backward compatibility
-      (data as any).total = data.total_amount;
-    }
-
     if (error) {
-      console.error("Error creating order:", error);
-      return null;
+      const message = formatSupabaseError(error);
+      console.error("Error creating order:", message);
+      throw new Error(message);
     }
 
+    if (!data) {
+      throw new Error("Order was not created — no data returned from database.");
+    }
+
+    (data as any).total = data.total_amount;
     return data as Order;
   } catch (error) {
-    console.error("Error creating order:", error);
-    return null;
+    if (error instanceof Error) throw error;
+    console.error("Error creating order:", formatSupabaseError(error));
+    throw new Error(formatSupabaseError(error));
   }
 }
 

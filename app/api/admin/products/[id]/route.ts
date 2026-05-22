@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProductById } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const dynamic = 'force-dynamic';
 
@@ -82,6 +82,7 @@ export async function PUT(
       // If slug changed, revalidate old slug too
       revalidatePath(`/product/${oldProduct.slug}`);
     }
+    revalidateTag("products");
 
     return NextResponse.json(data);
   } catch (error: any) {
@@ -123,6 +124,7 @@ export async function DELETE(
       revalidatePath("/collections/chocolates");
       revalidatePath(`/product/${product.slug}`);
     }
+    revalidateTag("products");
 
     return NextResponse.json({ message: "Product deleted" });
   } catch (error: any) {

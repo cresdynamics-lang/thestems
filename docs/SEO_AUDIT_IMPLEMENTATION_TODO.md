@@ -50,7 +50,7 @@ This plan captures the full audit recommendations and tracks implementation stat
 - [x] `/same-day-flower-delivery-nairobi`
 - [x] `/wedding-flowers-nairobi` (or align existing wedding page slug strategy)
 - [x] `/corporate-gift-hampers-nairobi`
-- [ ] Add local-area landing pages (`westlands`, `kilimani`, `karen`, `cbd`) if not already present.
+- [x] Add local-area landing pages (`westlands`, `kilimani`, `karen`, `cbd`) if not already present.
 
 ## Phase 7 - Content and Blog Program (Month 1-3)
 - [ ] Publish "Gift Hampers Nairobi - Flowers, Wine & Chocolate Delivered Same Day".

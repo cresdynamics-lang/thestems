@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/db";
+import { whatsappUrl } from "@/lib/contact";
 
 export default function CardsPageClient() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,7 +41,7 @@ export default function CardsPageClient() {
           </p>
           <div className="mt-4 flex justify-center">
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to order greeting cards in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"

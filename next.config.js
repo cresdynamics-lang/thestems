@@ -17,42 +17,57 @@ const nextConfig = {
         hostname: 'localhost',
       },
     ],
-    deviceSizes: [640, 750, 828, 1080, 1200], // Reduced max size for faster loading
-    imageSizes: [16, 32, 48, 64, 96, 128, 256], // Reduced sizes
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year cache
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 60 * 60 * 24 * 365,
     dangerouslyAllowSVG: false,
     unoptimized: false,
-    loader: 'default',
-    formats: ['image/webp', 'image/avif'], // Prefer modern formats for better compression
+    formats: ['image/webp', 'image/avif'],
   },
-  // Performance optimizations
   compress: true,
   poweredByHeader: false,
   async headers() {
+    const securityHeaders = [
+      { key: 'X-DNS-Prefetch-Control', value: 'on' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+    ];
+
     return [
       {
-        source: "/_next/image",
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+      {
+        source: '/_next/image',
         headers: [
-          {
-            key: "X-Robots-Tag",
-            value: "noindex, nofollow",
-          },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
     ];
   },
-  // Satisfy Next.js 16: Turbopack is default when webpack is present
   turbopack: {},
-  // Webpack configuration for path aliases (used when running with --webpack)
   webpack: (config) => {
-    // Ensure @/ alias resolves correctly
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname),
     };
     return config;
   },
-}
+};
 
-module.exports = nextConfig
-
+module.exports = nextConfig;

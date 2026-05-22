@@ -1,15 +1,22 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HeroCarousel, { HeroSlideConfig } from "@/components/HeroCarousel";
 import ProductCard from "@/components/ProductCard";
-import { getProducts } from "@/lib/db";
+import type { Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import { getBlogPosts } from "@/lib/blogData";
 import { format } from "date-fns";
+import { getCachedAllProducts, getCachedHeroSlides } from "@/lib/cache";
+import { SITE_URL, stableSortByKey } from "@/lib/seo";
+import { pickUniqueProducts } from "@/lib/productDisplay";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+const baseUrl = SITE_URL;
+
+/** ISR: cache rendered homepage for 60s (matches collection pages). */
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Florist Nairobi CBD | Red Roses, Gift Hampers & Same-Day Delivery | The Stems Flowers",
@@ -652,28 +659,26 @@ Whether you're celebrating a university graduation, high school completion, or a
   );
 }
 
+function BlogSectionSkeleton() {
+  return (
+    <section className="py-12 md:py-16 bg-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="h-8 w-48 bg-brand-gray-200 rounded animate-pulse mb-8" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-64 bg-brand-gray-100 rounded-lg animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function HomePage() {
-  // Fetch hero slides from Supabase (fallback to hard-coded slides if empty)
-  const heroSlides: HeroSlideConfig[] = await (async () => {
-    try {
-      const res = await fetch(`${baseUrl}/api/hero`, {
-        next: { revalidate: 60 },
-      });
-      if (!res.ok) return [];
-      const data = (await res.json()) as any[];
-      if (!data.length) return [];
-      return data.map((s) => ({
-        id: s.id,
-        image: s.image_url,
-        title: s.title,
-        subtitle: s.subtitle,
-        ctaText: s.cta_text,
-        ctaLink: s.cta_link,
-      }));
-    } catch {
-      return [];
-    }
-  })();
+  const [heroSlides, allProducts] = await Promise.all([
+    getCachedHeroSlides(),
+    getCachedAllProducts(),
+  ]);
 
   const fallbackSlides: HeroSlideConfig[] = [
     {
@@ -705,12 +710,9 @@ export default async function HomePage() {
     },
   ];
 
-  // Fetch all products
-  const [dbFlowers, dbHampers, dbTeddy] = await Promise.all([
-    getProducts({ category: "flowers" }),
-    getProducts({ category: "hampers" }),
-    getProducts({ category: "teddy" }),
-  ]);
+  const dbFlowers = allProducts.filter((p) => p.category === "flowers");
+  const dbHampers = allProducts.filter((p) => p.category === "hampers");
+  const dbTeddy = allProducts.filter((p) => p.category === "teddy");
 
   // Include predefined products for flowers
   const predefinedFlowers = getPredefinedProducts("flowers");
@@ -719,16 +721,16 @@ export default async function HomePage() {
   const allFlowers = [...dbFlowers, ...uniquePredefinedFlowers];
 
   // Fallback products for hampers if database is empty (only existing images: GiftAmper3, GiftAmper6)
-  const HAMPER_FALLBACK = [
-    { id: "hamper-gentlepaw-hamper", slug: "gentlepaw-hamper", title: "GentlePaw Hamper", price: 2050000, images: ["/images/products/hampers/GiftAmper3.jpg"], short_description: "100cm Teddy bear, Flower bouquet, Non Alcoholic wine, Ferrero rocher chocolate T16, Necklace, Bracelet, Watch", category: "hampers", tags: [] },
-    { id: "hamper-signature-celebration-basket", slug: "signature-celebration-basket", title: "Signature Celebration Basket", price: 1050000, images: ["/images/products/hampers/GiftAmper6.jpg"], short_description: "Luxury gift hamper with curated items", category: "hampers", tags: [] },
+  const now = new Date().toISOString();
+  const HAMPER_FALLBACK: Product[] = [
+    { id: "hamper-gentlepaw-hamper", slug: "gentlepaw-hamper", title: "GentlePaw Hamper", price: 2050000, images: ["/images/products/hampers/GiftAmper3.jpg"], short_description: "100cm Teddy bear, Flower bouquet, Non Alcoholic wine, Ferrero rocher chocolate T16, Necklace, Bracelet, Watch", description: "100cm Teddy bear, Flower bouquet, Non Alcoholic wine, Ferrero rocher chocolate T16, Necklace, Bracelet, Watch", category: "hampers", tags: [], created_at: now, updated_at: now },
+    { id: "hamper-signature-celebration-basket", slug: "signature-celebration-basket", title: "Signature Celebration Basket", price: 1050000, images: ["/images/products/hampers/GiftAmper6.jpg"], short_description: "Luxury gift hamper with curated items", description: "Luxury gift hamper with curated items", category: "hampers", tags: [], created_at: now, updated_at: now },
   ];
 
-  // Fallback products for teddy bears if database is empty (only existing images: Teddybear1, TeddyBears1, TeddyBears3)
-  const TEDDY_FALLBACK = [
-    { id: "teddy-dream-soft-teddy", slug: "dream-soft-teddy", title: "Dream Soft Teddy", price: 250000, images: ["/images/products/teddies/Teddybear1.jpg"], short_description: "25cm pink teddy bear. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [] },
-    { id: "teddy-fluffyjoy-bear", slug: "fluffyjoy-bear", title: "FluffyJoy Bear", price: 450000, images: ["/images/products/teddies/TeddyBears1.jpg"], short_description: "50cm teddy bear. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [] },
-    { id: "teddy-tender-heart-bear", slug: "tender-heart-bear", title: "Tender Heart Bear", price: 1250000, images: ["/images/products/teddies/TeddyBears3.jpg"], short_description: "120cm teddy bear with customized Stanley mug. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [] },
+  const TEDDY_FALLBACK: Product[] = [
+    { id: "teddy-dream-soft-teddy", slug: "dream-soft-teddy", title: "Dream Soft Teddy", price: 250000, images: ["/images/products/teddies/Teddybear1.jpg"], short_description: "25cm pink teddy bear. Available in brown, white, red, pink, and blue.", description: "25cm pink teddy bear. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [], created_at: now, updated_at: now },
+    { id: "teddy-fluffyjoy-bear", slug: "fluffyjoy-bear", title: "FluffyJoy Bear", price: 450000, images: ["/images/products/teddies/TeddyBears1.jpg"], short_description: "50cm teddy bear. Available in brown, white, red, pink, and blue.", description: "50cm teddy bear. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [], created_at: now, updated_at: now },
+    { id: "teddy-tender-heart-bear", slug: "tender-heart-bear", title: "Tender Heart Bear", price: 1250000, images: ["/images/products/teddies/TeddyBears3.jpg"], short_description: "120cm teddy bear with customized Stanley mug. Available in brown, white, red, pink, and blue.", description: "120cm teddy bear with customized Stanley mug. Available in brown, white, red, pink, and blue.", category: "teddy", tags: [], created_at: now, updated_at: now },
   ];
 
   // Use fallback if database is empty
@@ -745,244 +747,39 @@ export default async function HomePage() {
     );
   };
 
-  // Helper function to shuffle/mix array
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
+  const sortProducts = <T extends { slug?: string; id?: string }>(array: T[]): T[] =>
+    stableSortByKey(array);
 
-  // Helper function to mix different product types - ensures all types are included
-  const mixProducts = (hampers: any[], flowers: any[], teddies: any[], count: number = 8) => {
-    const mixed: any[] = [];
-    
-    // Ensure we have at least some from each category if available
-    const hampersAvailable = hampers.length > 0;
-    const flowersAvailable = flowers.length > 0;
-    const teddiesAvailable = teddies.length > 0;
-    
-    const availableTypes = [hampersAvailable, flowersAvailable, teddiesAvailable].filter(Boolean).length;
-    const itemsPerType = Math.max(2, Math.floor(count / Math.max(1, availableTypes)));
-    
-    // Add products from each category
-    if (hampersAvailable && hampers.length > 0) {
-      mixed.push(...hampers.slice(0, itemsPerType));
-    }
-    if (flowersAvailable && flowers.length > 0) {
-      mixed.push(...flowers.slice(0, itemsPerType));
-    }
-    if (teddiesAvailable && teddies.length > 0) {
-      mixed.push(...teddies.slice(0, itemsPerType));
-    }
-    
-    // Fill remaining slots by cycling through available categories
-    let typeIndex = 0;
-    const allProducts = [
-      ...(hampersAvailable ? hampers : []),
-      ...(flowersAvailable ? flowers : []),
-      ...(teddiesAvailable ? teddies : []),
-    ];
-    
-    while (mixed.length < count && allProducts.length > 0) {
-      const product = allProducts[typeIndex % allProducts.length];
-      if (!mixed.some(p => p.id === product.id)) {
-        mixed.push(product);
-      }
-      typeIndex++;
-      if (typeIndex > allProducts.length * 2) break; // Prevent infinite loop
-    }
-    
-    // If still not enough, repeat products
-    if (mixed.length < count) {
-      const needed = count - mixed.length;
-      const allMixed = [...mixed];
-      for (let i = 0; i < needed; i++) {
-        allMixed.push(allMixed[i % allMixed.length]);
-      }
-      return shuffleArray(allMixed).slice(0, count);
-    }
-    
-    return shuffleArray(mixed).slice(0, count);
-  };
+  const flowerPool = sortProducts(allFlowers);
+  const hamperPool = sortProducts(allHampers);
+  const teddyPool = sortProducts(allTeddy);
+  const mixedPool = sortProducts([...flowerPool, ...hamperPool, ...teddyPool]);
+  const usedOnHomepage = new Set<string>();
 
-  // Valentine's Gift Hampers - gift hampers first (first 3), then mix teddy bears and flowers
-  const newYearHampers = (() => {
-    const result: any[] = [];
-    // Add hampers FIRST (first 3, not shuffled)
-    if (allHampers.length > 0) {
-      result.push(...allHampers.slice(0, 3));
-    }
-    // Add teddy bears (at least 2)
-    if (allTeddy.length > 0) {
-      result.push(...allTeddy.slice(0, 2));
-    }
-    // Add flowers (at least 2)
-    if (allFlowers.length > 0) {
-      result.push(...allFlowers.slice(0, 2));
-    }
-    // Fill remaining with any available products (prioritize more hampers)
-    const remainingHampers = allHampers.slice(3);
-    const allAvailable = [...remainingHampers, ...allTeddy.slice(2), ...allFlowers.slice(2)].filter(p => p && p.id);
-    let addedCount = 0;
-    for (let i = 0; i < allAvailable.length && result.length < 8; i++) {
-      const next = allAvailable[i];
-      if (next && next.id && !result.some(p => p && p.id === next.id)) {
-        result.push(next);
-        addedCount++;
-      }
-    }
-    // Keep first 3 hampers in place, shuffle the rest
-    const firstThree = result.slice(0, 3);
-    const rest = shuffleArray(result.slice(3));
-    return [...firstThree, ...rest].slice(0, 8);
-  })();
-  
-  // Flowers delivered same day in Nairobi - mix different flower arrangements (shuffled)
-  const sameDayFlowers = shuffleArray(allFlowers).slice(0, Math.max(8, allFlowers.length));
-  
-  // Holiday surprise gifts for families - mix hampers, flowers, and teddy bears
-  const holidayFamilyProducts = (() => {
-    const result: any[] = [];
-    // Add hampers (at least 3)
-    if (allHampers.length > 0) {
-      result.push(...allHampers.slice(0, 3));
-    }
-    // Add teddy bears (at least 2)
-    if (allTeddy.length > 0) {
-      result.push(...allTeddy.slice(0, 2));
-    }
-    // Add flowers (at least 2)
-    if (allFlowers.length > 0) {
-      result.push(...allFlowers.slice(0, 2));
-    }
-    // Fill remaining
-    const allAvailable = [...allHampers, ...allTeddy, ...allFlowers].filter(p => p && p.id);
-    while (result.length < 8 && allAvailable.length > 0) {
-      const index = result.length % allAvailable.length;
-      const next = allAvailable[index];
-      if (next && next.id && !result.some(p => p && p.id === next.id)) {
-        result.push(next);
-      } else {
-        break;
-      }
-    }
-    return shuffleArray(result).slice(0, 8);
-  })();
-  
-  // Form Four Results Celebration Gifts - Parents celebrating their kids' KCSE results with hampers, flowers, and teddy bears
-  const formFourResultsProducts = (() => {
-    const result: any[] = [];
-    if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
-    if (allTeddy.length > 0) result.push(...allTeddy.slice(0, 2));
-    if (allFlowers.length > 0) result.push(...allFlowers.slice(0, 2));
-    const allAvailable = [...allHampers, ...allTeddy, ...allFlowers].filter(p => p && p.id);
-    while (result.length < 8 && allAvailable.length > 0) {
-      const next = allAvailable[result.length % allAvailable.length];
-      if (!result.some(p => p.id === next.id)) {
-        result.push(next);
-      } else {
-        break;
-      }
-    }
-    return shuffleArray(result).slice(0, 8);
-  })();
-  
-  // Valentine's anniversary celebrations - mix hampers, flowers, and teddy bears
-  const anniversaryProducts = (() => {
-    const result: any[] = [];
-    if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
-    if (allTeddy.length > 0) result.push(...allTeddy.slice(0, 2));
-    if (allFlowers.length > 0) result.push(...allFlowers.slice(0, 2));
-    const allAvailable = [...allHampers, ...allTeddy, ...allFlowers].filter(p => p && p.id);
-    while (result.length < 8 && allAvailable.length > 0) {
-      const next = allAvailable[result.length % allAvailable.length];
-      if (!result.some(p => p.id === next.id)) {
-        result.push(next);
-      } else {
-        break;
-      }
-    }
-    return shuffleArray(result).slice(0, 8);
-  })();
-  
-  // Say it with flowers - ONLY flowers, but mixed different arrangements
-  const sayItWithFlowers = shuffleArray(allFlowers).slice(0, Math.max(8, allFlowers.length));
-  
-  // Gift Hampers - dedicated section
-  const giftHampers = (() => {
-    if (allHampers.length >= 8) {
-      return allHampers.slice(0, 8);
-    }
-    // If not enough, repeat to reach 8
-    const result = [...allHampers];
-    while (result.length < 8 && allHampers.length > 0) {
-      result.push(...allHampers);
-    }
-    return result.slice(0, 8);
-  })();
-  
-  // Teddy Bears - dedicated section
-  const teddyBears = (() => {
-    if (allTeddy.length >= 8) {
-      return allTeddy.slice(0, 8);
-    }
-    // If not enough, repeat to reach 8
-    const result = [...allTeddy];
-    while (result.length < 8 && allTeddy.length > 0) {
-      result.push(...allTeddy);
-    }
-    return result.slice(0, 8);
-  })();
-  
-  // Valentine's colleagues surprises - mix hampers, flowers, and teddy bears
-  const colleaguesProducts = (() => {
-    const result: any[] = [];
-    if (allHampers.length > 0) result.push(...allHampers.slice(0, 3));
-    if (allTeddy.length > 0) result.push(...allTeddy.slice(0, 2));
-    if (allFlowers.length > 0) result.push(...allFlowers.slice(0, 2));
-    const allAvailable = [...allHampers, ...allTeddy, ...allFlowers].filter(p => p && p.id);
-    while (result.length < 8 && allAvailable.length > 0) {
-      const next = allAvailable[result.length % allAvailable.length];
-      if (!result.some(p => p.id === next.id)) {
-        result.push(next);
-      } else {
-        break;
-      }
-    }
-    return shuffleArray(result).slice(0, 8);
-  })();
-
-  // Fallback if no tagged products - ensure at least 8
-  const getFallbackProducts = (category: string) => {
-    if (category === "hampers") {
-      // Only hampers, no mixing
-      if (allHampers.length >= 8) {
-        return allHampers.slice(0, 8);
-      }
-      const result = [...allHampers];
-      while (result.length < 8 && allHampers.length > 0) {
-        result.push(...allHampers);
-      }
-      return result.slice(0, 8);
-    }
-    if (category === "flowers") {
-      return shuffleArray(allFlowers).slice(0, Math.max(8, allFlowers.length));
-    }
-    if (category === "teddy") {
-      if (allTeddy.length >= 8) {
-        return allTeddy.slice(0, 8);
-      }
-      const result = [...allTeddy];
-      while (result.length < 8 && allTeddy.length > 0) {
-        result.push(...allTeddy);
-      }
-      return result.slice(0, 8);
-    }
-    return mixProducts(allHampers, allFlowers, allTeddy, 8);
-  };
+  const anniversaryProducts = pickUniqueProducts(
+    filterByTags(mixedPool, ["anniversary"]).length
+      ? filterByTags(mixedPool, ["anniversary"])
+      : mixedPool,
+    8,
+    usedOnHomepage
+  );
+  const birthdayProducts = pickUniqueProducts(
+    filterByTags(mixedPool, ["birthday"]).length
+      ? filterByTags(mixedPool, ["birthday"])
+      : mixedPool,
+    8,
+    usedOnHomepage
+  );
+  const sameDayFlowers = pickUniqueProducts(flowerPool, 8, usedOnHomepage);
+  const apologyFlowers = pickUniqueProducts(
+    filterByTags(flowerPool, ["apology", "sorry"]).length
+      ? filterByTags(flowerPool, ["apology", "sorry"])
+      : flowerPool,
+    8,
+    usedOnHomepage
+  );
+  const giftHampers = pickUniqueProducts(hamperPool, 8, usedOnHomepage);
+  const teddyBears = pickUniqueProducts(teddyPool, 8, usedOnHomepage);
 
   return (
     <>
@@ -1009,7 +806,7 @@ export default async function HomePage() {
         {/* Anniversary Gifts - Celebrate Love, Every Year */}
         <ProductSection
           title="Anniversary Gifts - Celebrate Love, Every Year"
-          products={anniversaryProducts.length >= 8 ? anniversaryProducts : getFallbackProducts("mixed")}
+          products={anniversaryProducts}
           bgColor="bg-brand-blush"
           linkHref="/collections/flowers?tags=anniversary"
         />
@@ -1081,65 +878,37 @@ export default async function HomePage() {
         {/* Birthday Surprises - Make Their Day Extraordinary */}
         <ProductSection
           title="Birthday Surprises - Make Their Day Extraordinary"
-          products={holidayFamilyProducts.length >= 8 ? holidayFamilyProducts : getFallbackProducts("mixed")}
+          products={birthdayProducts}
           bgColor="bg-brand-blush"
-          linkHref="/collections"
+          linkHref="/birthday-flowers-nairobi"
         />
 
-        {/* Same-Day Flower Delivery - Express Your Feelings Today */}
         <ProductSection
           title="Same-Day Flower Delivery - Express Your Feelings Today"
-          products={sameDayFlowers.length >= 8 ? sameDayFlowers : getFallbackProducts("flowers")}
+          products={sameDayFlowers}
           bgColor="bg-brand-blush"
           linkHref="/collections/flowers"
         />
 
-        {/* Apology Flowers - Say Sorry with Beautiful Blooms */}
         <ProductSection
           title="Apology Flowers - Say Sorry with Beautiful Blooms"
-          products={sayItWithFlowers.length >= 8 ? sayItWithFlowers : getFallbackProducts("flowers")}
+          products={apologyFlowers}
           bgColor="bg-brand-blush"
-          linkHref="/collections/flowers"
+          linkHref="/apology-flowers-nairobi"
         />
 
-        {/* Surprise Gift Hampers - Unexpected Joy, Delivered */}
-        <ProductSection
-          title="Surprise Gift Hampers - Unexpected Joy, Delivered"
-          products={newYearHampers.length >= 8 ? newYearHampers : getFallbackProducts("hampers")}
-          bgColor="bg-brand-blush"
-          linkHref="/collections/gift-hampers"
-        />
-
-        {/* Just Because - Spontaneous Gestures of Love */}
-        <ProductSection
-          title="Just Because - Spontaneous Gestures of Love"
-          products={colleaguesProducts.length >= 8 ? colleaguesProducts : getFallbackProducts("mixed")}
-          bgColor="bg-brand-blush"
-          linkHref="/collections"
-        />
-
-        {/* Premium Gift Hampers - Thoughtful Combinations */}
         <ProductSection
           title="Premium Gift Hampers - Thoughtful Combinations"
-          products={giftHampers.length >= 8 ? giftHampers : getFallbackProducts("hampers")}
+          products={giftHampers}
           bgColor="bg-brand-blush"
           linkHref="/collections/gift-hampers"
         />
 
-        {/* Cuddly Teddy Bears - Warm Hugs, Lasting Memories */}
         <ProductSection
           title="Cuddly Teddy Bears - Warm Hugs, Lasting Memories"
           products={teddyBears}
           bgColor="bg-brand-blush"
           linkHref="/collections/teddy-bears"
-        />
-
-        {/* Celebration Gifts - Mark Every Milestone */}
-        <ProductSection
-          title="Celebration Gifts - Mark Every Milestone"
-          products={formFourResultsProducts.length >= 8 ? formFourResultsProducts : getFallbackProducts("mixed")}
-          bgColor="bg-brand-blush"
-          linkHref="/collections/gift-hampers"
         />
 
         {/* Explore Collections Section */}
@@ -1320,8 +1089,10 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Blog Section */}
-        <BlogSection />
+        {/* Blog Section — streams after main content */}
+        <Suspense fallback={<BlogSectionSkeleton />}>
+          <BlogSection />
+        </Suspense>
 
         {/* Homepage FAQ Section */}
         <section className="py-12 md:py-16 lg:py-20 bg-brand-blush border-t border-brand-gray-200">

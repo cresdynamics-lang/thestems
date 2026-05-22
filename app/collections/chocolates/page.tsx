@@ -3,12 +3,15 @@ import ChocolatesPageClient from "./ChocolatesPageClient";
 import { getProducts } from "@/lib/db";
 import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+import { WHATSAPP_DISPLAY } from "@/lib/contact";
+import { SITE_URL } from "@/lib/seo";
+
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Chocolate Delivery Nairobi | Ferrero Rocher & Gift Chocolates | The Stems",
   description:
-    "Order chocolates in Nairobi with same-day delivery. Ferrero Rocher gift boxes and chocolate hampers from KSh 1,500. WhatsApp +254113700549 to order.",
+    `Order chocolates in Nairobi with same-day delivery. Ferrero Rocher gift boxes and chocolate hampers from KSh 1,500. WhatsApp ${WHATSAPP_DISPLAY} to order.`,
   keywords: [
     // Valentine's Chocolates Core Keywords
     "valentine's chocolates Nairobi",

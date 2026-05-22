@@ -3,13 +3,15 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
+import { WHATSAPP_DISPLAY } from "@/lib/contact";
+import { SITE_URL } from "@/lib/seo";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Birthday Flowers Nairobi | Same Day Delivery from KSh 3,500 | The Stems",
   description:
-    "Order birthday flowers in Nairobi with same-day delivery. Roses, bouquets, teddy and gift combos from KSh 3,500. WhatsApp +254113700549 to order.",
+    `Order birthday flowers in Nairobi with same-day delivery. Roses, bouquets, teddy and gift combos from KSh 3,500. WhatsApp ${WHATSAPP_DISPLAY} to order.`,
   alternates: {
     canonical: `${baseUrl}/birthday-flowers-nairobi`,
   },

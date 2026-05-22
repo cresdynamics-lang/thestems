@@ -60,7 +60,8 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
             className="object-cover"
             priority={index <= 1}
             sizes="100vw"
-            quality={80}
+            quality={index === 0 ? 75 : 65}
+            fetchPriority={index === 0 ? "high" : "auto"}
           />
           <div className="absolute inset-0 bg-black/40 flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">

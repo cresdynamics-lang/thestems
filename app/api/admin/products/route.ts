@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { getProducts } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const dynamic = 'force-dynamic';
 
@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
     revalidatePath("/collections/wines");
     revalidatePath("/collections/chocolates");
     revalidatePath(`/product/${data.slug}`);
+    revalidateTag("products");
 
     return NextResponse.json(data);
   } catch (error: any) {

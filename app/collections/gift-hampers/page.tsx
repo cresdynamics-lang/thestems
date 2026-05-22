@@ -2,7 +2,9 @@ import { Metadata } from "next";
 import GiftHampersPageClient from "./GiftHampersPageClient";
 import { getProducts, type Product } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
+
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Gift Hampers Nairobi from KSh 8,500 | Same-Day Delivery | The Stems",
@@ -117,9 +119,8 @@ const HAMPER_IMAGES = [
   "/images/products/hampers/GiftAmper6.jpg",
 ];
 
-function toAbsoluteImageUrl(imagePath?: string) {
-  if (!imagePath) return `${baseUrl}/images/products/hampers/GiftAmper3.jpg`;
-  return imagePath.startsWith("http") ? imagePath : `${baseUrl}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
+function hamperImageUrl(imagePath?: string) {
+  return toAbsoluteImageUrl(imagePath, "/images/products/hampers/GiftAmper3.jpg");
 }
 
 function buildHampersItemListJsonLd(products: Product[]) {
@@ -140,7 +141,7 @@ function buildHampersItemListJsonLd(products: Product[]) {
         "@type": "Product",
         name: product.title,
         description: product.short_description || product.description,
-        image: toAbsoluteImageUrl(product.images?.[0]),
+        image: hamperImageUrl(product.images?.[0]),
         url: `${baseUrl}/product/${product.slug}`,
         brand: { "@type": "Brand", name: "The Stems Flowers" },
         offers: {

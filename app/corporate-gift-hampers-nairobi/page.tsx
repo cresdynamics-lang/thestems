@@ -3,13 +3,15 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
+import { WHATSAPP_DISPLAY } from "@/lib/contact";
+import { SITE_URL } from "@/lib/seo";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Corporate Gift Hampers Nairobi | Business Gifting | The Stems",
   description:
-    "Corporate gift hampers in Nairobi for clients, teams and events. Same-day and scheduled delivery with custom bundles. WhatsApp +254113700549.",
+    `Corporate gift hampers in Nairobi for clients, teams and events. Same-day and scheduled delivery with custom bundles. WhatsApp ${WHATSAPP_DISPLAY}.`,
   alternates: {
     canonical: `${baseUrl}/corporate-gift-hampers-nairobi`,
   },

@@ -5,6 +5,13 @@ import ProductDetailClient from "./ProductDetailClient";
 import { getProductBySlug } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { SITE_URL, absoluteUrl, buildProductJsonLd, toAbsoluteImageUrl } from "@/lib/seo";
+import {
+  getDisplayProductTitle,
+  getProductImageAlt,
+  getProductMetaDescription,
+  getProductMetaTitle,
+} from "@/lib/productDisplay";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -16,27 +23,33 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!product) return {};
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
-  const title = `${product.title} — ${product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : "Gifts"} Delivered in Nairobi | The Stems Flowers`;
-  const description = `${
-    product.short_description || product.description || product.title
-  } — Same-day delivery across Nairobi. Pay with M-Pesa and order from The Stems Flowers at Delta Hotel, University Way, Nairobi CBD.`;
+  const metaTitle = getProductMetaTitle(product.title, product.category);
+  const description = getProductMetaDescription(product);
+
+  const ogImage =
+    product.images && product.images.length > 0
+      ? toAbsoluteImageUrl(product.images[0])
+      : toAbsoluteImageUrl("/images/logo/thestemslogo.jpeg");
 
   return {
-    title,
+    title: { absolute: metaTitle },
     description,
+    alternates: {
+      canonical: absoluteUrl(`/product/${slug}`),
+    },
     openGraph: {
-      title,
+      title: metaTitle,
       description,
-      images:
-        product.images && product.images.length > 0
-          ? [
-              {
-                url: product.images[0].startsWith("http") ? product.images[0] : `${baseUrl}${product.images[0]}`,
-              },
-            ]
-          : [],
-      url: `${baseUrl}/product/${slug}`,
+      type: "website",
+      locale: "en_KE",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: getProductImageAlt(product.title, product.category) }],
+      url: absoluteUrl(`/product/${slug}`),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description,
+      images: [ogImage],
     },
   };
 }
@@ -55,15 +68,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
-  const productUrl = `${baseUrl}/product/${product.slug}`;
-  const categoryMap: Record<string, string> = {
-    flowers: "Florist",
-    teddy: "Toy",
-    hampers: "Gift",
-    wines: "Wine",
-    chocolates: "Food",
-  };
+  const productUrl = absoluteUrl(`/product/${product.slug}`);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -73,19 +78,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: baseUrl,
+        item: SITE_URL,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Collections",
-        item: `${baseUrl}/collections`,
+        item: absoluteUrl("/collections"),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.category === "flowers" ? "Flowers" : product.category === "teddy" ? "Teddy Bears" : product.category === "hampers" ? "Gift Hampers" : product.category === "wines" ? "Wines" : "Chocolates",
-        item: `${baseUrl}/collections/${product.category === "flowers" ? "flowers" : product.category === "teddy" ? "teddy-bears" : product.category === "hampers" ? "gift-hampers" : product.category === "wines" ? "wines" : "chocolates"}`,
+        item: absoluteUrl(`/collections/${product.category === "flowers" ? "flowers" : product.category === "teddy" ? "teddy-bears" : product.category === "hampers" ? "gift-hampers" : product.category === "wines" ? "wines" : "chocolates"}`),
       },
       {
         "@type": "ListItem",
@@ -96,28 +101,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ],
   };
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.title,
-    description: product.description || product.short_description,
-    image: product.images && product.images.length > 0 ? product.images[0] : undefined,
-    brand: { "@type": "Brand", name: "The Stems Flowers" },
-    offers: {
-      "@type": "Offer",
-      price: product.price / 100,
-      priceCurrency: "KES",
-      availability: "https://schema.org/InStock",
-      url: productUrl,
-      areaServed: { "@type": "City", name: "Nairobi" },
-      availableDeliveryMethod: "https://schema.org/DeliveryModeOnSitePickup",
-      seller: {
-        "@type": "LocalBusiness",
-        name: "The Stems Flowers",
-        address: "Delta Hotel, University Way, Nairobi CBD",
-      },
-    },
-  };
+  const jsonLd = buildProductJsonLd(product);
 
   return (
     <>
@@ -138,7 +122,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             <div>
               <h1 className="font-heading font-bold text-3xl md:text-4xl text-brand-gray-900 mb-4">
-                {product.title} — Nairobi Flowers & Gifts
+                {getDisplayProductTitle(product.title, product.category)}
               </h1>
 
               <div className="mb-6">

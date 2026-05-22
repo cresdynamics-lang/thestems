@@ -1,56 +1,59 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { isSupabaseConfigured } from "./supabaseConfig";
 
-// Get Supabase URL and validate it
-const getSupabaseUrl = () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!url || url.includes("your_") || url.includes("placeholder") || !url.startsWith("http")) {
-    return "https://placeholder.supabase.co";
+function getAdminKey(): string {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const secretKey = process.env.SUPABASE_SECRET_KEY?.trim();
+  const key = serviceKey || secretKey;
+  if (key && !key.includes("your_") && !key.includes("your-service") && !key.includes("placeholder")) {
+    return key;
   }
-  return url;
-};
-
-// Get Supabase anon key
-const getSupabaseAnonKey = () => {
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!key || key.includes("your_") || key.includes("placeholder")) {
-    return "placeholder-key";
-  }
-  return key;
-};
-
-const supabaseUrl = getSupabaseUrl();
-const supabaseAnonKey = getSupabaseAnonKey();
-
-if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes("your_") || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes("your_")) {
-  if (typeof window === "undefined") {
-    console.warn("⚠️  Supabase credentials not configured. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local");
-  }
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  return anonKey || "placeholder-key";
 }
 
-// Only create client if we have valid URLs
-let supabase: ReturnType<typeof createClient>;
-let supabaseAdmin: ReturnType<typeof createClient>;
+function createClients(): { supabase: SupabaseClient; supabaseAdmin: SupabaseClient } {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
 
-try {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-  supabaseAdmin = createClient(
-    supabaseUrl,
-    process.env.SUPABASE_SERVICE_ROLE_KEY && !process.env.SUPABASE_SERVICE_ROLE_KEY.includes("your_") 
-      ? process.env.SUPABASE_SERVICE_ROLE_KEY 
-      : supabaseAnonKey,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  );
-} catch (error) {
-  console.error("Failed to initialize Supabase client:", error);
-  // Create a dummy client that will fail gracefully
-  supabase = createClient("https://placeholder.supabase.co", "placeholder-key");
-  supabaseAdmin = createClient("https://placeholder.supabase.co", "placeholder-key");
+  if (!isSupabaseConfigured() || !url || !anonKey) {
+    const placeholder = createClient("https://placeholder.supabase.co", "placeholder-key");
+    return { supabase: placeholder, supabaseAdmin: placeholder };
+  }
+
+  const supabase = createClient(url, anonKey);
+  const supabaseAdmin = createClient(url, getAdminKey(), {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+
+  return { supabase, supabaseAdmin };
 }
 
-export { supabase, supabaseAdmin };
+let cached: { supabase: SupabaseClient; supabaseAdmin: SupabaseClient } | null = null;
 
+function getClients() {
+  if (!cached) {
+    cached = createClients();
+  }
+  return cached;
+}
+
+function clientProxy(getClient: () => SupabaseClient): SupabaseClient {
+  return new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+      const client = getClient();
+      const value = Reflect.get(client, prop, client);
+      if (typeof value === "function") {
+        return value.bind(client);
+      }
+      return value;
+    },
+  });
+}
+
+/** Reads .env.local on first use (restart dev server after changing env). */
+export const supabase = clientProxy(() => getClients().supabase);
+export const supabaseAdmin = clientProxy(() => getClients().supabaseAdmin);

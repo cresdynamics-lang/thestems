@@ -1,4 +1,5 @@
 import type { Product } from "./db";
+import { normalizeProduct } from "./productDisplay";
 
 // Flower product details mapped to existing images (BouquetFlowers3, 4, 5 only)
 export const FLOWER_PRODUCTS = [
@@ -112,19 +113,21 @@ export function getPredefinedProducts(category: string): Product[] {
   const now = new Date().toISOString();
   
   if (category === "flowers") {
-    return FLOWER_PRODUCTS.map((fp) => ({
-      id: `flower-${fp.slug}`,
-      title: fp.title,
-      price: fp.price,
-      images: [fp.image],
-      slug: fp.slug,
-      short_description: fp.description,
-      description: fp.description,
-      category: "flowers" as const,
-      tags: [] as string[],
-      created_at: now,
-      updated_at: now,
-    }));
+    return FLOWER_PRODUCTS.map((fp) =>
+      normalizeProduct({
+        id: `flower-${fp.slug}`,
+        title: fp.title,
+        price: fp.price,
+        images: [fp.image],
+        slug: fp.slug,
+        short_description: fp.description,
+        description: fp.description,
+        category: "flowers" as const,
+        tags: [] as string[],
+        created_at: now,
+        updated_at: now,
+      })
+    );
   }
   
   if (category === "wines") {

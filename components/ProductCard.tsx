@@ -9,6 +9,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import ImageModal from "@/components/ImageModal";
 import { Analytics } from "@/lib/analytics";
+import { getCleanProductTitle, getProductImageAlt } from "@/lib/productDisplay";
 
 interface ProductCardProps {
   id: string;
@@ -35,17 +36,18 @@ export default function ProductCard({
   homePage = false,
   priority = false,
 }: ProductCardProps) {
+  const displayName = getCleanProductTitle(name);
+  const imageAlt = getProductImageAlt(name, category);
 
   const { addItem } = useCartStore();
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    // Track product view when card is visible
-    if (id && name && category) {
-      Analytics.trackProductView(id, name, category, price);
-    }
-  }, [id, name, category, price]);
+    // Homepage shows many cards — skip per-card analytics to reduce /api/analytics noise
+    if (homePage || !id || !name || !category) return;
+    Analytics.trackProductView(id, name, category, price);
+  }, [id, name, category, price, homePage]);
 
   const handleAddToCart = () => {
     const cartImage = imageError
@@ -64,13 +66,13 @@ export default function ProductCard({
 
     addItem({
       id,
-      name,
+      name: displayName,
       price,
       image: cartImage,
       slug,
     });
     // Track add to cart
-    Analytics.trackAddToCart(id, name, price, 1);
+    Analytics.trackAddToCart(id, displayName, price, 1);
   };
 
   const handleImageClick = (e: React.MouseEvent) => {
@@ -99,7 +101,7 @@ export default function ProductCard({
               <>
                 <Image
                   src={image}
-                  alt={`${name} - ${category === "flowers" ? "Premium flower delivery Nairobi CBD, Westlands, Karen" : category === "teddy" ? "Teddy bears Kenya, Nairobi" : category === "hampers" ? "Gift hampers Kenya, Nairobi CBD" : category === "wines" ? "Wines Nairobi, Westlands" : "Chocolates Kenya, Nairobi"} | The Stems`}
+                  alt={imageAlt}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -114,7 +116,7 @@ export default function ProductCard({
                   type="button"
                   onClick={handleBasketClick}
                   className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 bg-white rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110"
-                  aria-label={`Add ${name} to cart`}
+                  aria-label={`Add ${displayName} to cart`}
                 >
                   <ShoppingCartIconSolid className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
                 </button>
@@ -157,7 +159,7 @@ export default function ProductCard({
 
       <Link href={`/product/${slug}`} className="block">
         <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-green transition-colors line-clamp-2">
-          {name}
+          {displayName}
         </h3>
         {shortDescription && (
           <p className="text-brand-gray-600 text-xs sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
@@ -172,7 +174,7 @@ export default function ProductCard({
         <Link
           href={`/product/${slug}`}
           className="btn-outline w-full text-center text-xs sm:text-xs md:text-sm py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-2"
-          aria-label={`View details for ${name}`}
+          aria-label={`View details for ${displayName}`}
         >
           Details
         </Link>
@@ -199,7 +201,7 @@ export default function ProductCard({
                   : "/images/products/hampers/GiftAmper3.jpg")
               : image
           }
-          alt={name}
+          alt={displayName}
         />
       )}
     </>

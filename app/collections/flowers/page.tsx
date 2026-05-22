@@ -2,7 +2,9 @@ import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
 import { getProducts, type Product } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
+
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500 | The Stems",
@@ -102,9 +104,8 @@ export const metadata: Metadata = {
   },
 };
 
-function toAbsoluteImageUrl(imagePath?: string) {
-  if (!imagePath) return `${baseUrl}/images/products/flowers/BouquetFlowers4.jpg`;
-  return imagePath.startsWith("http") ? imagePath : `${baseUrl}${imagePath.startsWith("/") ? imagePath : `/${imagePath}`}`;
+function flowerImageUrl(imagePath?: string) {
+  return toAbsoluteImageUrl(imagePath, "/images/products/flowers/BouquetFlowers4.jpg");
 }
 
 function buildFlowersItemListJsonLd(products: Product[]) {
@@ -125,7 +126,7 @@ function buildFlowersItemListJsonLd(products: Product[]) {
         "@type": "Product",
         name: product.title,
         description: product.short_description || product.description,
-        image: toAbsoluteImageUrl(product.images?.[0]),
+        image: flowerImageUrl(product.images?.[0]),
         url: `${baseUrl}/product/${product.slug}`,
         brand: {
           "@type": "Brand",

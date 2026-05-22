@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { supabaseAdmin } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   const url = new URL(request.url);
@@ -13,7 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     if (migrationType === 'cards') {
       // Update products category constraint to include 'cards'
-      const { error: dropError } = await supabase.rpc('exec_sql', {
+      const { error: dropError } = await (supabaseAdmin as any).rpc('exec_sql', {
         sql: 'ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;'
       });
 
@@ -21,7 +16,7 @@ export async function POST(request: NextRequest) {
         console.error('Error dropping products constraint:', dropError);
       }
 
-      const { error: addError } = await supabase.rpc('exec_sql', {
+      const { error: addError } = await (supabaseAdmin as any).rpc('exec_sql', {
         sql: "ALTER TABLE products ADD CONSTRAINT products_category_check CHECK (category IN ('flowers', 'hampers', 'teddy', 'wines', 'chocolates', 'cards'));"
       });
 
@@ -34,7 +29,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Original orders payment method migration
       // Drop existing constraint
-      const { error: dropError } = await supabase.rpc('exec_sql', {
+      const { error: dropError } = await (supabaseAdmin as any).rpc('exec_sql', {
         sql: 'ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_payment_method_check;'
       });
 
@@ -43,7 +38,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Add new constraint with 'card' included
-      const { error: addError } = await supabase.rpc('exec_sql', {
+      const { error: addError } = await (supabaseAdmin as any).rpc('exec_sql', {
         sql: "ALTER TABLE orders ADD CONSTRAINT orders_payment_method_check CHECK (payment_method IN ('mpesa', 'mpesa_till', 'mpesa_paybill', 'whatsapp', 'card'));"
       });
 

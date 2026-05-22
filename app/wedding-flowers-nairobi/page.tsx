@@ -3,13 +3,15 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
+import { WHATSAPP_DISPLAY } from "@/lib/contact";
+import { SITE_URL } from "@/lib/seo";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Wedding Flowers Nairobi | Bridal Bouquets & Decor | The Stems",
   description:
-    "Wedding flowers in Nairobi for bridal bouquets, car decor and venue styling. Same-day and pre-booked flower delivery available. WhatsApp +254113700549.",
+    `Wedding flowers in Nairobi for bridal bouquets, car decor and venue styling. Same-day and pre-booked flower delivery available. WhatsApp ${WHATSAPP_DISPLAY}.`,
   alternates: {
     canonical: `${baseUrl}/wedding-flowers-nairobi`,
   },

@@ -5,6 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
+import { whatsappUrl } from "@/lib/contact";
 
 interface ChocolateProduct {
   image: string;
@@ -68,7 +69,7 @@ export default function ChocolatesPageClient({ products, allChocolateImages = []
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to order chocolates in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"

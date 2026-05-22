@@ -6,6 +6,8 @@ import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
 import { SUBCATEGORIES } from "@/lib/subcategories";
+import SeoInternalLinks from "@/components/SeoInternalLinks";
+import { whatsappUrl } from "@/lib/contact";
 
 interface FlowerProduct {
   image: string;
@@ -154,6 +156,24 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
             bouquets for birthdays, anniversaries and romantic surprises. We offer same-day delivery in Nairobi CBD and fast
             delivery to Westlands, Karen, Kilimani, Lavington, South B, Parklands and nearby areas.
           </p>
+          <p className="text-brand-gray-600 text-sm md:text-base mt-3 max-w-3xl">
+            As a trusted Nairobi CBD florist at Delta Hotel, University Way, we prepare every bouquet fresh for delivery
+            across the city. Whether you need urgent apology flowers, a last-minute birthday surprise, or a premium
+            anniversary rose arrangement, our team hand-wraps each order and delivers with a personal message. Prices start
+            from around KSh 3,500, and you can order online with M-Pesa or WhatsApp for fast confirmation. Explore our{" "}
+            <a href="/red-roses-nairobi" className="text-brand-green hover:underline">
+              red roses
+            </a>
+            ,{" "}
+            <a href="/collections/gift-hampers" className="text-brand-green hover:underline">
+              gift hampers
+            </a>{" "}
+            and{" "}
+            <a href="/same-day-flower-delivery-nairobi" className="text-brand-green hover:underline">
+              same-day delivery guide
+            </a>{" "}
+            for more options.
+          </p>
           <div className="text-brand-gray-500 text-xs md:text-sm mt-1">
             <span>
               {selectedSubcategory 
@@ -164,7 +184,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to order flowers in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
@@ -242,6 +262,8 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
             })}
           </div>
         )}
+
+        <SeoInternalLinks />
 
         <section className="mt-10 md:mt-14 rounded-xl border border-brand-gray-200 bg-white p-5 md:p-6">
           <h2 className="font-heading font-bold text-xl md:text-2xl text-brand-gray-900 mb-4">

@@ -12,6 +12,19 @@ import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
 
+function getCheckoutErrorMessage(err: unknown): string {
+  if (axios.isAxiosError(err)) {
+    const data = err.response?.data as { message?: string } | undefined;
+    return (
+      data?.message ||
+      err.message ||
+      "Could not complete checkout. Please try again or contact us on WhatsApp."
+    );
+  }
+  if (err instanceof Error && err.message) return err.message;
+  return "Could not complete checkout. Please try again or contact us on WhatsApp.";
+}
+
 interface OrderData {
   customer: {
     name: string;
@@ -202,7 +215,12 @@ export default function CheckoutPage() {
           notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
         });
 
-        const orderId = orderResponse.data.id;
+        const orderId = orderResponse.data?.id;
+        if (!orderId) {
+          throw new Error(
+            orderResponse.data?.message || "Order was not saved. Please check your connection and try again."
+          );
+        }
 
         // Notify admin by email (Till/Paybill order – payment to be completed via M-Pesa)
         const paymentLabel = paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill";
@@ -280,7 +298,12 @@ export default function CheckoutPage() {
           notes: `Payment via Pesapal (card / M-Pesa STK). Total: ${formatCurrency(total)}`,
         });
 
-        const orderId = orderResponse.data.id as string;
+        const orderId = orderResponse.data?.id as string | undefined;
+        if (!orderId) {
+          throw new Error(
+            orderResponse.data?.message || "Order was not saved before payment. Please try again."
+          );
+        }
 
         // 2) Initiate Pesapal payment
         const baseUrl =
@@ -349,15 +372,13 @@ export default function CheckoutPage() {
         window.location.href = redirect_url;
         return;
       }
-    } catch (err: any) {
-      console.error("❌ Checkout: Order submission error:", {
-        error: err.message,
-        paymentMethod,
-        total,
-        response: err.response?.data,
-        stack: err.stack
-      });
-      setError(err.response?.data?.message || err.message || "An error occurred. Please try again.");
+    } catch (err: unknown) {
+      const message = getCheckoutErrorMessage(err);
+      console.error("❌ Checkout: Order submission error:", message);
+      if (axios.isAxiosError(err)) {
+        console.error("Checkout API response:", err.response?.status, err.response?.data);
+      }
+      setError(message);
     } finally {
       setIsProcessing(false);
     }

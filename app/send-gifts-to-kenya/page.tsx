@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { whatsappUrl } from "@/lib/contact";
 import JsonLd from "@/components/JsonLd";
 
 const baseUrl = "https://thestemsflowers.co.ke";
@@ -63,7 +64,7 @@ export default function SendGiftsToKenyaPage() {
               Gift Hampers
             </Link>
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to send gifts within Kenya.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100"

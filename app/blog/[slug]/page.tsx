@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
 import JsonLd from "@/components/JsonLd";
+import { whatsappUrl } from "@/lib/contact";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
@@ -19,10 +20,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) return {};
 
-  const title = `${post.title} | The Stems Flowers Nairobi`;
+  const title =
+    post.title.length <= 55 ? `${post.title} | The Stems` : `${post.title.slice(0, 52).trim()}… | The Stems`;
   const description =
     post.excerpt ??
-    `${post.title} — flower and gift ideas from The Stems Flowers, Nairobi's CBD florist at Delta Hotel, University Way.`;
+    `Flower and gift tips from The Stems Flowers — Nairobi florist at Delta Hotel, University Way. Same-day delivery across CBD, Westlands, Karen and Kilimani.`;
 
   return {
     title,
@@ -165,7 +167,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://wa.me/254113700549"
+                href={whatsappUrl("Hello! I read your blog and would like to order.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"

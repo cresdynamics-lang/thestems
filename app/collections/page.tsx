@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
+import { whatsappUrl } from "@/lib/contact";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
@@ -76,7 +77,7 @@ export default function CollectionsPage() {
           </p>
           <div className="mt-4 flex justify-center">
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to place an order in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
@@ -94,7 +95,7 @@ export default function CollectionsPage() {
             <div className="relative h-48 md:h-80 overflow-hidden">
               <Image
                 src="/images/products/flowers/BouquetFlowers4.jpg"
-                alt="Premium flower delivery Nairobi - Birthday flowers, anniversary flowers, roses Nairobi"
+                alt="Fresh flower bouquets collection — The Stems Flowers Nairobi"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 50vw, 33vw"

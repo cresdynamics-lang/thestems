@@ -2,12 +2,15 @@ import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
 import { getProducts, type Product } from "@/lib/db";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+import { WHATSAPP_DISPLAY } from "@/lib/contact";
+import { SITE_URL } from "@/lib/seo";
+
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "Teddy Bears Nairobi | Same Day Delivery from KSh 3,500 | The Stems",
   description:
-    "Order teddy bears in Nairobi with same-day delivery from KSh 3,500. Giant teddy bears and teddy plus flower combos. WhatsApp +254113700549 to order.",
+    `Order teddy bears in Nairobi with same-day delivery from KSh 3,500. Giant teddy bears and teddy plus flower combos. WhatsApp ${WHATSAPP_DISPLAY} to order.`,
   keywords: [
     // Valentine's Teddy Bears Core Keywords
     "valentine's teddy bears Nairobi",

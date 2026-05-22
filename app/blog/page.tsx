@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { whatsappUrl } from "@/lib/contact";
 import Image from "next/image";
 import { getBlogPosts, getBlogTags } from "@/lib/blogData";
 import JsonLd from "@/components/JsonLd";
@@ -122,7 +123,7 @@ export default async function BlogPage() {
               Talk to The Stems team on WhatsApp for quick recommendations and same-day flower and gift delivery in Nairobi.
             </p>
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I have a question about flowers and gifts in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"

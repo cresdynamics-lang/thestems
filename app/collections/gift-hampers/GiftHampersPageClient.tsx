@@ -5,6 +5,8 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
+import SeoInternalLinks from "@/components/SeoInternalLinks";
+import { whatsappUrl } from "@/lib/contact";
 
 interface HamperProduct {
   image: string;
@@ -64,12 +66,19 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
             8,500, with same-day delivery in Nairobi CBD and fast delivery across the city. Every hamper is hand-curated by The
             Stems Flowers for birthdays, anniversaries, apologies and corporate gifting.
           </p>
+          <p className="text-brand-gray-600 text-sm md:text-base mt-3 max-w-3xl">
+            Our luxury hampers combine Ferrero Rocher chocolates, non-alcoholic or alcoholic wine, fresh flower bouquets,
+            cuddly teddy bears and personalised accessories — ideal when you want one impressive gift delivered in Nairobi.
+            Corporate teams choose us for employee appreciation and client thank-you baskets, while couples love our romantic
+            surprise hampers for anniversaries and Valentine&apos;s gestures. Order online with M-Pesa or message us on
+            WhatsApp; we deliver to Westlands, Karen, Kilimani, Lavington, Runda and all major Nairobi zones.
+          </p>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
             Showing {allDisplayItems.length} {allDisplayItems.length === 1 ? 'product' : 'products'}
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <a
-              href="https://wa.me/254113700549"
+              href={whatsappUrl("Hello! I'd like to order a gift hamper in Nairobi.")}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
@@ -78,6 +87,17 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
             </a>
           </div>
         </div>
+
+        <SeoInternalLinks
+          links={[
+            { href: "/corporate-gift-hampers-nairobi", label: "Corporate hampers" },
+            { href: "/flower-wine-hamper-nairobi", label: "Flower & wine hampers" },
+            { href: "/collections/flowers", label: "Add fresh flowers" },
+            { href: "/collections/wines", label: "Wine gifts" },
+            { href: "/birthday-flowers-nairobi", label: "Birthday gifts" },
+            { href: "/contact", label: "Custom hamper quote" },
+          ]}
+        />
 
         {allDisplayItems.length === 0 ? (
           <div className="text-center py-8">

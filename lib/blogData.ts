@@ -1,4 +1,9 @@
 import { supabase } from "./supabase";
+import {
+  formatSupabaseError,
+  isSupabaseConfigured,
+  warnIfSupabaseNotConfigured,
+} from "./supabaseConfig";
 
 export interface BlogPost {
   slug: string;
@@ -49,106 +54,155 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
   };
 }
 
-// Static blog posts for The Stems (seed/evergreen content)
+// Static blog posts — informational guides (not transactional landing pages)
 const STATIC_BLOG_POSTS: BlogPost[] = [
   {
-    slug: "fresh-flowers-nairobi-same-day-delivery",
-    title: "Fresh Flowers Nairobi | Same-Day Delivery by The Stems",
-    excerpt: "Order fresh flowers in Nairobi with same-day delivery. The Stems delivers bouquets, roses, and arrangements across CBD, Westlands, Karen, and more.",
+    slug: "how-to-keep-red-roses-fresh-nairobi",
+    title: "How to Keep Red Roses Fresh Longer in Nairobi's Climate",
+    excerpt:
+      "Practical tips for Nairobi households: trimming stems, water changes, indoor placement, and what to avoid so your roses last beyond delivery day.",
     content: `
-<p>The Stems offers same-day flower delivery across Nairobi. Whether you need a last-minute bouquet for a birthday, anniversary, or just because, we deliver fresh, hand-arranged flowers to your door.</p>
-<h2>Why Choose The Stems?</h2>
-<p>We source only the freshest blooms and create arrangements that make every occasion special. Our team is based at Delta Hotel Building, University Way, Nairobi CBD—ready to serve you.</p>
-<h2>How to Order</h2>
-<p>Browse our collections online, add to cart, and pay via M-Pesa (Till 4202044 or Paybill 880100, Account 433587). We deliver same day in CBD and next day in other Nairobi areas. Contact us on 0725 707 143 or thestemsflowers.ke@gmail.com.</p>
+<p>Nairobi's warm days and dry indoor air can shorten the life of cut roses. With a few simple habits, you can keep bouquets looking full and vibrant for several extra days after delivery.</p>
+<h2>Start with a clean vase</h2>
+<p>Wash the vase with soap, rinse well, and fill with cool water. Add the flower food sachet if your bouquet includes one.</p>
+<h2>Trim stems at an angle</h2>
+<p>Cut 2–3 cm off each stem under running water at a 45° angle. This helps stems absorb water efficiently.</p>
+<h2>Keep roses cool and away from fruit</h2>
+<p>Place the vase away from direct sun, heaters, and ripening fruit (ethylene gas speeds wilting). Change the water every two days and re-trim stems lightly.</p>
+<h2>When to order fresh roses in Nairobi</h2>
+<p>For the longest vase life, order from a florist who prepares bouquets the same day. Browse our <a href="/collections/flowers">fresh flower collection</a> or see <a href="/red-roses-nairobi">red roses for Nairobi delivery</a>.</p>
     `.trim(),
-    author: "The Stems",
+    author: "The Stems Team",
     publishedAt: new Date().toISOString().split("T")[0],
-    image: "/images/products/flowers/BouquetFlowers3.jpg",
-    category: "Flowers",
-    tags: ["flowers", "nairobi", "same-day", "delivery"],
-    readTime: 3,
+    image: "/images/products/flowers/BouquetFlowers4.jpg",
+    category: "Flower Care",
+    tags: ["roses", "flower care", "nairobi", "tips"],
+    readTime: 5,
     featured: true,
   },
   {
-    slug: "valentines-day-flowers-nairobi-2026",
-    title: "Valentine's Day Flowers Nairobi 2026 | The Stems",
-    excerpt: "Surprise your loved one with Valentine's Day flowers from The Stems. Red roses, mixed bouquets, and gift hampers with same-day delivery in Nairobi.",
+    slug: "rose-colors-meaning-anniversaries",
+    title: "What Different Rose Colors Mean for Anniversaries",
+    excerpt:
+      "Red, pink, white, and yellow roses each carry a different message. A simple guide to choosing the right anniversary bouquet in Kenya.",
     content: `
-<p>Valentine's Day is the perfect time to say it with flowers. The Stems offers romantic red roses, mixed bouquets, and gift hampers with chocolates and wine—all available for delivery across Nairobi.</p>
-<h2>Pre-Order for Valentine's Day</h2>
-<p>Book early to secure your preferred arrangement. We deliver on Valentine's Day across Nairobi CBD, Westlands, Karen, Lavington, Kilimani, and more. Pay with M-Pesa (Till 4202044 or Paybill 880100, Account 433587) or contact us on 0725 707 143.</p>
-<h2>Gift Hampers</h2>
-<p>Combine flowers with chocolates, wine, or teddy bears for the ultimate Valentine's surprise. Visit our shop at Delta Hotel Building, University Way, or order online at thestemsflowers.co.ke.</p>
+<p>Anniversary flowers are never just decorative — colour sends a message. Here is what guests and partners commonly understand in Kenya.</p>
+<h2>Red roses</h2>
+<p>Deep love and passion. Best for romantic milestones such as your wedding anniversary or Valentine's gestures.</p>
+<h2>Pink roses</h2>
+<p>Admiration, gratitude, and gentle romance. Ideal when you want something softer than all-red.</p>
+<h2>White roses</h2>
+<p>Purity, new beginnings, and respect. Popular for first anniversaries or formal celebrations.</p>
+<h2>Yellow roses</h2>
+<p>Friendship and joy — wonderful for long-term partners who want a cheerful, non-traditional palette.</p>
+<h2>Ready to send anniversary flowers?</h2>
+<p>See our <a href="/anniversary-flowers-nairobi">anniversary flower ideas in Nairobi</a> or shop <a href="/collections/flowers">mixed bouquets</a> with same-day delivery.</p>
     `.trim(),
-    author: "The Stems",
+    author: "The Stems Team",
     publishedAt: new Date().toISOString().split("T")[0],
-    image: "/images/products/flowers/BouquetFlowers4.jpg",
-    category: "Valentine",
-    tags: ["valentine", "roses", "nairobi", "gifts"],
+    image: "/images/products/flowers/BouquetFlowers3.jpg",
+    category: "Occasions",
+    tags: ["anniversary", "roses", "meaning", "gifts"],
     readTime: 4,
     featured: true,
   },
   {
-    slug: "wedding-flowers-nairobi-the-stems",
-    title: "Wedding Flowers Nairobi | Bouquets & Decor by The Stems",
-    excerpt: "Wedding bouquets, centrepieces, and venue decor in Nairobi. The Stems creates bespoke wedding floral arrangements for your big day.",
+    slug: "non-alcoholic-wines-gift-hampers-guide",
+    title: "A Guide to Non-Alcoholic Wines for Gift Hampers in Nairobi",
+    excerpt:
+      "Why alcohol-free wine works in hampers, how to pair it with chocolates and flowers, and what to look for when gifting in Kenya.",
     content: `
-<p>Your wedding deserves beautiful, fresh flowers. The Stems works with couples across Nairobi to create bridal bouquets, centrepieces, aisle arrangements, and full venue decor.</p>
-<h2>Consultation & Quotes</h2>
-<p>Contact us at thestemsflowers.ke@gmail.com or 0725 707 143 to discuss your vision. We'll provide a quote and work with your budget and colour scheme. Visit us at Delta Hotel Building, University Way, Nairobi CBD.</p>
-<h2>Why The Stems?</h2>
-<p>We focus on quality blooms, timely delivery, and attention to detail. From intimate ceremonies to larger celebrations, we help make your day memorable.</p>
+<p>Not every recipient drinks alcohol — yet many love the ritual of opening a beautiful bottle with a celebration meal. Non-alcoholic sparkling wines and red blends are a thoughtful hamper addition in Nairobi.</p>
+<h2>Who appreciates alcohol-free wine?</h2>
+<p>Colleagues, parents, guests who drive, and anyone observing personal or faith-based preferences. It keeps hampers inclusive without feeling like an afterthought.</p>
+<h2>Pairing ideas</h2>
+<p>Combine alcohol-free wine with Ferrero Rocher chocolates, a small flower bouquet, and a greeting card. For premium surprises, add a teddy bear or personalised mug.</p>
+<h2>Shop hamper-ready wines</h2>
+<p>Explore our <a href="/collections/wines">wine gifts collection</a> or the curated <a href="/collections/gift-hampers">GentlePaw Hamper</a> with flowers, teddy, and chocolates.</p>
     `.trim(),
-    author: "The Stems",
+    author: "The Stems Team",
+    publishedAt: new Date().toISOString().split("T")[0],
+    image: "/images/products/hampers/GiftAmper3.jpg",
+    category: "Gift Guides",
+    tags: ["wine", "hampers", "non-alcoholic", "gifts"],
+    readTime: 5,
+    featured: true,
+  },
+  {
+    slug: "fresh-flowers-nairobi-same-day-delivery",
+    title: "How Same-Day Flower Delivery Works in Nairobi",
+    excerpt:
+      "Cut-off times, delivery zones, and what happens after you pay — a clear guide to ordering flowers online in Nairobi.",
+    content: `
+<p>Same-day delivery sounds simple, but knowing the process helps you plan surprises without stress.</p>
+<h2>Order before the cut-off</h2>
+<p>At The Stems, orders placed by 4PM on weekdays can reach most Nairobi neighbourhoods the same day. CBD deliveries are typically fastest.</p>
+<h2>What we need from you</h2>
+<p>Recipient name, phone number, and a precise address (estate, building, floor). Add delivery instructions for gated communities.</p>
+<h2>Payment and confirmation</h2>
+<p>M-Pesa checkout confirms instantly. Our florists then prepare your bouquet at Delta Hotel, University Way, and dispatch a rider.</p>
+<p>Read more on our <a href="/same-day-flower-delivery-nairobi">same-day delivery page</a> or browse <a href="/collections/flowers">flowers</a>.</p>
+    `.trim(),
+    author: "The Stems Team",
+    publishedAt: new Date().toISOString().split("T")[0],
+    image: "/images/products/flowers/BouquetFlowers5.jpg",
+    category: "Delivery Guide",
+    tags: ["delivery", "nairobi", "flowers", "how-to"],
+    readTime: 4,
+    featured: false,
+  },
+  {
+    slug: "wedding-flowers-nairobi-the-stems",
+    title: "How to Plan Wedding Flowers on a Budget in Nairobi",
+    excerpt:
+      "Prioritise bridal bouquets, simplify centrepieces, and book early — practical wedding flower planning for Kenyan couples.",
+    content: `
+<p>Wedding flowers set the mood, but costs add up quickly. Start with three priorities: bridal bouquet, ceremony focal point, and one reception feature (head table or entrance).</p>
+<h2>Choose seasonal blooms</h2>
+<p>Roses, gypsophila, and greens stay available year-round in Nairobi and photograph beautifully.</p>
+<h2>Book a consultation early</h2>
+<p>Share inspiration photos, venue access times, and your colour palette. We prepare quotes based on stem counts, not vague ranges.</p>
+<p>Explore <a href="/wedding-flowers-nairobi">wedding flowers at The Stems</a> or <a href="/contact">contact our florists</a>.</p>
+    `.trim(),
+    author: "The Stems Team",
     publishedAt: new Date().toISOString().split("T")[0],
     image: "/weddingblog.jpeg",
     category: "Wedding",
-    tags: ["wedding", "bouquets", "nairobi", "events"],
-    readTime: 3,
+    tags: ["wedding", "planning", "nairobi", "budget"],
+    readTime: 5,
     featured: false,
   },
   {
     slug: "birthday-flowers-gift-hampers-nairobi",
-    title: "Birthday Flowers & Gift Hampers Nairobi | The Stems",
-    excerpt: "Send birthday flowers and gift hampers in Nairobi. Same-day delivery, M-Pesa payment, and a wide range of bouquets and hampers from The Stems.",
+    title: "How to Pick Birthday Flowers Based on Personality",
+    excerpt:
+      "Outgoing, romantic, or minimalist? Match bouquet style and colour to the person you're celebrating in Nairobi.",
     content: `
-<p>Make someone's birthday special with flowers or a gift hamper from The Stems. We deliver across Nairobi—same day in CBD and next day in other areas.</p>
-<h2>What We Offer</h2>
-<p>Fresh bouquets, mixed arrangements, gift hampers with chocolates and wine, and teddy bears. All can be paired with a personalised message. Order online or call 0725 707 143. Pay via M-Pesa Till 4202044 or Paybill 880100, Account 433587.</p>
-<h2>Visit Us</h2>
-<p>Delta Hotel Building, University Way, Nairobi CBD. Mon–Sat 8AM–8PM. Email: thestemsflowers.ke@gmail.com. Find us on the map: thestemsflowers.co.ke</p>
+<p>The best birthday flowers reflect who you're celebrating — not just what is in season.</p>
+<h2>For the romantic</h2>
+<p>Red or pink roses with a handwritten card. Add chocolates for a classic surprise.</p>
+<h2>For the fun-loving friend</h2>
+<p>Mixed bright bouquets or a teddy-and-flower combo hamper.</p>
+<h2>For the minimalist</h2>
+<p>Single-colour roses in a simple wrap — elegant without feeling over the top.</p>
+<p>Shop <a href="/birthday-flowers-nairobi">birthday flowers in Nairobi</a> or <a href="/collections/gift-hampers">gift hampers</a>.</p>
     `.trim(),
-    author: "The Stems",
+    author: "The Stems Team",
     publishedAt: new Date().toISOString().split("T")[0],
-    image: "/images/products/hampers/GiftAmper3.jpg",
+    image: "/images/products/hampers/GiftAmper6.jpg",
     category: "Birthday",
-    tags: ["birthday", "flowers", "hampers", "nairobi"],
-    readTime: 3,
-    featured: false,
-  },
-  {
-    slug: "corporate-gifts-flowers-nairobi",
-    title: "Corporate Gifts & Flowers Nairobi | The Stems",
-    excerpt: "Corporate flower arrangements and gift hampers for offices, events, and clients in Nairobi. The Stems delivers to businesses across the city.",
-    content: `
-<p>Impress clients and colleagues with corporate flowers and gift hampers from The Stems. We deliver to offices, events, and venues across Nairobi.</p>
-<h2>Services</h2>
-<p>Regular office flowers, one-off thank-you bouquets, conference and event decor, and branded gift hampers. Contact us at thestemsflowers.ke@gmail.com or 0725 707 143 for bulk orders and quotes.</p>
-<h2>Payment & Delivery</h2>
-<p>M-Pesa (Till 4202044, Paybill 880100 Account 433587), invoice on request. We're at Delta Hotel Building, University Way, Nairobi CBD. Mon–Sat 8AM–8PM.</p>
-    `.trim(),
-    author: "The Stems",
-    publishedAt: new Date().toISOString().split("T")[0],
-    image: "/images/products/teddies/TeddyBears1.jpg",
-    category: "Corporate",
-    tags: ["corporate", "gifts", "nairobi", "offices"],
-    readTime: 3,
+    tags: ["birthday", "flowers", "personality", "gifts"],
+    readTime: 4,
     featured: false,
   },
 ];
 
 async function getDatabaseBlogPosts(): Promise<BlogPost[]> {
+  if (!isSupabaseConfigured()) {
+    warnIfSupabaseNotConfigured("getBlogPosts");
+    return [];
+  }
+
   try {
     const { data, error } = await supabase
       .from("blog_posts")
@@ -156,19 +210,24 @@ async function getDatabaseBlogPosts(): Promise<BlogPost[]> {
       .order("published_at", { ascending: false });
 
     if (error) {
-      console.error("Error fetching blog posts from database:", error);
+      console.error("Error fetching blog posts from database:", formatSupabaseError(error));
       return [];
     }
 
     return (data as BlogPostDB[]).map(convertBlogPost);
   } catch (error) {
-    console.error("Unexpected error fetching blog posts from database:", error);
+    console.error("Unexpected error fetching blog posts from database:", formatSupabaseError(error));
     return [];
   }
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
   // 1. Try database first
+  if (!isSupabaseConfigured()) {
+    const staticPost = STATIC_BLOG_POSTS.find((p) => p.slug === slug);
+    return staticPost ?? undefined;
+  }
+
   try {
     const { data, error } = await supabase
       .from("blog_posts")
@@ -180,7 +239,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
       return convertBlogPost(data as BlogPostDB);
     }
   } catch (error) {
-    console.error("Error fetching blog post from database:", error);
+    console.error("Error fetching blog post from database:", formatSupabaseError(error));
   }
 
   // 2. Fallback to static posts

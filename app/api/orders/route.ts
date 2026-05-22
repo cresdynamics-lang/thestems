@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
 
     if (!order) {
       console.error("❌ Failed to create order in database");
-      return NextResponse.json({ message: "Failed to create order" }, { status: 500 });
+      return NextResponse.json(
+        { message: "Failed to create order. Please check server logs." },
+        { status: 500 }
+      );
     }
 
     console.log("✅ Order created successfully:", {
@@ -40,12 +43,11 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(order);
-  } catch (error: any) {
-    console.error("❌ Create order error:", error);
-    return NextResponse.json(
-      { message: error.message || "Failed to create order" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Failed to create order";
+    console.error("❌ Create order error:", message);
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
 

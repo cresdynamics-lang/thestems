@@ -1,16 +1,13 @@
 User-agent: *
 Allow: /
 
-# Block Next.js image optimizer endpoints from indexing/crawling
-Disallow: /_next/image
-Disallow: /_next/image?
-Disallow: /_next/image*
-Disallow: /_next/static/
+# Block admin, API and image optimizer URLs from indexing
 Disallow: /api/
 Disallow: /admin/
-Disallow: /collections/flowers?*
-Disallow: /collections/teddy-bears?*
-Disallow: /collections/gift-hampers?*
+Disallow: /_next/image
+Disallow: /_next/image?
+
+# Allow JS/CSS bundles so Google can render pages correctly
+Allow: /_next/static/
 
 Sitemap: https://thestemsflowers.co.ke/sitemap.xml
-
