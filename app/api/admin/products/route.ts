@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     revalidatePath("/collections/wines");
     revalidatePath("/collections/chocolates");
     revalidatePath(`/product/${data.slug}`);
-    revalidateTag("products");
+    revalidateTag("products", "max");
 
     return NextResponse.json(data);
   } catch (error: any) {
