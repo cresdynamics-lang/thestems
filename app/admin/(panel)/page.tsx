@@ -21,38 +21,40 @@ export default function AdminDashboard() {
   const [previousVisitors, setPreviousVisitors] = useState<number | null>(null);
 
   useEffect(() => {
-    // Check if admin is logged in
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.push("/admin/login");
+      router.replace("/admin/login");
       return;
     }
 
-    // Validate token by making an API call
-    async function validateAndFetchStats() {
+    let cancelled = false;
+
+    async function fetchStats() {
       try {
-        // First validate the token by checking if it's valid
-        const statsResponse = await axios.get("/api/admin/stats", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await fetch("/api/admin/stats", {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
         });
-        setStats(statsResponse.data);
-      } catch (error: any) {
-        // If unauthorized, clear token and redirect to login
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("admin_token");
+            router.replace("/admin/login");
+          }
           return;
-        } else {
-          console.error("Error fetching stats:", error);
         }
+        const data = await res.json();
+        if (!cancelled) setStats(data);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     }
 
-    validateAndFetchStats();
+    fetchStats();
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   // Poll live visitors

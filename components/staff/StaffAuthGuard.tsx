@@ -9,17 +9,17 @@ import {
   useRef,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { getStaffToken, clearStaffToken, staffFetch } from "@/lib/staff/api-client";
+import {
+  getStaffToken,
+  getCachedStaffUser,
+  setStaffSession,
+  clearStaffToken,
+  staffFetch,
+  type StaffUser,
+} from "@/lib/staff/api-client";
 import { STAFF_SESSION_MS } from "@/lib/staff/constants";
 
 const PUBLIC_PATHS = ["/staff/login", "/staff/forgot-password", "/staff/reset-password"];
-
-interface StaffUser {
-  email: string;
-  role: string;
-  name?: string;
-  id?: string;
-}
 
 const StaffContext = createContext<{ user: StaffUser; logout: () => void } | null>(null);
 
@@ -35,11 +35,13 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<StaffUser | null>(null);
   const [loading, setLoading] = useState(true);
   const lastActivity = useRef(Date.now());
+  const authReady = useRef(false);
 
   const logout = useCallback(async () => {
     clearStaffToken();
+    authReady.current = false;
     await fetch("/api/staff/logout", { method: "POST" }).catch(() => {});
-    router.push("/staff/login");
+    router.replace("/staff/login");
   }, [router]);
 
   useEffect(() => {
@@ -50,18 +52,46 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
 
     const token = getStaffToken();
     if (!token) {
-      router.push("/staff/login");
+      authReady.current = false;
+      router.replace("/staff/login");
       setLoading(false);
       return;
     }
 
+    const cached = getCachedStaffUser();
+    if (cached) {
+      setUser(cached);
+      setLoading(false);
+      authReady.current = true;
+      return;
+    }
+
+    if (authReady.current) {
+      setLoading(false);
+      return;
+    }
+
+    let cancelled = false;
     staffFetch<StaffUser>("/api/staff/me")
-      .then(setUser)
-      .catch(() => {
-        clearStaffToken();
-        router.push("/staff/login");
+      .then((profile) => {
+        if (cancelled) return;
+        setStaffSession(token, profile);
+        setUser(profile);
+        authReady.current = true;
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (cancelled) return;
+        clearStaffToken();
+        authReady.current = false;
+        router.replace("/staff/login");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, router]);
 
   useEffect(() => {
@@ -91,8 +121,8 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[40vh] text-brand-gray-600">
-        Loading staff panel…
+      <div className="staff-auth-form-wrap min-h-dvh w-full flex items-center justify-center text-brand-gray-600">
+        Loading…
       </div>
     );
   }

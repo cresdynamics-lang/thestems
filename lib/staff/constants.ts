@@ -1,9 +1,12 @@
+import { SHOP_INFO } from "@/lib/constants";
+
 export const STAFF_BRAND = {
-  name: "Floral Whispers Gifts",
-  shortName: "Floral Whispers",
-  domain: "floralwhispersgifts.co.ke",
-  tagline: "Nairobi · Flowers, hampers & gifts",
+  name: SHOP_INFO.name,
+  shortName: "The Stems",
+  domain: "thestemsflowers.co.ke",
+  tagline: "Nairobi · Flowers, teddy bears & gift hampers",
   location: "Nairobi, Kenya",
+  address: SHOP_INFO.address,
 } as const;
 
 export const STAFF_TOKEN_KEY = "staff_token";

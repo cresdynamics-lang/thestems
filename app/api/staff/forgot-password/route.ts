@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       await resend.emails.send({
         from: FROM_EMAIL,
         to: admin.email,
-        subject: "Floral Whispers Gifts – Staff password reset",
+        subject: "The Stems – Staff password reset",
         html: `<p>Click to reset your staff password (valid 1 hour):</p><p><a href="${resetUrl}">${resetUrl}</a></p>`,
       });
     } else {

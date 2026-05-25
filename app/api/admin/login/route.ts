@@ -2,18 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import jwt from "jsonwebtoken";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@example.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ALLOWED_EMAIL = (process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com")
+  .trim()
+  .toLowerCase();
+const ALLOWED_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@2025";
+
+function successResponse(email: string, role: string, id?: string) {
+  const token = jwt.sign({ email, role, id }, JWT_SECRET, { expiresIn: "7d" });
+  return NextResponse.json({ message: "Login successful", token });
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password } = body;
-
-    console.log(`[Login] Attempt: email="${email}", password length=${password?.length || 0}`);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -22,85 +27,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // RESTRICTED ACCESS: Only The Stems admin email is allowed
-    const ALLOWED_EMAIL = process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com";
-    const ALLOWED_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@2025";
+    const normalizedEmail = String(email).trim().toLowerCase();
 
-    // Normalize email (trim and lowercase)
-    const normalizedEmail = email.trim().toLowerCase();
-    const normalizedAllowedEmail = ALLOWED_EMAIL.toLowerCase();
-
-    console.log(`[Login] Normalized: "${normalizedEmail}" vs "${normalizedAllowedEmail}"`);
-
-    // Check if email is the allowed email
-    if (normalizedEmail !== normalizedAllowedEmail) {
-      console.log(`[Login] Email mismatch: "${normalizedEmail}" !== "${normalizedAllowedEmail}"`);
+    if (normalizedEmail !== ALLOWED_EMAIL) {
       return NextResponse.json(
         { message: "Access denied. Only authorized administrators can access this dashboard." },
         { status: 403 }
       );
     }
 
-    console.log(`[Login] Email matches, checking password...`);
-
-    // Check against admins table in Supabase first
-    try {
-      const { data: admin, error } = await (supabaseAdmin
-        .from("admins") as any)
-        .select("*")
-        .eq("email", ALLOWED_EMAIL)
-        .single();
-
-      if (!error && admin) {
-        // Check password from database or fallback to allowed password
-        if (admin.password_hash === password || password === ALLOWED_PASSWORD) {
-          const token = jwt.sign({ 
-            email: admin.email, 
-            role: admin.role || "admin", 
-            id: admin.id 
-          }, JWT_SECRET, { expiresIn: "7d" });
-
-          console.log(`[Login] Success for ${admin.email}`);
-          return NextResponse.json({
-            message: "Login successful",
-            token,
-          });
-        } else {
-          console.log(`[Login] Password mismatch for ${admin.email}`);
-        }
-      } else {
-        console.log(`[Login] Admin not found in database:`, error);
-      }
-    } catch (dbError) {
-      console.error("Database auth error:", dbError);
+    if (password === ALLOWED_PASSWORD) {
+      return successResponse(ALLOWED_EMAIL, "admin");
     }
 
-    // Fallback: Direct check for allowed admin email and password
-    if (normalizedEmail === normalizedAllowedEmail && password === ALLOWED_PASSWORD) {
-      const token = jwt.sign({ 
-        email: ALLOWED_EMAIL, 
-        role: "admin" 
-      }, JWT_SECRET, { expiresIn: "7d" });
-      
-      console.log(`[Login] Fallback success for ${ALLOWED_EMAIL}`);
-      return NextResponse.json({
-        message: "Login successful",
-        token,
-      });
+    const { data: admin } = await supabaseAdmin
+      .from("admins")
+      .select("id, email, role, password_hash, is_active")
+      .eq("email", normalizedEmail)
+      .maybeSingle();
+
+    if (admin?.is_active === false) {
+      return NextResponse.json({ message: "Account deactivated." }, { status: 403 });
     }
 
-    console.log(`[Login] Final check failed for email: ${normalizedEmail}`);
+    if (admin && (admin.password_hash === password || password === ALLOWED_PASSWORD)) {
+      return successResponse(
+        admin.email,
+        admin.role || "admin",
+        admin.id
+      );
+    }
 
-    return NextResponse.json(
-      { message: "Invalid email or password" },
-      { status: 401 }
-    );
-  } catch (error: any) {
-    console.error("Login error:", error);
-    return NextResponse.json(
-      { message: error.message || "Login failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Login failed";
+    return NextResponse.json({ message }, { status: 500 });
   }
 }
-

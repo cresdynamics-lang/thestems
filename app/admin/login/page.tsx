@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
-import Image from "next/image";
+import { SHOP_INFO } from "@/lib/constants";
+import { StaffAuthLayout } from "@/components/staff/StaffAuthLayout";
+import { setAdminToken } from "@/lib/admin/session";
 
 const schema = yup.object({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -15,7 +17,7 @@ const schema = yup.object({
 
 type LoginFormData = yup.InferType<typeof schema>;
 
-function AdminLoginForm() {
+export default function AdminLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -28,11 +30,6 @@ function AdminLoginForm() {
     resolver: yupResolver(schema),
   });
 
-  // Clear any existing token on mount to force fresh login
-  useEffect(() => {
-    localStorage.removeItem("admin_token");
-  }, []);
-
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
     setError(null);
@@ -42,6 +39,7 @@ function AdminLoginForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: data.email, password: data.password }),
+        cache: "no-store",
       });
 
       const result = await response.json();
@@ -50,105 +48,86 @@ function AdminLoginForm() {
         throw new Error(result.message || "Login failed");
       }
 
-      // Store token only if login is successful
       if (result.token) {
-        localStorage.setItem("admin_token", result.token);
-        router.push("/admin");
-      } else {
-        throw new Error("No token received from server");
+        setAdminToken(result.token);
+        router.replace("/admin");
+        return;
       }
-    } catch (err: any) {
-      setError(err.message || "Login failed. Please try again.");
+
+      throw new Error("No token received from server");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
       setIsSubmitting(false);
     }
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-blush py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <Link href="/" className="flex justify-center mb-4">
-            <Image
-              src="/images/logo/thestemslogo.jpeg"
-              alt="The Stems Logo"
-              width={80}
-              height={80}
-              className="rounded-full"
-            />
-          </Link>
-          <h2 className="font-heading font-bold text-3xl text-brand-gray-900">Admin Login</h2>
-          <p className="mt-2 text-sm text-brand-gray-600">
-            Sign in to access the admin dashboard
+    <StaffAuthLayout
+      title="Admin sign in"
+      subtitle={`${SHOP_INFO.name} content admin`}
+      intro="Legacy admin for blog and homepage content. For orders and products, use the staff panel."
+      footer={
+        <div className="space-y-3 text-center text-sm text-brand-gray-600">
+          <p>
+            <Link href="/staff/login" className="font-medium text-brand-pink hover:underline">
+              Go to staff panel sign in →
+            </Link>
           </p>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-          {error && (
-            <div className="bg-brand-red/10 border border-brand-red rounded-lg p-4 text-brand-red text-sm">
-              {error}
-            </div>
-          )}
-
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                {...register("email")}
-                className="input-field"
-                aria-required="true"
-                aria-invalid={errors.email ? "true" : "false"}
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-brand-red">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                {...register("password")}
-                className="input-field"
-                aria-required="true"
-                aria-invalid={errors.password ? "true" : "false"}
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-brand-red">{errors.password.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? "Signing in..." : "Sign in"}
-            </button>
-          </div>
-
-          <div className="text-center">
-            <Link href="/" className="text-sm text-brand-gray-600 hover:text-brand-green">
+          <p>
+            <Link href="/" className="hover:text-brand-gray-900 transition-colors">
               ← Back to website
             </Link>
-          </div>
-        </form>
-      </div>
-    </div>
+          </p>
+        </div>
+      }
+    >
+      <form className="space-y-5" onSubmit={onSubmit}>
+        {error ? <div className="staff-auth-error">{error}</div> : null}
+
+        <div>
+          <label htmlFor="email" className="staff-label">
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            {...register("email")}
+            className="staff-input"
+            aria-invalid={errors.email ? "true" : "false"}
+          />
+          {errors.email ? (
+            <p className="text-xs text-red-700 mt-1">{errors.email.message}</p>
+          ) : null}
+        </div>
+
+        <div>
+          <label htmlFor="password" className="staff-label">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="••••••••"
+            {...register("password")}
+            className="staff-input"
+            aria-invalid={errors.password ? "true" : "false"}
+          />
+          {errors.password ? (
+            <p className="text-xs text-red-700 mt-1">{errors.password.message}</p>
+          ) : null}
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="staff-btn staff-btn-primary w-full py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Signing in…" : "Sign in"}
+        </button>
+      </form>
+    </StaffAuthLayout>
   );
 }
-
-export default function AdminLoginPage() {
-  return <AdminLoginForm />;
-}
-

@@ -11,7 +11,7 @@ export function StaffShell({ children }: { children: React.ReactNode }) {
   const isAuth = AUTH_PATHS.some((p) => pathname?.startsWith(p));
 
   if (isAuth) {
-    return <div className="staff-auth">{children}</div>;
+    return <>{children}</>;
   }
 
   return (

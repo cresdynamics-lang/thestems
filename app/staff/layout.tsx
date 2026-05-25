@@ -5,7 +5,7 @@ import { STAFF_BRAND } from "@/lib/staff/constants";
 import "./staff.css";
 
 export const metadata: Metadata = {
-  title: `Staff Admin | ${STAFF_BRAND.name}`,
+  title: `Staff | ${STAFF_BRAND.name}`,
   robots: { index: false, follow: false },
 };
 

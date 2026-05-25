@@ -7,7 +7,7 @@ import { SHOP_INFO } from "@/lib/constants";
 export const dynamic = "force-dynamic";
 
 const DEFAULT_SETTINGS: Record<string, string> = {
-  store_name: "Floral Whispers Gifts",
+  store_name: "The Stems",
   store_address: SHOP_INFO.address,
   store_phone: SHOP_INFO.phone,
   store_email: SHOP_INFO.email,

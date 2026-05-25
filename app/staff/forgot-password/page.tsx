@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { STAFF_BRAND } from "@/lib/staff/constants";
+import { StaffAuthLayout } from "@/components/staff/StaffAuthLayout";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -12,48 +13,52 @@ export default function ForgotPasswordPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setMsg("");
     const res = await fetch("/api/staff/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
     const data = await res.json();
-    setMsg(data.message || "Check your email.");
+    setMsg(data.message || "If that email exists, we sent a reset link.");
     setLoading(false);
   }
 
   return (
-    <div className="staff-auth-form-wrap w-full col-span-2">
-      <div className="w-full max-w-[380px]">
-        <h1 className="font-heading text-2xl font-semibold tracking-tight">Reset password</h1>
-        <p className="text-sm text-brand-gray-600 mt-1 mb-8">{STAFF_BRAND.shortName} staff account</p>
-        <form onSubmit={submit} className="space-y-4">
-          <div>
-            <label className="staff-label">Email</label>
-            <input
-              type="email"
-              className="staff-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          {msg && (
-            <p className="text-sm px-3 py-2 rounded-lg bg-emerald-50 text-emerald-900 border border-emerald-200">
-              {msg}
-            </p>
-          )}
-          <button type="submit" disabled={loading} className="staff-btn staff-btn-primary w-full">
-            {loading ? "Sending…" : "Send reset link"}
-          </button>
-        </form>
-        <Link
-          href="/staff/login"
-          className="block text-center mt-6 text-sm font-medium text-brand-pink hover:underline"
-        >
-          Back to sign in
-        </Link>
-      </div>
-    </div>
+    <StaffAuthLayout
+      title="Reset password"
+      subtitle={`Enter the email for your ${STAFF_BRAND.name} staff account`}
+      footer={
+        <p className="text-center text-sm">
+          <Link href="/staff/login" className="font-medium text-brand-pink hover:underline">
+            ← Back to sign in
+          </Link>
+        </p>
+      }
+    >
+      <form onSubmit={submit} className="space-y-5">
+        <div>
+          <label htmlFor="email" className="staff-label">
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            className="staff-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        {msg ? <p className="staff-auth-success">{msg}</p> : null}
+
+        <button type="submit" disabled={loading} className="staff-btn staff-btn-primary w-full py-2.5">
+          {loading ? "Sending…" : "Send reset link"}
+        </button>
+      </form>
+    </StaffAuthLayout>
   );
 }
