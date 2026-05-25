@@ -1,0 +1,219 @@
+/* Staff admin — boutique panel (scoped under .staff-app) */
+
+.staff-app {
+  --staff-sidebar: #1a2e26;
+  --staff-sidebar-hover: #243d33;
+  --staff-sidebar-border: rgba(255, 255, 255, 0.08);
+  --staff-accent: #b84d68;
+  --staff-accent-soft: #f3e8ec;
+  --staff-sage: #5a7d62;
+  --staff-bg: #f4f1ec;
+  --staff-surface: #ffffff;
+  --staff-border: #e5dfd6;
+  --staff-muted: #6b6560;
+  --staff-text: #1c1917;
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--staff-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.staff-app .staff-main {
+  flex: 1;
+  overflow: auto;
+  padding: 1.25rem 1.5rem 2rem;
+  background: var(--staff-bg);
+}
+
+@media (min-width: 1024px) {
+  .staff-app .staff-main {
+    padding: 1.75rem 2rem 2.5rem;
+  }
+}
+
+.staff-app .staff-panel {
+  background: var(--staff-surface);
+  border: 1px solid var(--staff-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+}
+
+.staff-app .staff-panel-head {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--staff-border);
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+}
+
+.staff-app .staff-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--staff-text);
+  margin-bottom: 0.375rem;
+}
+
+.staff-app .staff-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+  border: 1px solid var(--staff-border);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.staff-app .staff-input:focus {
+  outline: none;
+  border-color: var(--staff-sage);
+  box-shadow: 0 0 0 3px rgba(90, 125, 98, 0.15);
+}
+
+.staff-app .staff-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.staff-app .staff-btn-primary {
+  background: var(--staff-sidebar);
+  color: #fff;
+}
+
+.staff-app .staff-btn-primary:hover:not(:disabled) {
+  background: var(--staff-sidebar-hover);
+}
+
+.staff-app .staff-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.staff-app .staff-btn-accent {
+  background: var(--staff-accent);
+  color: #fff;
+}
+
+.staff-app .staff-btn-accent:hover:not(:disabled) {
+  background: #a3445c;
+}
+
+.staff-app .staff-btn-ghost {
+  background: transparent;
+  color: var(--staff-muted);
+  border: 1px solid var(--staff-border);
+}
+
+.staff-app .staff-btn-ghost:hover {
+  background: var(--staff-bg);
+  color: var(--staff-text);
+}
+
+.staff-app .staff-segment {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--staff-surface);
+  border: 1px solid var(--staff-border);
+  border-radius: 8px;
+}
+
+.staff-app .staff-segment button {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: 6px;
+  color: var(--staff-muted);
+}
+
+.staff-app .staff-segment button[data-active="true"] {
+  background: var(--staff-sidebar);
+  color: #fff;
+}
+
+.staff-app .staff-table {
+  width: 100%;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+
+.staff-app .staff-table th {
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--staff-muted);
+  padding: 0.75rem 1rem;
+  background: #faf9f7;
+  border-bottom: 1px solid var(--staff-border);
+}
+
+.staff-app .staff-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--staff-border);
+  vertical-align: middle;
+}
+
+.staff-app .staff-table tbody tr:hover td {
+  background: #faf9f7;
+}
+
+.staff-app .staff-stat {
+  background: var(--staff-surface);
+  border: 1px solid var(--staff-border);
+  border-radius: 12px;
+  padding: 1.125rem 1.25rem;
+}
+
+.staff-app .staff-stat-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--staff-muted);
+}
+
+.staff-app .staff-stat-value {
+  margin-top: 0.35rem;
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.staff-auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .staff-auth {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.staff-auth-brand {
+  background: var(--staff-sidebar);
+  color: #fff;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.staff-auth-form-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--staff-bg);
+}

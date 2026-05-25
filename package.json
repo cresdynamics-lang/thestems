@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "node -e \"try{require('fs').rmSync('.next/dev/lock',{force:true})}catch(e){}\"",
+    "dev:fresh": "npm run dev:clean && next dev",
     "build": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build --webpack",
     "build:low-memory": "node --max-old-space-size=2048 ./node_modules/next/dist/bin/next build --webpack",
     "start": "next start",

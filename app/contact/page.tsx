@@ -58,8 +58,11 @@ export default function ContactPage() {
       try {
         await axios.post("/api/email", {
           type: "contact",
-          subject: emailSubject,
-          message: emailMessage,
+          subject: sanitizedData.subject,
+          message: sanitizedData.message,
+          name: sanitizedData.name,
+          email: sanitizedData.email,
+          phone: sanitizedData.phone,
         });
       } catch (emailError) {
         console.error("Email sending error:", emailError);

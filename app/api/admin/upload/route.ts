@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth";
+import { verifyAdminToken } from "@/lib/auth";
+import { verifyStaffToken } from "@/lib/staff/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import sharp from "sharp";
 
@@ -9,7 +10,9 @@ export async function POST(request: NextRequest) {
   try {
     // Admin auth - catch auth errors gracefully
     try {
-      requireAdmin(request);
+      if (!verifyAdminToken(request) && !verifyStaffToken(request)) {
+        throw new Error("Unauthorized");
+      }
     } catch (authError: any) {
       if (authError?.message === "Unauthorized") {
         return NextResponse.json(

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { supabaseAdmin } from "@/lib/supabase";
 
 const RECIPIENT_EMAIL = process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com";
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR";
@@ -13,7 +14,22 @@ const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { type, subject, message, html } = body;
+    const { type, subject, message, html, name, email, phone } = body;
+
+    if (type === "contact" && name && message) {
+      try {
+        await supabaseAdmin.from("contact_messages").insert({
+          name,
+          email: email || null,
+          phone: phone || null,
+          subject: subject || "Contact form",
+          message,
+          status: "unread",
+        });
+      } catch (dbErr) {
+        console.error("contact_messages insert:", dbErr);
+      }
+    }
 
     if (!subject || (!message && !html)) {
       return NextResponse.json(

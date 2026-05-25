@@ -19,6 +19,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 301);
   }
 
+  const pathname = request.nextUrl.pathname;
+
+  // Staff panel: require session cookie on protected pages (API validates JWT fully)
+  const staffPublic =
+    pathname === "/staff/login" ||
+    pathname.startsWith("/staff/forgot-password") ||
+    pathname.startsWith("/staff/reset-password");
+  if (pathname.startsWith("/staff") && !staffPublic) {
+    const hasStaffSession = Boolean(request.cookies.get("staff_token")?.value);
+    if (!hasStaffSession) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/staff/login";
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   const response = NextResponse.next();
 
   // Add CORS headers for Chrome compatibility (only for API routes)

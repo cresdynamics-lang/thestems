@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Lato, Dancing_Script } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import LazyWhatsAppButton from "@/components/LazyWhatsAppButton";
+import { StoreChrome } from "@/components/StoreChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import ClientGoogleAnalytics from "@/components/ClientGoogleAnalytics";
@@ -136,10 +134,7 @@ export default function RootLayout({
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
-            <Header />
-            <main id="main-content" className="flex-1">{children}</main>
-            <Footer />
-            <LazyWhatsAppButton />
+            <StoreChrome>{children}</StoreChrome>
           </AnalyticsProvider>
         </ErrorBoundary>
       </body>
