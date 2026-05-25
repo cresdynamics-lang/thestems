@@ -1,17 +1,72 @@
-/* Staff admin — boutique panel (scoped under .staff-app) */
+/* Staff admin — matches storefront (blush, white, rose) */
+
+/* Drawer is portaled to document.body — must not rely on .staff-app variables */
+.staff-nav-drawer {
+  background-color: #ffffff;
+  color: #111827;
+}
+
+.staff-nav-drawer .staff-nav-drawer-title {
+  color: #e75480;
+}
+
+.staff-nav-drawer .staff-nav-drawer-subtitle {
+  color: #6b7280;
+}
+
+.staff-nav-drawer .staff-nav-drawer-close {
+  color: #4b5563;
+}
+
+.staff-nav-drawer .staff-nav-drawer-close:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.staff-nav-drawer .staff-nav-group-label {
+  color: #6b7280;
+}
+
+.staff-nav-drawer .staff-nav-link {
+  color: #111827;
+}
+
+.staff-nav-drawer .staff-nav-link:hover {
+  color: #e75480;
+  background-color: #f9fafb;
+}
+
+.staff-nav-drawer .staff-nav-link--active {
+  color: #e75480;
+  background-color: #f8c8dc;
+}
+
+.staff-nav-drawer .staff-nav-icon {
+  color: #6b7280;
+}
+
+.staff-nav-drawer .staff-nav-link--active .staff-nav-icon {
+  color: #e75480;
+}
+
+.staff-nav-drawer .staff-nav-drawer-user {
+  color: #111827;
+}
+
+.staff-nav-drawer .staff-nav-drawer-foot {
+  background-color: #fdf2f6;
+}
 
 .staff-app {
-  --staff-sidebar: #1a2e26;
-  --staff-sidebar-hover: #243d33;
-  --staff-sidebar-border: rgba(255, 255, 255, 0.08);
-  --staff-accent: #b84d68;
-  --staff-accent-soft: #f3e8ec;
-  --staff-sage: #5a7d62;
-  --staff-bg: #f4f1ec;
+  --staff-accent: #e75480;
+  --staff-blush: #f8c8dc;
+  --staff-rose: #e75480;
+  --staff-rose-soft: rgba(231, 84, 128, 0.12);
+  --staff-bg: #f8c8dc;
   --staff-surface: #ffffff;
-  --staff-border: #e5dfd6;
-  --staff-muted: #6b6560;
-  --staff-text: #1c1917;
+  --staff-border: #e5e7eb;
+  --staff-muted: #6b7280;
+  --staff-text: #111827;
   font-family: var(--font-body), system-ui, sans-serif;
   color: var(--staff-text);
   -webkit-font-smoothing: antialiased;
@@ -33,8 +88,8 @@
 .staff-app .staff-panel {
   background: var(--staff-surface);
   border: 1px solid var(--staff-border);
-  border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .staff-app .staff-panel-head {
@@ -43,7 +98,6 @@
   font-family: var(--font-heading), system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.9375rem;
-  letter-spacing: -0.01em;
 }
 
 .staff-app .staff-label {
@@ -58,16 +112,15 @@
   width: 100%;
   padding: 0.625rem 0.875rem;
   font-size: 0.9375rem;
-  border: 1px solid var(--staff-border);
-  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
   background: #fff;
-  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .staff-app .staff-input:focus {
   outline: none;
-  border-color: var(--staff-sage);
-  box-shadow: 0 0 0 3px rgba(90, 125, 98, 0.15);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--staff-rose);
 }
 
 .staff-app .staff-btn {
@@ -78,41 +131,36 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .staff-app .staff-btn-primary {
-  background: var(--staff-sidebar);
+  background: var(--staff-rose);
   color: #fff;
 }
 
 .staff-app .staff-btn-primary:hover:not(:disabled) {
-  background: var(--staff-sidebar-hover);
-}
-
-.staff-app .staff-btn-primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+  opacity: 0.9;
 }
 
 .staff-app .staff-btn-accent {
-  background: var(--staff-accent);
+  background: var(--staff-rose);
   color: #fff;
 }
 
 .staff-app .staff-btn-accent:hover:not(:disabled) {
-  background: #a3445c;
+  opacity: 0.9;
 }
 
 .staff-app .staff-btn-ghost {
   background: transparent;
   color: var(--staff-muted);
-  border: 1px solid var(--staff-border);
+  border: 2px solid var(--staff-border);
 }
 
 .staff-app .staff-btn-ghost:hover {
-  background: var(--staff-bg);
+  background: #f9fafb;
   color: var(--staff-text);
 }
 
@@ -121,19 +169,19 @@
   padding: 3px;
   background: var(--staff-surface);
   border: 1px solid var(--staff-border);
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .staff-app .staff-segment button {
   padding: 0.35rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   color: var(--staff-muted);
 }
 
 .staff-app .staff-segment button[data-active="true"] {
-  background: var(--staff-sidebar);
+  background: var(--staff-rose);
   color: #fff;
 }
 
@@ -151,7 +199,7 @@
   letter-spacing: 0.06em;
   color: var(--staff-muted);
   padding: 0.75rem 1rem;
-  background: #faf9f7;
+  background: #f9fafb;
   border-bottom: 1px solid var(--staff-border);
 }
 
@@ -162,14 +210,15 @@
 }
 
 .staff-app .staff-table tbody tr:hover td {
-  background: #faf9f7;
+  background: #f9fafb;
 }
 
 .staff-app .staff-stat {
   background: var(--staff-surface);
   border: 1px solid var(--staff-border);
-  border-radius: 12px;
+  border-radius: 0.5rem;
   padding: 1.125rem 1.25rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .staff-app .staff-stat-label {
@@ -185,14 +234,18 @@
   font-family: var(--font-heading), system-ui, sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
   line-height: 1.1;
+  color: var(--staff-text);
 }
 
 .staff-auth {
+  --staff-accent: #e75480;
+  --staff-muted: #6b7280;
+  --staff-text: #111827;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
+  background: var(--staff-blush, #f8c8dc);
 }
 
 @media (min-width: 900px) {
@@ -202,12 +255,17 @@
 }
 
 .staff-auth-brand {
-  background: var(--staff-sidebar);
-  color: #fff;
+  background: linear-gradient(135deg, #f8c8dc 0%, #ffffff 50%, #f8c8dc 100%);
+  color: #111827;
   padding: 2.5rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-right: 1px solid #e5e7eb;
+}
+
+.staff-auth-brand h1 {
+  color: #e75480;
 }
 
 .staff-auth-form-wrap {
@@ -215,5 +273,5 @@
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: var(--staff-bg);
+  background: #ffffff;
 }

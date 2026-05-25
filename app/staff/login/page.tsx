@@ -35,6 +35,7 @@ export default function StaffLoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.message || "Login failed");
@@ -58,23 +59,23 @@ export default function StaffLoginPage() {
           alt=""
           width={56}
           height={56}
-          className="rounded-xl object-cover mb-8 ring-2 ring-white/20"
+          className="rounded-full object-cover mb-8 ring-2 ring-brand-blush"
         />
-        <h1 className="font-heading text-3xl font-semibold tracking-tight leading-snug max-w-sm">
+        <h1 className="font-heading text-3xl font-semibold tracking-tight leading-snug max-w-sm text-brand-pink">
           {STAFF_BRAND.name}
         </h1>
-        <p className="mt-3 text-white/70 text-sm leading-relaxed max-w-xs">
+        <p className="mt-3 text-brand-gray-600 text-sm leading-relaxed max-w-xs">
           Manage orders, stock, and deliveries for your Nairobi store — all in one place.
         </p>
-        <p className="mt-8 text-xs text-white/40">{STAFF_BRAND.location}</p>
+        <p className="mt-8 text-xs text-brand-gray-500">{STAFF_BRAND.location}</p>
       </div>
 
       <div className="staff-auth-form-wrap">
         <div className="w-full max-w-[380px]">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight text-[var(--staff-text)]">
+          <h2 className="font-heading text-2xl font-semibold tracking-tight text-brand-gray-900">
             Sign in
           </h2>
-          <p className="text-sm text-[var(--staff-muted)] mt-1 mb-8">
+          <p className="text-sm text-brand-gray-600 mt-1 mb-8">
             Staff and admin accounts only
           </p>
 
@@ -131,16 +132,15 @@ export default function StaffLoginPage() {
             <p className="text-center text-sm">
               <Link
                 href="/staff/forgot-password"
-                className="font-medium hover:underline"
-                style={{ color: "var(--staff-accent)" }}
+                className="font-medium text-brand-pink hover:underline"
               >
                 Forgot password?
               </Link>
             </p>
           </form>
 
-          <p className="text-center mt-10 text-sm text-[var(--staff-muted)]">
-            <Link href="/" className="hover:text-[var(--staff-text)] transition-colors">
+          <p className="text-center mt-10 text-sm text-brand-gray-600">
+            <Link href="/" className="hover:text-brand-gray-900 transition-colors">
               ← Back to website
             </Link>
           </p>

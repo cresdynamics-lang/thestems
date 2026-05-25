@@ -16,7 +16,7 @@ export function StaffShell({ children }: { children: React.ReactNode }) {
 
   return (
     <StaffNavProvider>
-      <div className="staff-app min-h-screen flex flex-col bg-[var(--staff-bg)]">
+      <div className="staff-app min-h-screen flex flex-col bg-brand-blush">
         <StaffNavDrawer />
         <div className="flex-1 flex flex-col min-w-0">{children}</div>
       </div>

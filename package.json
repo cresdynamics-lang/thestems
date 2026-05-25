@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "dev:clean": "node -e \"try{require('fs').rmSync('.next/dev/lock',{force:true})}catch(e){}\"",
     "dev:fresh": "npm run dev:clean && next dev",
     "build": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build --webpack",

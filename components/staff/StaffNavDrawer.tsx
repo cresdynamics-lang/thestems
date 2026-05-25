@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Dialog } from "@headlessui/react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
   HomeIcon,
@@ -43,102 +44,140 @@ export function StaffNavDrawer() {
   const pathname = usePathname();
   const { user } = useStaff();
   const { open, closeNav } = useStaffNav();
+  const [mounted, setMounted] = useState(false);
 
   const visibleItems = (NAV_ITEMS ?? []).filter(
     (item) => !(item.superOnly && !canViewFinancials(user.role))
   );
   const navGroups = getStaffNavGroups(visibleItems);
 
-  return (
-    <Dialog open={open} onClose={closeNav} className="relative z-50">
-      <div className="fixed inset-0 bg-stone-900/50" aria-hidden="true" />
-      <Dialog.Panel
-        className="fixed inset-y-0 left-0 w-[min(280px,88vw)] flex flex-col text-white shadow-xl"
-        style={{ background: "var(--staff-sidebar)" }}
-      >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--staff-sidebar-border)]">
-          <Link href="/staff" className="flex items-center gap-3 min-w-0" onClick={closeNav}>
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeNav();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, closeNav]);
+
+  if (!open || !mounted) return null;
+
+  const drawer = (
+    <div
+      className="staff-nav-overlay fixed inset-0 z-[200]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigation"
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-default"
+        aria-label="Close menu"
+        onClick={closeNav}
+      />
+      <aside className="staff-nav-drawer fixed inset-y-0 left-0 z-[201] w-[min(300px,90vw)] flex flex-col shadow-2xl border-r border-[#e5e7eb]">
+        <div className="h-1 shrink-0 bg-[#e75480]" />
+
+        <div className="staff-nav-drawer-head flex items-center justify-between px-5 py-5 shrink-0 border-b border-[#e5e7eb]">
+          <Link
+            href="/staff"
+            className="flex items-center gap-3 min-w-0"
+            onClick={closeNav}
+          >
             <Image
               src="/images/logo/thestemslogo.jpeg"
               alt=""
-              width={40}
-              height={40}
-              className="rounded-lg object-cover ring-2 ring-white/20 shrink-0"
+              width={44}
+              height={44}
+              className="rounded-full object-cover shrink-0"
+              style={{ boxShadow: "0 0 0 2px #f8c8dc" }}
             />
             <div className="min-w-0">
-              <p className="font-heading font-semibold text-[15px] leading-tight truncate">
+              <p className="staff-nav-drawer-title font-heading font-bold text-base leading-tight truncate">
                 {STAFF_BRAND.shortName ?? STAFF_BRAND.name}
               </p>
-              <p className="text-[11px] text-white/55">Store panel</p>
+              <p className="staff-nav-drawer-subtitle text-[11px]">Staff panel</p>
             </div>
           </Link>
           <button
             type="button"
             onClick={closeNav}
-            className="p-2 rounded-lg text-white/70 hover:bg-white/10 hover:text-white"
+            className="staff-nav-drawer-close p-2 rounded-full transition-colors"
             aria-label="Close menu"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <XMarkIcon className="w-6 h-6" />
           </button>
         </div>
 
-        <nav className="flex-1 py-4 px-3 overflow-y-auto">
-          {navGroups.map((group) => {
-            const items = visibleItems.filter((i) => i.group === group);
-            if (!items.length) return null;
-            return (
-              <div key={group} className="mb-5 last:mb-0">
-                <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-white/40">
-                  {group}
-                </p>
-                <ul className="space-y-0.5">
-                  {items.map((item) => {
-                    const Icon = ICONS[item.icon] || HomeIcon;
-                    const active =
-                      pathname === item.href ||
-                      (item.href !== "/staff" && pathname?.startsWith(item.href));
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          onClick={closeNav}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-colors ${
-                            active
-                              ? "bg-white/12 text-white font-medium"
-                              : "text-white/75 hover:bg-white/8 hover:text-white"
-                          }`}
-                        >
-                          <Icon
-                            className={`w-[18px] h-[18px] shrink-0 ${active ? "opacity-100" : "opacity-70"}`}
-                          />
-                          {item.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            );
-          })}
+        <nav className="flex-1 py-4 px-3 overflow-y-auto min-h-0">
+          {navGroups.length === 0 ? (
+            <p className="staff-nav-drawer-subtitle px-4 py-3 text-sm">No menu items loaded.</p>
+          ) : (
+            navGroups.map((group) => {
+              const items = visibleItems.filter((i) => i.group === group);
+              if (!items.length) return null;
+              return (
+                <div key={group} className="mb-5 last:mb-0">
+                  <p className="staff-nav-group-label px-4 mb-2 text-[10px] font-bold uppercase tracking-widest">
+                    {group}
+                  </p>
+                  <ul className="space-y-1">
+                    {items.map((item) => {
+                      const Icon = ICONS[item.icon] || HomeIcon;
+                      const active =
+                        pathname === item.href ||
+                        (item.href !== "/staff" && pathname?.startsWith(item.href));
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            onClick={closeNav}
+                            className={`staff-nav-link flex items-center gap-2.5 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                              active ? "staff-nav-link--active" : ""
+                            }`}
+                          >
+                            <Icon className="staff-nav-icon w-5 h-5 shrink-0" />
+                            <span>{item.label}</span>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })
+          )}
         </nav>
 
-        <div className="px-4 py-4 border-t border-[var(--staff-sidebar-border)]">
+        <div className="staff-nav-drawer-foot px-4 py-4 shrink-0 border-t border-[#e5e7eb]">
           <div className="flex items-center gap-2.5">
             <span
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold bg-white/15"
-              aria-hidden
+              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold text-white shrink-0"
+              style={{ backgroundColor: "#e75480" }}
             >
               {(user.name || user.email)[0]?.toUpperCase()}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium truncate">{user.name || user.email.split("@")[0]}</p>
-              <p className="text-[10px] text-white/50 truncate">
+              <p className="staff-nav-drawer-user text-sm font-medium truncate">
+                {user.name || user.email.split("@")[0]}
+              </p>
+              <p className="staff-nav-drawer-subtitle text-xs truncate">
                 {isSuperAdmin(user.role) ? "Super admin" : "Staff"}
               </p>
             </div>
           </div>
         </div>
-      </Dialog.Panel>
-    </Dialog>
+      </aside>
+    </div>
   );
+
+  return createPortal(drawer, document.body);
 }

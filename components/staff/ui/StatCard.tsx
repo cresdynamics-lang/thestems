@@ -11,10 +11,10 @@ export function StatCard({
 }) {
   const valueColor =
     tone === "accent"
-      ? "var(--staff-accent)"
+      ? "#e75480"
       : tone === "warn"
         ? "#b45309"
-        : "var(--staff-text)";
+        : "#111827";
 
   return (
     <div className="staff-stat">

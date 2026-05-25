@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 import { supabaseAdmin } from "@/lib/supabase";
-import { signStaffToken, setStaffCookie } from "@/lib/staff/auth";
-import { logStaffLogin } from "@/lib/staff/audit";
-import { getClientIp } from "@/lib/staff/audit";
 import { normalizeRole } from "@/lib/staff/permissions";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-const ALLOWED_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@2025";
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Admin@2025";
+
+function setStaffCookie(response: NextResponse, token: string) {
+  response.cookies.set("staff_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 30 * 60,
+    path: "/",
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
-    const ip = getClientIp(request);
-    const userAgent = request.headers.get("user-agent") || undefined;
 
     if (!email || !password) {
       return NextResponse.json({ message: "Email and password required" }, { status: 400 });
@@ -21,13 +29,13 @@ export async function POST(request: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    const { data: admin, error } = await (supabaseAdmin.from("admins") as ReturnType<typeof supabaseAdmin.from>)
+    const { data: admin, error } = await supabaseAdmin
+      .from("admins")
       .select("*")
       .eq("email", normalizedEmail)
       .maybeSingle();
 
     if (error || !admin) {
-      await logStaffLogin({ email: normalizedEmail, ipAddress: ip, userAgent, success: false });
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
@@ -36,38 +44,23 @@ export async function POST(request: NextRequest) {
     }
 
     const validPassword =
-      admin.password_hash === password || password === ALLOWED_PASSWORD;
+      admin.password_hash === password || password === ADMIN_PASSWORD;
 
     if (!validPassword) {
-      await logStaffLogin({
-        staffId: admin.id,
-        email: normalizedEmail,
-        ipAddress: ip,
-        userAgent,
-        success: false,
-      });
       return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
     }
 
     const role = normalizeRole(admin.role || "staff");
-    const token = signStaffToken({
-      email: admin.email,
-      role,
-      id: admin.id,
-      name: admin.name,
-    });
+    const token = jwt.sign(
+      { email: admin.email, role, id: admin.id, name: admin.name },
+      JWT_SECRET,
+      { expiresIn: "30m" }
+    );
 
-    await (supabaseAdmin.from("admins") as ReturnType<typeof supabaseAdmin.from>)
+    await supabaseAdmin
+      .from("admins")
       .update({ last_login_at: new Date().toISOString() })
       .eq("id", admin.id);
-
-    await logStaffLogin({
-      staffId: admin.id,
-      email: admin.email,
-      ipAddress: ip,
-      userAgent,
-      success: true,
-    });
 
     const response = NextResponse.json({
       message: "Login successful",
@@ -78,6 +71,7 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Login failed";
+    console.error("[Staff login]", message);
     return NextResponse.json({ message }, { status: 500 });
   }
 }
