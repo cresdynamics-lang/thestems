@@ -54,11 +54,10 @@ export function StaffAuthLayout({
           ) : (
             <>
               <h1 className="font-heading text-xl font-semibold text-brand-gray-900 mt-10 max-w-md">
-                Store management
+                Staff & admin
               </h1>
               <p className="mt-3 text-sm text-brand-gray-600 leading-relaxed max-w-md">
-                Sign in to manage orders, products, deliveries, and customer enquiries for your
-                Nairobi florist.
+                One sign-in for orders, products, content, and live shop activity.
               </p>
               {!hideFeatures ? (
                 <ul className="staff-auth-features mt-8 space-y-2.5 text-sm text-brand-gray-700 max-w-md">

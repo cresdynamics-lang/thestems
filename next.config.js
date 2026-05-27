@@ -19,9 +19,12 @@ const nextConfig = {
     ],
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    // Must include every `quality` prop used in <Image /> (default is [75] only)
+    qualities: [60, 65, 70, 75, 80, 85, 90],
     minimumCacheTTL: 60 * 60 * 24 * 365,
     dangerouslyAllowSVG: false,
-    unoptimized: false,
+    // Skip slow remote resizing in dev (avoids 504 while compiling + many Supabase images)
+    unoptimized: process.env.NODE_ENV === 'development',
     formats: ['image/webp', 'image/avif'],
   },
   compress: true,

@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import { getOrders } from "@/lib/db";
+import { listOrdersForStaff } from "@/lib/staff/queries";
 
 export const dynamic = "force-dynamic";
+
+const CUSTOMER_COLUMNS =
+  "id, name, email, phone, notes, is_blocked, total_orders, total_spend, created_at";
 
 export async function GET(request: NextRequest) {
   try {
     requireStaff(request);
     const search = request.nextUrl.searchParams.get("search")?.toLowerCase();
 
-    const { data: dbCustomers } = await supabaseAdmin.from("customers").select("*").order("created_at", { ascending: false });
+    const { data: dbCustomers } = await supabaseAdmin
+      .from("customers")
+      .select(CUSTOMER_COLUMNS)
+      .order("created_at", { ascending: false })
+      .limit(300);
 
     if (dbCustomers?.length) {
       let list = dbCustomers;
@@ -25,8 +32,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(list);
     }
 
-    // Aggregate from orders if customers table empty
-    const orders = await getOrders({});
+    const orders = await listOrdersForStaff({ limit: 200 });
     const map = new Map<string, Record<string, unknown>>();
     for (const o of orders) {
       const key = o.phone;

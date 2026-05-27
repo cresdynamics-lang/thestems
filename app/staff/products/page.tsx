@@ -26,7 +26,9 @@ export default function StaffProductsPage() {
     const q = new URLSearchParams();
     if (category) q.set("category", category);
     if (search) q.set("search", search);
-    staffFetch<Product[]>(`/api/staff/products?${q}`).then(setProducts);
+    const params = new URLSearchParams(q);
+    params.set("summary", "1");
+    staffFetch<Product[]>(`/api/staff/products?${params}`).then(setProducts);
   };
 
   useEffect(() => {
@@ -170,6 +172,16 @@ export default function StaffProductsPage() {
                     />
                   </td>
                   <td className="text-right whitespace-nowrap">
+                    {(p as Product & { visibility?: string }).visibility !== "draft" && (
+                      <Link
+                        href={`/product/${p.slug}`}
+                        target="_blank"
+                        className="text-xs font-medium mr-3 hover:underline"
+                        style={{ color: "var(--staff-accent)" }}
+                      >
+                        View shop
+                      </Link>
+                    )}
                     <Link
                       href={`/staff/products/${p.id}`}
                       className="text-xs font-medium mr-3 hover:underline"

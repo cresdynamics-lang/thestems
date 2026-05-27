@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
-import { getOrders } from "@/lib/db";
+import { listOrdersForStaff } from "@/lib/staff/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const from = request.nextUrl.searchParams.get("from");
     const to = request.nextUrl.searchParams.get("to");
 
-    let orders = await getOrders({ status });
+    let orders = await listOrdersForStaff({ status, limit: 150 });
 
     if (paymentMethod) {
       orders = orders.filter((o) => o.payment_method === paymentMethod);

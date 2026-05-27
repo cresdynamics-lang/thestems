@@ -5,7 +5,7 @@ import { StaffPage } from "@/components/staff/StaffPage";
 
 const sections = [
   {
-    href: "/staff/content/blog",
+    href: "/staff/blogs",
     title: "Blog",
     desc: "Write posts, set SEO, and upload featured images.",
   },
@@ -18,6 +18,16 @@ const sections = [
     href: "/staff/content/collections",
     title: "Featured collections",
     desc: "Choose which products appear on the homepage.",
+  },
+  {
+    href: "/staff/live-visitors",
+    title: "Live visitors",
+    desc: "See who is browsing the shop right now.",
+  },
+  {
+    href: "/staff/shop",
+    title: "Shop preview",
+    desc: "View every published product as customers see it.",
   },
 ];
 

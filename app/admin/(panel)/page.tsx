@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.replace("/admin/login");
+      router.replace("/staff/login");
       return;
     }
 
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
         if (!res.ok) {
           if (res.status === 401 || res.status === 403) {
             localStorage.removeItem("admin_token");
-            router.replace("/admin/login");
+            router.replace("/staff/login");
           }
           return;
         }
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("admin_token");
-    router.push("/admin/login");
+    router.push("/staff/login");
   };
 
   if (isLoading) {
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
             <span className="text-brand-green font-medium">Create Links →</span>
         </Link>
 
-        <Link href="/admin/blogs" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
+        <Link href="/staff/content/blog" className="card p-5 md:p-6 hover:shadow-cardHover transition-shadow block">
             <h2 className="font-heading font-bold text-xl text-brand-gray-900 mb-2">Manage Blog</h2>
             <p className="text-brand-gray-600 mb-4">Create, edit, or delete blog posts</p>
             <span className="text-brand-green font-medium">Go to Blog →</span>

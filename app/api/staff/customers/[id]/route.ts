@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
-import { getOrders } from "@/lib/db";
+import { listOrdersForStaff } from "@/lib/staff/queries";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +19,8 @@ export async function GET(
       .eq("id", id)
       .maybeSingle();
 
-    const orders = await getOrders({});
     const phone = customer?.phone || id;
+    const orders = await listOrdersForStaff({ limit: 150 });
     const orderHistory = orders.filter((o) => o.phone === phone);
 
     return NextResponse.json({

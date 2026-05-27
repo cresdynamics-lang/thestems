@@ -36,16 +36,22 @@ export default function StaffDashboardPage() {
   const chartSlice = chart.slice(-slice);
   const maxRev = Math.max(...chartSlice.map((d) => d.revenue), 1);
 
-  const today = new Date().toLocaleDateString("en-KE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
+  const [today, setToday] = useState("");
+
+  useEffect(() => {
+    setToday(
+      new Date().toLocaleDateString("en-KE", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      })
+    );
+  }, []);
 
   return (
     <StaffPage
       title="Dashboard"
-      description={today}
+      description={today || " "}
       actions={
         <Link href="/staff/orders" className="staff-btn staff-btn-accent text-sm">
           View orders
@@ -70,6 +76,38 @@ export default function StaffDashboardPage() {
         />
         <StatCard label="Low stock" value={data?.summary.lowStockItems ?? "—"} />
         <StatCard label="New customers" value={data?.summary.newCustomers ?? "—"} />
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <Link
+          href="/staff/live-visitors"
+          className="staff-panel p-4 block hover:border-[var(--staff-sage)] transition-colors"
+        >
+          <p className="text-xs text-[var(--staff-muted)]">Live visitors</p>
+          <p className="text-sm font-medium mt-1">Who is on the shop now →</p>
+        </Link>
+        <Link
+          href="/staff/shop"
+          className="staff-panel p-4 block hover:border-[var(--staff-sage)] transition-colors"
+        >
+          <p className="text-xs text-[var(--staff-muted)]">Shop preview</p>
+          <p className="text-sm font-medium mt-1">See products as customers do →</p>
+        </Link>
+        <Link
+          href="/staff/content/collections"
+          className="staff-panel p-4 block hover:border-[var(--staff-sage)] transition-colors"
+        >
+          <p className="text-xs text-[var(--staff-muted)]">Homepage</p>
+          <p className="text-sm font-medium mt-1">Featured collections →</p>
+        </Link>
+        <Link
+          href="/"
+          target="_blank"
+          className="staff-panel p-4 block hover:border-[var(--staff-sage)] transition-colors"
+        >
+          <p className="text-xs text-[var(--staff-muted)]">Live site</p>
+          <p className="text-sm font-medium mt-1">Open shop ↗</p>
+        </Link>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6 mb-8">

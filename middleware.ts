@@ -21,22 +21,37 @@ export function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
-  // Staff panel: require session cookie on protected pages (API validates JWT fully)
-  const staffPublic =
-    pathname === "/staff/login" ||
-    pathname.startsWith("/staff/forgot-password") ||
-    pathname.startsWith("/staff/reset-password");
-  if (pathname.startsWith("/staff") && !staffPublic) {
-    const hasStaffSession = Boolean(request.cookies.get("staff_token")?.value);
-    if (!hasStaffSession) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/staff/login";
-      loginUrl.searchParams.set("next", pathname);
-      return NextResponse.redirect(loginUrl);
+  // Legacy admin content URLs → staff panel
+  if (pathname === "/admin/blogs" || pathname === "/staff/content/blog") {
+    return NextResponse.redirect(new URL("/staff/blogs", request.url));
+  }
+  if (pathname === "/admin/hero") {
+    return NextResponse.redirect(new URL("/staff/content/banners", request.url));
+  }
+  if (pathname === "/admin/live-visitors") {
+    return NextResponse.redirect(new URL("/staff/live-visitors", request.url));
+  }
+  if (pathname === "/admin" || pathname === "/admin/") {
+    return NextResponse.redirect(new URL("/staff", request.url));
+  }
+  if (pathname === "/admin/login") {
+    const next = request.nextUrl.searchParams.get("next");
+    const url = new URL("/staff/login", request.url);
+    if (next && (next.startsWith("/staff") || next.startsWith("/admin"))) {
+      url.searchParams.set("next", next);
     }
+    return NextResponse.redirect(url);
   }
 
+  // Staff auth is handled client-side (StaffAuthGuard) and on /api/staff/* routes.
+  // Do not redirect here — httpOnly cookie timing caused login → blog redirect loops.
+
   const response = NextResponse.next();
+
+  if (pathname.startsWith("/staff")) {
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    response.headers.set("Pragma", "no-cache");
+  }
 
   // Add CORS headers for Chrome compatibility (only for API routes)
   if (request.nextUrl.pathname.startsWith("/api/")) {

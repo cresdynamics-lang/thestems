@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
@@ -12,6 +12,8 @@ import { format } from "date-fns";
 import { getCachedAllProducts, getCachedHeroSlides } from "@/lib/cache";
 import { SITE_URL, stableSortByKey } from "@/lib/seo";
 import { pickUniqueProducts } from "@/lib/productDisplay";
+import { getHomepageProductSections } from "@/lib/homepage-sections";
+import { isSupabaseConfigured } from "@/lib/supabaseConfig";
 
 const baseUrl = SITE_URL;
 
@@ -621,7 +623,6 @@ Whether you're celebrating a university graduation, high school completion, or a
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 768px) 280px, 320px"
                   loading="lazy"
-                  quality={70}
                 />
               </div>
               <div className="p-4 md:p-5">
@@ -781,6 +782,18 @@ export default async function HomePage() {
   const giftHampers = pickUniqueProducts(hamperPool, 8, usedOnHomepage);
   const teddyBears = pickUniqueProducts(teddyPool, 8, usedOnHomepage);
 
+  const allCatalogueProducts = [...allFlowers, ...allHampers, ...allTeddy];
+  const seenProductIds = new Set<string>();
+  const uniqueCatalogueProducts = allCatalogueProducts.filter((p) => {
+    if (seenProductIds.has(p.id)) return false;
+    seenProductIds.add(p.id);
+    return true;
+  });
+  const configuredHomepageSections = isSupabaseConfigured()
+    ? await getHomepageProductSections(uniqueCatalogueProducts)
+    : [];
+  const useConfiguredSections = configuredHomepageSections.length > 0;
+
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
@@ -803,13 +816,75 @@ export default async function HomePage() {
 
         <HeroCarousel slides={heroSlides.length ? heroSlides : fallbackSlides} />
 
-        {/* Anniversary Gifts - Celebrate Love, Every Year */}
-        <ProductSection
-          title="Anniversary Gifts - Celebrate Love, Every Year"
-          products={anniversaryProducts}
-          bgColor="bg-brand-blush"
-          linkHref="/collections/flowers?tags=anniversary"
-        />
+        {useConfiguredSections ? (
+          configuredHomepageSections.map((section, index) => (
+            <Fragment key={section.key}>
+              <ProductSection
+                title={section.title}
+                products={section.products}
+                bgColor="bg-brand-blush"
+                linkHref={section.linkHref}
+              />
+              {index === 0 ? (
+                <section className="py-8 md:py-12 bg-brand-blush">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-center gap-6 md:gap-8 lg:gap-12">
+                      <Link href="/collections/flowers" className="group flex flex-col items-center">
+                        <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-lg border-4 border-white hover:border-brand-green transition-all duration-300 transform hover:scale-110">
+                          <Image
+                            src="/images/products/flowers/BouquetFlowers3.jpg"
+                            alt="Flowers Collection"
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            sizes="(max-width: 768px) 96px, (max-width: 1024px) 128px, 160px"
+                          />
+                        </div>
+                        <h3 className="mt-3 md:mt-4 font-heading font-semibold text-sm md:text-base lg:text-lg text-brand-gray-900 group-hover:text-brand-green transition-colors">
+                          Flowers
+                        </h3>
+                      </Link>
+                      <Link href="/collections/teddy-bears" className="group flex flex-col items-center">
+                        <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-lg border-4 border-white hover:border-brand-green transition-all duration-300 transform hover:scale-110">
+                          <Image
+                            src="/images/products/teddies/Teddybear1.jpg"
+                            alt="Teddy Bears Collection"
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            sizes="(max-width: 768px) 96px, (max-width: 1024px) 128px, 160px"
+                          />
+                        </div>
+                        <h3 className="mt-3 md:mt-4 font-heading font-semibold text-sm md:text-base lg:text-lg text-brand-gray-900 group-hover:text-brand-green transition-colors">
+                          Teddy Bears
+                        </h3>
+                      </Link>
+                      <Link href="/collections/gift-hampers" className="group flex flex-col items-center">
+                        <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden shadow-lg border-4 border-white hover:border-brand-green transition-all duration-300 transform hover:scale-110">
+                          <Image
+                            src="/images/products/hampers/GiftAmper3.jpg"
+                            alt="Gift Hampers Collection"
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                            sizes="(max-width: 768px) 96px, (max-width: 1024px) 128px, 160px"
+                          />
+                        </div>
+                        <h3 className="mt-3 md:mt-4 font-heading font-semibold text-sm md:text-base lg:text-lg text-brand-gray-900 group-hover:text-brand-green transition-colors">
+                          Gift Hampers
+                        </h3>
+                      </Link>
+                    </div>
+                  </div>
+                </section>
+              ) : null}
+            </Fragment>
+          ))
+        ) : (
+          <>
+            <ProductSection
+              title="Anniversary Gifts - Celebrate Love, Every Year"
+              products={anniversaryProducts}
+              bgColor="bg-brand-blush"
+              linkHref="/collections/flowers?tags=anniversary"
+            />
 
         {/* Circular Collection Cards */}
         <section className="py-8 md:py-12 bg-brand-blush">
@@ -910,6 +985,8 @@ export default async function HomePage() {
           bgColor="bg-brand-blush"
           linkHref="/collections/teddy-bears"
         />
+          </>
+        )}
 
         {/* Explore Collections Section */}
         <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">

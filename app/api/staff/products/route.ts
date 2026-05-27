@@ -3,6 +3,7 @@ import { requireStaff } from "@/lib/staff/auth";
 import { logStaffAction, getClientIp } from "@/lib/staff/audit";
 import { canDelete } from "@/lib/staff/permissions";
 import { getProducts } from "@/lib/db";
+import { listProductsSummary } from "@/lib/staff/queries";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidatePath, revalidateTag } from "next/cache";
 
@@ -13,7 +14,29 @@ export async function GET(request: NextRequest) {
     requireStaff(request);
     const category = request.nextUrl.searchParams.get("category") || undefined;
     const search = request.nextUrl.searchParams.get("search")?.toLowerCase();
-    let products = await getProducts(category ? { category } : {});
+    const summary = request.nextUrl.searchParams.get("summary") === "1";
+
+    const useSummary = summary || request.nextUrl.searchParams.get("full") !== "1";
+
+    if (useSummary) {
+      let rows = await listProductsSummary(category);
+      if (search) {
+        rows = rows.filter(
+          (p) =>
+            String(p.title || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(p.slug || "")
+              .toLowerCase()
+              .includes(search)
+        );
+      }
+      return NextResponse.json(rows);
+    }
+
+    let products = await getProducts(
+      category ? { category, includeDrafts: true } : { includeDrafts: true }
+    );
     if (search) {
       products = products.filter(
         (p) =>

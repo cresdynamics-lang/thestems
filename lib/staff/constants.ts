@@ -60,6 +60,8 @@ export const NAV_GROUPS: string[] = [
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/staff", label: "Dashboard", icon: "home", group: "Overview" },
+  { href: "/staff/live-visitors", label: "Live visitors", icon: "eye", group: "Overview" },
+  { href: "/staff/shop", label: "Shop preview", icon: "store", group: "Overview" },
   { href: "/staff/orders", label: "Orders", icon: "shopping-bag", group: "Shop" },
   { href: "/staff/products", label: "Products", icon: "cube", group: "Shop" },
   { href: "/staff/products/categories", label: "Categories", icon: "tag", group: "Shop" },

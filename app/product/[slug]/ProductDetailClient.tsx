@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/store/cart";
+import { Analytics } from "@/lib/analytics";
 import { generateProductWhatsAppLink } from "@/lib/whatsapp";
 import { ShoppingCartIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import type { Product } from "@/lib/db";
@@ -13,6 +14,10 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCartStore();
+
+  useEffect(() => {
+    Analytics.trackProductView(product.id, product.title, product.category, product.price);
+  }, [product.id, product.title, product.category, product.price]);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {

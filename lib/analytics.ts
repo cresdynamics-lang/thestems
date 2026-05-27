@@ -28,6 +28,20 @@ export class Analytics {
     return sessionId;
   }
 
+  /** Ping server so admin live-visitors stays accurate while user reads a page */
+  static trackHeartbeat(path: string) {
+    if (typeof window === "undefined") return;
+    this.sendToServer({
+      event: "heartbeat",
+      path,
+      userId: this.getUserId(),
+      sessionId: this.getSessionId(),
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      screen: { width: window.innerWidth, height: window.innerHeight },
+    });
+  }
+
   // Track page view
   static trackPageView(path: string, title?: string) {
     if (typeof window === "undefined") return;
@@ -42,8 +56,8 @@ export class Analytics {
       referrer: document.referrer,
       userAgent: navigator.userAgent,
       screen: {
-        width: window.screen.width,
-        height: window.screen.height,
+        width: window.innerWidth,
+        height: window.innerHeight,
       },
     };
 

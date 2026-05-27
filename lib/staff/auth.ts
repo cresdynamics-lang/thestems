@@ -24,12 +24,20 @@ export function signStaffToken(payload: StaffTokenPayload): string {
   );
 }
 
+export function extractStaffToken(request: NextRequest): string | null {
+  const authHeader = request.headers.get("authorization");
+  return (
+    authHeader?.replace("Bearer ", "") ||
+    request.cookies.get("staff_token")?.value ||
+    request.cookies.get("admin_token")?.value ||
+    request.nextUrl.searchParams.get("token") ||
+    null
+  );
+}
+
 export function verifyStaffToken(request: NextRequest): StaffTokenPayload | null {
   try {
-    const authHeader = request.headers.get("authorization");
-    const token =
-      authHeader?.replace("Bearer ", "") ||
-      request.cookies.get("staff_token")?.value;
+    const token = extractStaffToken(request);
 
     if (!token) return null;
 

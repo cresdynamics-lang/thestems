@@ -19,6 +19,8 @@ import {
   EnvelopeIcon,
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
+  EyeIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline";
 import { NAV_ITEMS, STAFF_BRAND, getStaffNavGroups } from "@/lib/staff/constants";
 import { useStaff } from "./StaffAuthGuard";
@@ -38,6 +40,8 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   mail: EnvelopeIcon,
   clipboard: ClipboardDocumentListIcon,
   cog: Cog6ToothIcon,
+  eye: EyeIcon,
+  store: BuildingStorefrontIcon,
 };
 
 export function StaffNavDrawer() {

@@ -32,58 +32,53 @@ export function useStaff() {
 export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<StaffUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const isPublic = PUBLIC_PATHS.some((p) => pathname?.startsWith(p));
+  const [user, setUser] = useState<StaffUser | null>(() =>
+    isPublic ? null : getCachedStaffUser()
+  );
+  const [loading, setLoading] = useState(() => !isPublic && !getCachedStaffUser());
   const lastActivity = useRef(Date.now());
-  const authReady = useRef(false);
+  const authInit = useRef(false);
 
   const logout = useCallback(async () => {
+    authInit.current = false;
     clearStaffToken();
-    authReady.current = false;
-    await fetch("/api/staff/logout", { method: "POST" }).catch(() => {});
+    await fetch("/api/staff/logout", { method: "POST", credentials: "include" }).catch(
+      () => {}
+    );
     router.replace("/staff/login");
   }, [router]);
 
   useEffect(() => {
-    if (PUBLIC_PATHS.some((p) => pathname?.startsWith(p))) {
+    if (isPublic) {
       setLoading(false);
       return;
     }
 
-    const token = getStaffToken();
-    if (!token) {
-      authReady.current = false;
-      router.replace("/staff/login");
-      setLoading(false);
-      return;
-    }
+    if (authInit.current) return;
+    authInit.current = true;
 
     const cached = getCachedStaffUser();
     if (cached) {
       setUser(cached);
       setLoading(false);
-      authReady.current = true;
-      return;
-    }
-
-    if (authReady.current) {
-      setLoading(false);
-      return;
     }
 
     let cancelled = false;
     staffFetch<StaffUser>("/api/staff/me")
       .then((profile) => {
         if (cancelled) return;
-        setStaffSession(token, profile);
+        const token = getStaffToken();
+        if (token) setStaffSession(token, profile);
         setUser(profile);
-        authReady.current = true;
       })
       .catch(() => {
         if (cancelled) return;
+        authInit.current = false;
         clearStaffToken();
-        authReady.current = false;
-        router.replace("/staff/login");
+        setUser(null);
+        const next = pathname ? `?next=${encodeURIComponent(pathname)}` : "";
+        router.replace(`/staff/login${next}`);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -92,10 +87,12 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [pathname, router]);
+    // Auth bootstrap once per app mount — not on every route change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPublic]);
 
   useEffect(() => {
-    if (PUBLIC_PATHS.some((p) => pathname?.startsWith(p))) return;
+    if (isPublic) return;
 
     const onActivity = () => {
       lastActivity.current = Date.now();
@@ -113,16 +110,16 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
       events.forEach((e) => window.removeEventListener(e, onActivity));
       clearInterval(interval);
     };
-  }, [pathname, logout]);
+  }, [isPublic, logout]);
 
-  if (PUBLIC_PATHS.some((p) => pathname?.startsWith(p))) {
+  if (isPublic) {
     return <>{children}</>;
   }
 
-  if (loading) {
+  if (loading && !user) {
     return (
-      <div className="staff-auth-form-wrap min-h-dvh w-full flex items-center justify-center text-brand-gray-600">
-        Loading…
+      <div className="staff-auth-form-wrap min-h-dvh w-full flex items-center justify-center text-brand-gray-600 text-sm">
+        Signing in…
       </div>
     );
   }
@@ -130,8 +127,6 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   return (
-    <StaffContext.Provider value={{ user, logout }}>
-      {children}
-    </StaffContext.Provider>
+    <StaffContext.Provider value={{ user, logout }}>{children}</StaffContext.Provider>
   );
 }

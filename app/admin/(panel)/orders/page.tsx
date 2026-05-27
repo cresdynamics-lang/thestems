@@ -18,7 +18,7 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.push("/admin/login");
+      router.push("/staff/login");
       return;
     }
 
@@ -33,7 +33,7 @@ export default function AdminOrdersPage() {
       } catch (error: any) {
         if (error.response?.status === 401) {
           localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          router.push("/staff/login");
         }
       } finally {
         setIsLoading(false);

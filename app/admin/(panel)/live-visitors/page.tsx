@@ -35,7 +35,7 @@ export default function LiveVisitorsPage() {
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.push("/admin/login");
+      router.push("/staff/login");
       return;
     }
 
@@ -77,7 +77,7 @@ export default function LiveVisitorsPage() {
       } catch (error: any) {
         if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          router.push("/staff/login");
         }
       } finally {
         if (isMounted) {

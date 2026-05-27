@@ -16,7 +16,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.push("/admin/login");
+      router.push("/staff/login");
       return;
     }
 
@@ -31,7 +31,7 @@ export default function AdminProductsPage() {
       } catch (error: any) {
         if (error.response?.status === 401) {
           localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          router.push("/staff/login");
         }
       } finally {
         setIsLoading(false);
@@ -47,7 +47,7 @@ export default function AdminProductsPage() {
     const token = localStorage.getItem("admin_token");
     if (!token) {
       alert("Authentication required. Please log in again.");
-      router.push("/admin/login");
+      router.push("/staff/login");
       return;
     }
 
@@ -62,7 +62,7 @@ export default function AdminProductsPage() {
       if (error.response?.status === 401) {
         alert("Authentication failed. Please log in again.");
         localStorage.removeItem("admin_token");
-        router.push("/admin/login");
+        router.push("/staff/login");
       } else {
         const errorMessage = error.response?.data?.message || error.message || "Failed to delete product. Please check the console for details.";
         alert(errorMessage);

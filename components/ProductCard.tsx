@@ -107,7 +107,6 @@ export default function ProductCard({
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   loading={priority ? "eager" : "lazy"}
                   priority={priority}
-                  quality={70}
                   fetchPriority={priority ? "high" : "auto"}
                   onError={() => setImageError(true)}
                 />
@@ -150,7 +149,6 @@ export default function ProductCard({
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 loading={priority ? "eager" : "lazy"}
                 priority={priority}
-                quality={60}
                 fetchPriority={priority ? "high" : "auto"}
               />
             )}

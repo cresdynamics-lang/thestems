@@ -228,7 +228,7 @@ export default function NewProductPage() {
 
       if (!token) {
         alert("Authentication required. Please log in again.");
-        router.push("/admin/login");
+        router.push("/staff/login");
         return;
       }
 
@@ -284,7 +284,7 @@ export default function NewProductPage() {
         if (error.response?.status === 401) {
           alert("Authentication failed. Please log in again.");
           localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          router.push("/staff/login");
         } else {
           const errorMessage = error.response?.data?.message || error.message || "Failed to create product. Please check the console for details.";
           alert(errorMessage);

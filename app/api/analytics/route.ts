@@ -1,16 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { parseUserAgent } from "@/lib/parse-user-agent";
 
 // Analytics endpoint - stores user data
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json();
+    const raw = await request.text();
+    if (!raw?.trim()) {
+      return NextResponse.json({ success: false }, { status: 200 });
+    }
+    const data = JSON.parse(raw);
 
-    // Log analytics data (for debugging)
-    console.log("[Analytics]", JSON.stringify(data, null, 2));
+    const path = data.path ?? data.pathname ?? null;
+    if (path?.startsWith("/staff") || path?.startsWith("/admin")) {
+      return NextResponse.json({ success: true }, { status: 200 });
+    }
 
-    // For page views, upsert a live session row so admin can see live visitors
-    if (data?.event === "page_view" && data.sessionId) {
+    // Keep session alive for live visitor dashboard (page views + heartbeats)
+    const sessionEvents = ["page_view", "heartbeat", "product_view", "collection_view"];
+    if (data?.sessionId && sessionEvents.includes(data.event)) {
+      const device = parseUserAgent(data.userAgent, data.screen);
       try {
         const { error } = await (supabaseAdmin
           .from("analytics_sessions") as any)
@@ -19,8 +28,12 @@ export async function POST(request: NextRequest) {
               session_id: data.sessionId,
               user_id: data.userId ?? null,
               last_seen: new Date().toISOString(),
-              last_path: data.path ?? null,
+              last_path: path,
               user_agent: data.userAgent ?? null,
+              device_type: device.deviceType,
+              device_name: device.deviceName,
+              browser: device.browser,
+              os: device.os || null,
             },
             { onConflict: "session_id" }
           );

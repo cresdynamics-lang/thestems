@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { staffFetch } from "@/lib/staff/api-client";
@@ -40,6 +41,15 @@ export default function EditProductPage() {
     <>
       <StaffHeader title="Edit product" />
       <main className="flex-1 p-4 sm:p-6 max-w-2xl">
+        {form.slug && form.visibility !== "draft" ? (
+          <Link
+            href={`/product/${String(form.slug)}`}
+            target="_blank"
+            className="staff-btn staff-btn-outline text-sm mb-4 inline-block"
+          >
+            View on shop ↗
+          </Link>
+        ) : null}
         <form onSubmit={save} className="card p-6 space-y-4">
           <input className="input-field" value={String(form.title || "")} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           <textarea className="input-field" rows={4} value={String(form.description || "")} onChange={(e) => setForm({ ...form, description: e.target.value })} />

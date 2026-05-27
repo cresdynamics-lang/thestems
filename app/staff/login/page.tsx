@@ -6,9 +6,15 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { setAdminToken } from "@/lib/admin/session";
 import { setStaffSession } from "@/lib/staff/api-client";
-import { STAFF_BRAND } from "@/lib/staff/constants";
 import { StaffAuthLayout } from "@/components/staff/StaffAuthLayout";
+
+function safeNextPath(next: string | null): string | null {
+  if (!next || next.startsWith("//")) return null;
+  if (next.startsWith("/staff") || next.startsWith("/admin")) return next;
+  return null;
+}
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Email is required"),
@@ -38,12 +44,19 @@ export default function StaffLoginPage() {
         credentials: "include",
         cache: "no-store",
       });
-      const result = await res.json();
+      let result: { message?: string; token?: string; user?: { email: string; role: string; name?: string; id?: string } } = {};
+      try {
+        result = await res.json();
+      } catch {
+        throw new Error("Server error. Please try again.");
+      }
       if (!res.ok) throw new Error(result.message || "Login failed");
       if (result.token) {
         setStaffSession(result.token, result.user);
-        const next = new URLSearchParams(window.location.search).get("next");
-        router.replace(next && next.startsWith("/staff") ? next : "/staff");
+        setAdminToken(result.token);
+        const next = safeNextPath(new URLSearchParams(window.location.search).get("next"));
+        router.replace(next || "/staff");
+        router.refresh();
       }
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Could not sign in");
@@ -55,7 +68,7 @@ export default function StaffLoginPage() {
   return (
     <StaffAuthLayout
       title="Sign in"
-      subtitle={`${STAFF_BRAND.name} staff & admin access`}
+      hideFeatures
       footer={
         <p className="text-center text-sm text-brand-gray-600">
           <Link href="/" className="hover:text-brand-gray-900 transition-colors">

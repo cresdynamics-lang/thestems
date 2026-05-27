@@ -1,5 +1,6 @@
 "use client";
 
+import { ADMIN_TOKEN_KEY } from "@/lib/admin/session";
 import { STAFF_TOKEN_KEY } from "./constants";
 
 const STAFF_USER_KEY = "staff_user";
@@ -13,7 +14,9 @@ export type StaffUser = {
 
 export function getStaffToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem(STAFF_TOKEN_KEY);
+  return (
+    localStorage.getItem(STAFF_TOKEN_KEY) || localStorage.getItem(ADMIN_TOKEN_KEY)
+  );
 }
 
 export function getCachedStaffUser(): StaffUser | null {
@@ -40,6 +43,7 @@ export function setStaffToken(token: string) {
 
 export function clearStaffToken() {
   localStorage.removeItem(STAFF_TOKEN_KEY);
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
   sessionStorage.removeItem(STAFF_USER_KEY);
 }
 

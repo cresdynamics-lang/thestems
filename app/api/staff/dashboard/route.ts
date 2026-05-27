@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
 import { canViewFinancials } from "@/lib/staff/permissions";
-import { getOrders, getProducts } from "@/lib/db";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -15,52 +14,69 @@ function startOfDay(d = new Date()) {
 export async function GET(request: NextRequest) {
   try {
     const staff = requireStaff(request);
-    const orders = await getOrders({});
-    const products = await getProducts({});
     const todayStart = startOfDay();
+    const chartStart = new Date();
+    chartStart.setDate(chartStart.getDate() - 13);
+    chartStart.setHours(0, 0, 0, 0);
 
-    type OrderExt = (typeof orders)[0] & { payment_status?: string; fulfillment_status?: string };
-    const ordersToday = orders.filter((o) => new Date(o.created_at) >= todayStart);
-    const paidToday = ordersToday.filter((o) => {
-      const x = o as OrderExt;
-      return x.status === "paid" || x.payment_status === "paid";
-    });
-    const pendingOrders = orders.filter((o) => {
-      const x = o as OrderExt;
-      return x.status === "pending" || x.fulfillment_status === "pending";
-    }).length;
+    const [
+      recentRes,
+      chartRes,
+      ordersTodayRes,
+      pendingRes,
+      lowStockRes,
+      newCustomersRes,
+      revenueTodayRes,
+    ] = await Promise.all([
+      (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+        .select("id, customer_name, total_amount, payment_method, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(10),
+      (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+        .select("created_at, total_amount, status")
+        .gte("created_at", chartStart.toISOString()),
+      (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart.toISOString()),
+      (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+        .select("*", { count: "exact", head: true })
+        .eq("status", "pending"),
+      (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
+        .select("*", { count: "exact", head: true })
+        .lte("stock", 5)
+        .not("stock", "is", null),
+      (supabaseAdmin.from("customers") as ReturnType<typeof supabaseAdmin.from>)
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart.toISOString()),
+      (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
+        .select("total_amount")
+        .gte("created_at", todayStart.toISOString())
+        .in("status", ["paid", "shipped", "delivered"]),
+    ]);
 
-    const lowStock = products.filter(
-      (p) => p.stock != null && p.stock <= 5
-    ).length;
+    const recentOrders = (recentRes.data ?? []).map((o: Record<string, unknown>) => ({
+      ...o,
+      total_amount: o.total_amount,
+    }));
 
-    const customerPhones = new Set(orders.map((o) => o.phone));
-    const { count: newCustomers } = await supabaseAdmin
-      .from("customers")
-      .select("*", { count: "exact", head: true })
-      .gte("created_at", todayStart.toISOString());
-
-    const revenueToday = paidToday.reduce(
-      (s, o) => s + (o.total_amount || o.total || 0),
-      0
-    );
-
-    const recentOrders = [...orders]
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-
-    // Revenue chart data – last 30 days
+    const chartOrders = chartRes.data ?? [];
     const chartDays: { date: string; revenue: number; orders: number }[] = [];
-    for (let i = 29; i >= 0; i--) {
+    for (let i = 13; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dayStart = startOfDay(d);
       const dayEnd = new Date(dayStart);
       dayEnd.setDate(dayEnd.getDate() + 1);
-      const dayOrders = orders.filter((o) => {
-        const t = new Date(o.created_at);
-        return t >= dayStart && t < dayEnd && (o.status === "paid" || o.status === "shipped");
-      });
+      const dayOrders = (chartOrders as { created_at: string; total_amount: number; status: string }[]).filter(
+        (o) => {
+          const t = new Date(o.created_at);
+          return (
+            t >= dayStart &&
+            t < dayEnd &&
+            ["paid", "shipped", "delivered"].includes(o.status)
+          );
+        }
+      );
       chartDays.push({
         date: dayStart.toISOString().slice(0, 10),
         revenue: dayOrders.reduce((s, o) => s + (o.total_amount || 0), 0),
@@ -68,13 +84,20 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    const revenueToday = canViewFinancials(staff.role)
+      ? ((revenueTodayRes.data ?? []) as { total_amount: number }[]).reduce(
+          (s, o) => s + (o.total_amount || 0),
+          0
+        )
+      : null;
+
     return NextResponse.json({
       summary: {
-        ordersToday: ordersToday.length,
-        revenueToday: canViewFinancials(staff.role) ? revenueToday : null,
-        pendingOrders,
-        lowStockItems: lowStock,
-        newCustomers: newCustomers ?? customerPhones.size,
+        ordersToday: ordersTodayRes.count ?? 0,
+        revenueToday,
+        pendingOrders: pendingRes.count ?? 0,
+        lowStockItems: lowStockRes.count ?? 0,
+        newCustomers: newCustomersRes.count ?? 0,
       },
       recentOrders,
       chartDays,

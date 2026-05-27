@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase";
+import { listBlogPosts, mapBlogPost } from "@/lib/blog-admin-service";
 
 export const dynamic = "force-dynamic";
 
@@ -14,42 +15,14 @@ export async function GET(request: NextRequest) {
     const featuredParam = searchParams.get("featured");
     const featured = featuredParam === "true" ? true : featuredParam === "false" ? false : undefined;
 
-    let query = (supabaseAdmin.from("blog_posts") as any).select("*").order("published_at", { ascending: false });
-
-    if (category) {
-      query = query.eq("category", category);
-    }
-    if (tag) {
-      query = query.contains("tags", [tag]);
-    }
-    if (featured !== undefined) {
-      query = query.eq("featured", featured);
-    }
-
-    const { data, error } = await query;
+    const includeContent = searchParams.get("full") === "true";
+    const { data, error } = await listBlogPosts({ category, tag, featured, includeContent });
 
     if (error) {
       return NextResponse.json({ message: error.message || "Failed to fetch blog posts" }, { status: 500 });
     }
 
-    const posts = (data || []).map((p: any) => ({
-      id: p.id,
-      slug: p.slug,
-      title: p.title,
-      excerpt: p.excerpt,
-      content: p.content,
-      author: p.author,
-      published_at: p.published_at,
-      image: p.image,
-      category: p.category,
-      tags: p.tags || [],
-      read_time: p.read_time,
-      featured: p.featured,
-      created_at: p.created_at,
-      updated_at: p.updated_at,
-    }));
-
-    return NextResponse.json(posts);
+    return NextResponse.json(data.map((p) => mapBlogPost(p)));
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

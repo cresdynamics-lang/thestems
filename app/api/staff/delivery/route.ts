@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
 import { supabaseAdmin } from "@/lib/supabase";
-import { getOrders } from "@/lib/db";
+import { listOrdersForStaff } from "@/lib/staff/queries";
 import { DELIVERY_LOCATIONS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -10,19 +10,19 @@ export async function GET(request: NextRequest) {
   try {
     requireStaff(request);
 
-    const { data: zones } = await supabaseAdmin.from("delivery_zones").select("*").order("name");
+    const { data: zones } = await supabaseAdmin
+      .from("delivery_zones")
+      .select("id, name, area, delivery_fee, is_active")
+      .order("name");
     const { data: personnel } = await supabaseAdmin
       .from("delivery_personnel")
-      .select("*")
+      .select("id, name, phone, is_active")
       .eq("is_active", true);
 
-    const orders = await getOrders({});
-    const pending = orders.filter(
-      (o) =>
-        ["pending", "confirmed", "packed", "out_for_delivery", "paid"].includes(
-          (o as { fulfillment_status?: string }).fulfillment_status || o.status
-        ) && o.status !== "cancelled"
-    );
+    const pending = await listOrdersForStaff({
+      limit: 80,
+      pendingDeliveryOnly: true,
+    });
 
     const defaultZones = DELIVERY_LOCATIONS.slice(0, 20).map((z, i) => ({
       id: `default-${i}`,

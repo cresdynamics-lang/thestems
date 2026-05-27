@@ -123,7 +123,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
-      router.push("/admin/login");
+      router.push("/staff/login");
       return;
     }
 
@@ -181,7 +181,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       } catch (error: any) {
         console.error("Error fetching product:", error);
         if (error.response?.status === 401) {
-          router.push("/admin/login");
+          router.push("/staff/login");
         } else if (error.response?.status === 404) {
           setError("Product not found");
         } else {
@@ -237,7 +237,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
       if (!token) {
         alert("Authentication required. Please log in again.");
-        router.push("/admin/login");
+        router.push("/staff/login");
         return;
       }
 
@@ -293,7 +293,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         if (error.response?.status === 401) {
           alert("Authentication failed. Please log in again.");
           localStorage.removeItem("admin_token");
-          router.push("/admin/login");
+          router.push("/staff/login");
         } else {
           const errorMessage = error.response?.data?.message || error.message || "Failed to update product. Please check the console for details.";
           alert(errorMessage);

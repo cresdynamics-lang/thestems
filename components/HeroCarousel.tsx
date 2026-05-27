@@ -60,7 +60,6 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
             className="object-cover"
             priority={index <= 1}
             sizes="100vw"
-            quality={index === 0 ? 75 : 65}
             fetchPriority={index === 0 ? "high" : "auto"}
           />
           <div className="absolute inset-0 bg-black/40 flex items-center">
@@ -98,7 +97,6 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
-                        quality={75}
                         loading="lazy"
                       />
                     </div>
@@ -113,7 +111,6 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 192px"
-                        quality={75}
                         loading="lazy"
                       />
                     </div>

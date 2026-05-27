@@ -330,7 +330,7 @@ export default function Footer() {
         <div className="border-t border-white/10 mt-4 pt-3">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-brand-gray-400 text-xs">
-              &copy; {new Date().getFullYear()} The Stems Flowers. All rights reserved. Designed by{" "}
+              &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> The Stems Flowers. All rights reserved. Designed by{" "}
               <a
                 href="https://nelson.strivego.online"
                 target="_blank"

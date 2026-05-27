@@ -23,6 +23,7 @@ export interface Product {
   included_items?: Array<{ name: string; qty: number; note?: string }> | null;
   upsells?: string[] | null;
   stock?: number | null;
+  visibility?: "published" | "draft" | string | null;
   created_at: string;
   updated_at: string;
 }
@@ -62,12 +63,19 @@ export interface Order {
   delivered_at?: string | null;
 }
 
+export function isProductPublished(product: { visibility?: string | null }): boolean {
+  const v = product.visibility;
+  return !v || v === "published";
+}
+
 export async function getProducts(filters?: {
   category?: string;
   subcategory?: string;
   tags?: string[];
   teddy_size?: number[];
   teddy_color?: string[];
+  /** Staff catalogue: include draft/unpublished rows */
+  includeDrafts?: boolean;
 }): Promise<Product[]> {
   if (!isSupabaseConfigured()) {
     warnIfSupabaseNotConfigured("getProducts");
@@ -104,9 +112,10 @@ export async function getProducts(filters?: {
       return [];
     }
 
-    return (data || []).map((row: any) =>
+    const mapped = (data || []).map((row: any) =>
       normalizeProduct({
         ...row,
+        visibility: row.visibility ?? "published",
         tags: row.tags || [],
         images: row.images || [],
         included_items: row.included_items || null,
@@ -114,6 +123,9 @@ export async function getProducts(filters?: {
         subcategory: row.subcategory || null,
       } as Product)
     );
+
+    if (filters?.includeDrafts) return mapped;
+    return mapped.filter(isProductPublished);
   } catch (error) {
     console.error("Error fetching products:", formatSupabaseError(error));
     return [];
@@ -140,14 +152,17 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
     if (!data) return null;
 
-    return normalizeProduct({
+    const product = normalizeProduct({
       ...(data as any),
+      visibility: (data as any).visibility ?? "published",
       tags: (data as any).tags || [],
       images: (data as any).images || [],
       included_items: (data as any).included_items || null,
       upsells: (data as any).upsells || null,
       subcategory: (data as any).subcategory || null,
     } as Product);
+
+    return isProductPublished(product) ? product : null;
   } catch (error) {
     console.error("Error fetching product:", formatSupabaseError(error));
     return null;
@@ -308,20 +323,16 @@ export async function getOrders(filters?: {
   status?: string;
 }): Promise<Order[]> {
   try {
-    console.log(`🔍 DB getOrders: Filters:`, filters);
-    
     // If no status filter, return all orders
     if (!filters?.status) {
       const { data, error } = await (supabaseAdmin.from("orders") as any)
         .select("*")
         .order("created_at", { ascending: false });
-      
+
       if (error) {
         console.error("Error fetching all orders:", error);
         return [];
       }
-      
-      console.log(`📊 DB getOrders: All orders count: ${data?.length || 0}`);
       
       return (data || []).map((order: any) => ({
         ...order,
@@ -329,9 +340,6 @@ export async function getOrders(filters?: {
         delivery_address: order.address || order.delivery_address,
       })) as Order[];
     }
-    
-    // For any status filter, use direct query approach
-    console.log(`🔍 DB getOrders: Filtering by status: "${filters.status}"`);
     
     const { data, error } = await (supabaseAdmin.from("orders") as any)
       .select("*")
@@ -343,9 +351,6 @@ export async function getOrders(filters?: {
       return [];
     }
     
-    console.log(`📊 DB getOrders: ${filters.status} orders count: ${data?.length || 0}`);
-    
-    // Process and return orders
     const processedOrders = (data || []).map((order: any) => ({
       ...order,
       total: order.total_amount,

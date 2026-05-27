@@ -1,9 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useStaff } from "./StaffAuthGuard";
 import { useStaffNav } from "./StaffNavContext";
 import { Bars3Icon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
 
 export function StaffHeader({
   title,
@@ -16,10 +24,11 @@ export function StaffHeader({
 }) {
   const { logout, user } = useStaff();
   const { openNav } = useStaffNav();
+  const [greeting, setGreeting] = useState("");
 
-  const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  useEffect(() => {
+    setGreeting(getGreeting());
+  }, []);
 
   return (
     <header className="shrink-0 bg-white border-b border-brand-gray-200 sticky top-0 z-40 px-4 sm:px-6 py-4 flex flex-wrap items-start justify-between gap-4">
@@ -39,10 +48,10 @@ export function StaffHeader({
             </h1>
           ) : (
             <h1 className="font-heading font-semibold text-xl text-brand-gray-900 tracking-tight">
-              {greeting}
+              {greeting || "Dashboard"}
             </h1>
           )}
-          <p className="text-sm mt-0.5 text-brand-gray-600">
+          <p className="text-sm mt-0.5 text-brand-gray-600" suppressHydrationWarning>
             {description || user.email}
           </p>
         </div>
