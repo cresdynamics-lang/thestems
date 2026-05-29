@@ -14,6 +14,8 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 300;
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);

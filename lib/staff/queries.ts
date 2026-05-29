@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const ORDER_LIST_COLUMNS =
-  "id, customer_name, phone, email, delivery_address, delivery_city, delivery_date, payment_method, status, fulfillment_status, total_amount, items, created_at, updated_at";
+  "id, customer_name, phone, email, delivery_address, delivery_city, delivery_date, payment_method, status, fulfillment_status, total_amount, created_at, updated_at";
 
 export type StaffOrderRow = {
   id: string;
@@ -23,6 +23,7 @@ export type StaffOrderRow = {
 
 export async function listOrdersForStaff(options?: {
   status?: string;
+  paymentMethod?: string;
   limit?: number;
   from?: string;
   pendingDeliveryOnly?: boolean;
@@ -36,6 +37,10 @@ export async function listOrdersForStaff(options?: {
 
   if (options?.status) {
     query = query.eq("status", options.status);
+  }
+
+  if (options?.paymentMethod) {
+    query = query.eq("payment_method", options.paymentMethod);
   }
 
   if (options?.from) {
@@ -73,12 +78,20 @@ export async function listOrdersForStaff(options?: {
 export const PRODUCT_SUMMARY_COLUMNS =
   "id, slug, title, price, category, images, visibility, stock, tags";
 
-export async function listProductsSummary(category?: string) {
+export async function listProductsSummary(category?: string, search?: string) {
   let query = (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
     .select(PRODUCT_SUMMARY_COLUMNS)
-    .order("title", { ascending: true });
+    .order("title", { ascending: true })
+    .limit(500);
 
   if (category) query = query.eq("category", category);
+
+  if (search?.trim()) {
+    const term = search.trim().replace(/[%_]/g, "");
+    if (term) {
+      query = query.or(`title.ilike.%${term}%,slug.ilike.%${term}%`);
+    }
+  }
 
   const { data, error } = await query;
   if (error) throw new Error(error.message);

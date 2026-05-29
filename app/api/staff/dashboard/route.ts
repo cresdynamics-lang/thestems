@@ -34,7 +34,8 @@ export async function GET(request: NextRequest) {
         .limit(10),
       (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
         .select("created_at, total_amount, status")
-        .gte("created_at", chartStart.toISOString()),
+        .gte("created_at", chartStart.toISOString())
+        .in("status", ["paid", "shipped", "delivered"]),
       (supabaseAdmin.from("orders") as ReturnType<typeof supabaseAdmin.from>)
         .select("*", { count: "exact", head: true })
         .gte("created_at", todayStart.toISOString()),
@@ -67,14 +68,10 @@ export async function GET(request: NextRequest) {
       const dayStart = startOfDay(d);
       const dayEnd = new Date(dayStart);
       dayEnd.setDate(dayEnd.getDate() + 1);
-      const dayOrders = (chartOrders as { created_at: string; total_amount: number; status: string }[]).filter(
+      const dayOrders = (chartOrders as { created_at: string; total_amount: number }[]).filter(
         (o) => {
           const t = new Date(o.created_at);
-          return (
-            t >= dayStart &&
-            t < dayEnd &&
-            ["paid", "shipped", "delivered"].includes(o.status)
-          );
+          return t >= dayStart && t < dayEnd;
         }
       );
       chartDays.push({

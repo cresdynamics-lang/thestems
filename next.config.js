@@ -2,6 +2,15 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: [
+      '@heroicons/react/24/outline',
+      '@heroicons/react/24/solid',
+      '@headlessui/react',
+      'date-fns',
+    ],
+  },
   images: {
     remotePatterns: [
       {
@@ -59,6 +68,22 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/((?!staff|admin|api|_next).*)',
+        headers: [
+          ...securityHeaders,
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=600',
+          },
         ],
       },
     ];

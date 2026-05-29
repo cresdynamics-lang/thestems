@@ -61,7 +61,7 @@ export async function listBlogPosts(options?: {
   }
 
   const { data, error } = await query;
-  return { data: (data || []) as BlogPostRow[], error };
+  return { data: (data || []) as unknown as BlogPostRow[], error };
 }
 
 export async function getBlogPostById(id: string) {

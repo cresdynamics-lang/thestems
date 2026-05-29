@@ -8,9 +8,10 @@ import LazyWhatsAppButton from "@/components/LazyWhatsAppButton";
 /** Store header/footer only — staff admin is full-screen without shop chrome */
 export function StoreChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isStaff = pathname?.startsWith("/staff");
+  const isStaffOrAdmin =
+    pathname?.startsWith("/staff") || pathname?.startsWith("/admin");
 
-  if (isStaff) {
+  if (isStaffOrAdmin) {
     return <>{children}</>;
   }
 

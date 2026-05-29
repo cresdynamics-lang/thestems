@@ -5,7 +5,7 @@ import { getLiveVisitorsDashboard } from "@/lib/analytics-server";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const STREAM_INTERVAL_MS = 4_000;
+const STREAM_INTERVAL_MS = 12_000;
 
 export async function GET(request: NextRequest) {
   if (!verifyStaffToken(request)) {

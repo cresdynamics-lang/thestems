@@ -18,17 +18,6 @@ type Options = {
   realtime?: boolean;
 };
 
-function enrichSecondsAgo(sessions: EnrichedLiveVisitor[]): EnrichedLiveVisitor[] {
-  const now = Date.now();
-  return sessions.map((s) => ({
-    ...s,
-    secondsAgo: Math.max(
-      0,
-      Math.floor((now - new Date(s.last_seen).getTime()) / 1000)
-    ),
-  }));
-}
-
 export function useLiveVisitors({
   compact = false,
   enabled = true,
@@ -44,7 +33,7 @@ export function useLiveVisitors({
 
   const applyPayload = useCallback(
     (payload: LiveVisitorsPayload, playSound: boolean) => {
-      const sessions = enrichSecondsAgo(payload.sessions || []);
+      const sessions = payload.sessions || [];
       const currentIds = new Set(sessions.map((s) => s.session_id));
       const hasNew =
         playSound &&
@@ -62,6 +51,7 @@ export function useLiveVisitors({
         sessions,
         summary: payload.summary,
         count: payload.summary?.liveVisitorCount ?? payload.count,
+        at: payload.at ?? Date.now(),
       });
       setError(null);
       setLoading(false);
@@ -95,7 +85,7 @@ export function useLiveVisitors({
       });
       pollTimer = setInterval(() => {
         fetchOnce().catch(() => {});
-      }, compact ? 60_000 : 8_000);
+      }, compact ? 60_000 : 15_000);
     };
 
     if (!realtime) {
@@ -145,21 +135,6 @@ export function useLiveVisitors({
     };
   }, [enabled, compact, realtime, applyPayload, fetchOnce]);
 
-  useEffect(() => {
-    if (!realtime || !data?.sessions?.length) return;
-    const tick = setInterval(() => {
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              sessions: enrichSecondsAgo(prev.sessions),
-            }
-          : prev
-      );
-    }, 1000);
-    return () => clearInterval(tick);
-  }, [realtime, data?.sessions.length]);
-
   return {
     data,
     loading,
@@ -168,4 +143,9 @@ export function useLiveVisitors({
     liveCount: data?.summary.liveVisitorCount ?? data?.count ?? 0,
     refetch: fetchOnce,
   };
+}
+
+export function sessionSecondsAgo(lastSeen: string, snapshotAt?: number): number {
+  const base = snapshotAt ?? Date.now();
+  return Math.max(0, Math.floor((base - new Date(lastSeen).getTime()) / 1000));
 }

@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
   useCallback,
   useRef,
@@ -11,7 +12,7 @@ import {
 import { useRouter, usePathname } from "next/navigation";
 import {
   getStaffToken,
-  getCachedStaffUser,
+  getBootStaffUser,
   setStaffSession,
   clearStaffToken,
   staffFetch,
@@ -33,12 +34,22 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const isPublic = PUBLIC_PATHS.some((p) => pathname?.startsWith(p));
-  const [user, setUser] = useState<StaffUser | null>(() =>
-    isPublic ? null : getCachedStaffUser()
-  );
-  const [loading, setLoading] = useState(() => !isPublic && !getCachedStaffUser());
+  const [user, setUser] = useState<StaffUser | null>(null);
+  const [loading, setLoading] = useState(() => !isPublic);
   const lastActivity = useRef(Date.now());
   const authInit = useRef(false);
+
+  useLayoutEffect(() => {
+    if (isPublic) {
+      setLoading(false);
+      return;
+    }
+    const boot = getBootStaffUser();
+    if (boot) {
+      setUser(boot);
+      setLoading(false);
+    }
+  }, [isPublic]);
 
   const logout = useCallback(async () => {
     authInit.current = false;
@@ -50,19 +61,10 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   useEffect(() => {
-    if (isPublic) {
-      setLoading(false);
-      return;
-    }
+    if (isPublic) return;
 
     if (authInit.current) return;
     authInit.current = true;
-
-    const cached = getCachedStaffUser();
-    if (cached) {
-      setUser(cached);
-      setLoading(false);
-    }
 
     let cancelled = false;
     staffFetch<StaffUser>("/api/staff/me")
@@ -87,7 +89,6 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-    // Auth bootstrap once per app mount — not on every route change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPublic]);
 
@@ -118,8 +119,10 @@ export function StaffAuthGuard({ children }: { children: React.ReactNode }) {
 
   if (loading && !user) {
     return (
-      <div className="staff-auth-form-wrap min-h-dvh w-full flex items-center justify-center text-brand-gray-600 text-sm">
-        Signing in…
+      <div className="staff-app min-h-screen flex flex-col bg-brand-blush">
+        <div className="flex-1 flex items-center justify-center text-brand-gray-600 text-sm">
+          Loading panel…
+        </div>
       </div>
     );
   }

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireStaff } from "@/lib/staff/auth";
 import { canViewFinancials } from "@/lib/staff/permissions";
 import { supabaseAdmin } from "@/lib/supabase";
-import { listProductsSummary } from "@/lib/staff/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -40,8 +39,24 @@ export async function GET(request: NextRequest) {
       byPayment[o.payment_method] = (byPayment[o.payment_method] || 0) + (o.total_amount || 0);
     }
 
-    const products = await listProductsSummary();
-    const productMap = new Map(products.map((p) => [p.id, p]));
+    const productIds = new Set<string>();
+    for (const o of periodOrders as { items?: { productId: string }[] }[]) {
+      for (const item of o.items || []) {
+        if (item.productId) productIds.add(item.productId);
+      }
+    }
+
+    const productMap = new Map<string, { category: string }>();
+    if (productIds.size > 0) {
+      const { data: productRows } = await (
+        supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>
+      )
+        .select("id, category")
+        .in("id", [...productIds]);
+      for (const p of productRows ?? []) {
+        productMap.set((p as { id: string }).id, p as { category: string });
+      }
+    }
 
     const byCategory: Record<string, number> = {};
     const productSales: Record<string, { units: number; revenue: number; name: string }> = {};

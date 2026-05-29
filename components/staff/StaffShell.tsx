@@ -1,8 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { StaffNavProvider } from "./StaffNavContext";
-import { StaffNavDrawer } from "./StaffNavDrawer";
+
+const StaffNavDrawer = dynamic(
+  () => import("./StaffNavDrawer").then((m) => ({ default: m.StaffNavDrawer })),
+  { ssr: false }
+);
 
 const AUTH_PATHS = ["/staff/login", "/staff/forgot-password", "/staff/reset-password"];
 

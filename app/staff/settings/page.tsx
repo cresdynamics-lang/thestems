@@ -3,27 +3,32 @@
 import { useEffect, useState } from "react";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { staffFetch } from "@/lib/staff/api-client";
+import { invalidateStaffCache } from "@/lib/staff/staff-cache";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { useStaff } from "@/components/staff/StaffAuthGuard";
 import { canManageStaff } from "@/lib/staff/permissions";
 
 export default function SettingsPage() {
   const { user } = useStaff();
+  const { data, refetch } = useStaffQuery<{
+    settings: Record<string, string>;
+    staffUsers: Array<Record<string, unknown>>;
+  }>("/api/staff/settings", { ttlMs: 60_000 });
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [staffUsers, setStaffUsers] = useState<Array<Record<string, unknown>>>([]);
   const [newStaff, setNewStaff] = useState({ email: "", password: "", name: "", role: "staff" });
 
   useEffect(() => {
-    staffFetch<{ settings: Record<string, string>; staffUsers: typeof staffUsers }>("/api/staff/settings").then((d) => {
-      setSettings(d.settings);
-      setStaffUsers(d.staffUsers || []);
-    });
-  }, []);
+    if (data?.settings) setSettings(data.settings);
+    if (data?.staffUsers) setStaffUsers(data.staffUsers);
+  }, [data]);
 
   async function save() {
     await staffFetch("/api/staff/settings", {
       method: "PUT",
       body: JSON.stringify({ settings }),
     });
+    invalidateStaffCache("/api/staff/settings");
     alert("Settings saved");
   }
 
@@ -33,9 +38,8 @@ export default function SettingsPage() {
       body: JSON.stringify({ staffUser: newStaff }),
     });
     setNewStaff({ email: "", password: "", name: "", role: "staff" });
-    staffFetch<{ staffUsers: typeof staffUsers }>("/api/staff/settings").then((d) =>
-      setStaffUsers(d.staffUsers || [])
-    );
+    invalidateStaffCache("/api/staff/settings");
+    void refetch(false);
   }
 
   const fields = [

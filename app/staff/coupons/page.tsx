@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { Modal } from "@/components/staff/ui/Modal";
 import { Badge } from "@/components/staff/ui/Badge";
 import { staffFetch } from "@/lib/staff/api-client";
+import { invalidateStaffCache } from "@/lib/staff/staff-cache";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 
 interface Coupon {
   id: string;
@@ -20,7 +22,10 @@ interface Coupon {
 }
 
 export default function CouponsPage() {
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const { data, refetch } = useStaffQuery<Coupon[]>("/api/staff/coupons", {
+    ttlMs: 45_000,
+  });
+  const coupons = data ?? [];
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     code: "",
@@ -31,8 +36,10 @@ export default function CouponsPage() {
     expires_at: "",
   });
 
-  const load = () => staffFetch<Coupon[]>("/api/staff/coupons").then(setCoupons);
-  useEffect(() => { load(); }, []);
+  const reload = () => {
+    invalidateStaffCache("/api/staff/coupons");
+    void refetch(false);
+  };
 
   async function create() {
     await staffFetch("/api/staff/coupons", {
@@ -44,7 +51,7 @@ export default function CouponsPage() {
       }),
     });
     setOpen(false);
-    load();
+    reload();
   }
 
   async function toggle(id: string, is_active: boolean) {
@@ -52,7 +59,7 @@ export default function CouponsPage() {
       method: "PATCH",
       body: JSON.stringify({ is_active: !is_active }),
     });
-    load();
+    reload();
   }
 
   return (

@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useLiveVisitors } from "@/hooks/useLiveVisitors";
+import { useLiveVisitors, sessionSecondsAgo } from "@/hooks/useLiveVisitors";
 
 type LiveVisitorsPanelProps = {
   compact?: boolean;
@@ -37,6 +38,15 @@ export function LiveVisitorsPanel({ compact = false }: LiveVisitorsPanelProps) {
     compact,
     realtime: !compact,
   });
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    if (compact) return;
+    const timer = setInterval(() => setTick((n) => n + 1), 15_000);
+    return () => clearInterval(timer);
+  }, [compact]);
+
+  const snapshotAt = data?.at;
 
   if (loading) {
     return (
@@ -126,7 +136,7 @@ export function LiveVisitorsPanel({ compact = false }: LiveVisitorsPanelProps) {
       <div className="staff-panel overflow-hidden">
         <div className="staff-panel-head flex items-center justify-between">
           <span>Who is browsing</span>
-          <span className="text-xs text-[var(--staff-muted)]">Updates every ~2 seconds</span>
+          <span className="text-xs text-[var(--staff-muted)]">Updates every ~12 seconds</span>
         </div>
         {sessions.length > 0 ? (
           <ul className="divide-y divide-[#f3f4f6]">
@@ -161,7 +171,7 @@ export function LiveVisitorsPanel({ compact = false }: LiveVisitorsPanelProps) {
                     Active
                   </span>
                   <p className="text-[11px] text-[var(--staff-muted)] mt-1 tabular-nums">
-                    {formatSecondsAgo(session.secondsAgo)}
+                    {formatSecondsAgo(sessionSecondsAgo(session.last_seen, snapshotAt))}
                   </p>
                 </div>
               </li>

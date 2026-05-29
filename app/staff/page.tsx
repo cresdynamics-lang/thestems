@@ -5,7 +5,7 @@ import Link from "next/link";
 import { StaffPage } from "@/components/staff/StaffPage";
 import { StatCard } from "@/components/staff/ui/StatCard";
 import { Badge } from "@/components/staff/ui/Badge";
-import { staffFetch } from "@/lib/staff/api-client";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { PAYMENT_METHOD_LABELS } from "@/lib/staff/constants";
 import type { Order } from "@/lib/db";
@@ -23,12 +23,8 @@ interface DashboardData {
 }
 
 export default function StaffDashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null);
+  const { data } = useStaffQuery<DashboardData>("/api/staff/dashboard", { ttlMs: 60_000 });
   const [chartPeriod, setChartPeriod] = useState<"daily" | "weekly" | "monthly">("daily");
-
-  useEffect(() => {
-    staffFetch<DashboardData>("/api/staff/dashboard").then(setData).catch(console.error);
-  }, []);
 
   const chart = data?.chartDays || [];
   const slice =

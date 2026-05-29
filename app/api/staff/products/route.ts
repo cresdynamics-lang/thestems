@@ -19,18 +19,7 @@ export async function GET(request: NextRequest) {
     const useSummary = summary || request.nextUrl.searchParams.get("full") !== "1";
 
     if (useSummary) {
-      let rows = await listProductsSummary(category);
-      if (search) {
-        rows = rows.filter(
-          (p) =>
-            String(p.title || "")
-              .toLowerCase()
-              .includes(search) ||
-            String(p.slug || "")
-              .toLowerCase()
-              .includes(search)
-        );
-      }
+      const rows = await listProductsSummary(category, search);
       return NextResponse.json(rows);
     }
 

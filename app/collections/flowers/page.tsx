@@ -3,6 +3,7 @@ import FlowersPageClient from "./FlowersPageClient";
 import { getProducts, type Product } from "@/lib/db";
 
 import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
+import { FLOWERS_SEO_KEYWORDS } from "@/lib/seo-keywords";
 
 const baseUrl = SITE_URL;
 
@@ -10,84 +11,7 @@ export const metadata: Metadata = {
   title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500 | The Stems",
   description:
     "Order fresh flowers in Nairobi from KSh 3,500. Shop red roses, mixed bouquets, birthday and anniversary flowers with same-day delivery in Nairobi CBD and fast citywide delivery.",
-  keywords: [
-    // Occasion-based Flower Keywords
-    "anniversary flowers Nairobi",
-    "birthday flowers Nairobi",
-    "apology flowers Nairobi",
-    "sorry flowers Nairobi",
-    "surprise flowers Nairobi",
-    "romantic flowers Nairobi",
-    "flower delivery Nairobi",
-
-    // Relationship-based Keywords
-    "flowers for wife Nairobi",
-    "flowers for girlfriend Nairobi",
-    "flowers for husband Nairobi",
-    "flowers for mom Nairobi",
-    "flowers for dad Nairobi",
-    "flowers for loved ones Nairobi",
-
-    // Anniversary Flowers
-    "anniversary roses Nairobi",
-    "anniversary bouquets Nairobi",
-    "wedding anniversary flowers Nairobi",
-    "romantic anniversary flowers Nairobi",
-    "anniversary flower arrangements Nairobi",
-
-    // Birthday Flowers
-    "birthday bouquets Nairobi",
-    "birthday roses Nairobi",
-    "surprise birthday flowers Nairobi",
-    "birthday flower arrangements Nairobi",
-    "birthday flower delivery Nairobi",
-
-    // Apology & Reconciliation Flowers
-    "apology bouquets Nairobi",
-    "sorry roses Nairobi",
-    "I'm sorry flowers Nairobi",
-    "forgiveness flowers Nairobi",
-    "reconciliation flowers Nairobi",
-
-    // Flower Types
-    "roses Nairobi",
-    "red roses Nairobi",
-    "pink roses Nairobi",
-    "white roses Nairobi",
-    "mixed bouquets Nairobi",
-    "luxury flowers Nairobi",
-    "premium flowers Nairobi",
-
-    // Delivery Keywords
-    "same day flowers Nairobi",
-    "flower delivery CBD Nairobi",
-    "flowers Westlands",
-    "flowers Karen Nairobi",
-    "flowers Lavington",
-    "flowers Kilimani",
-    "urgent flower delivery Nairobi",
-
-    // Search Intent Keywords
-    "where to buy flowers Nairobi",
-    "best florist Nairobi",
-    "flower shop near me",
-    "how to surprise with flowers Nairobi",
-    "beautiful flower arrangements Nairobi",
-
-    // Voice Search
-    "order flowers online Nairobi",
-    "find flowers near me Nairobi",
-    "florist near me Kenya",
-
-    // Long-tail Keywords
-    "personalized flower bouquets Nairobi",
-    "romantic flower deliveries Nairobi",
-    "luxury rose arrangements Nairobi",
-    "thoughtful flower gifts Nairobi",
-    "money bouquet Nairobi",
-    "bouquet delivery Nairobi",
-    "same-day flower delivery Nairobi",
-  ],
+  keywords: FLOWERS_SEO_KEYWORDS,
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },

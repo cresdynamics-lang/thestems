@@ -30,6 +30,38 @@ export function getCachedStaffUser(): StaffUser | null {
   }
 }
 
+/** Read profile from JWT for instant panel shell (validated by /api/staff/me in background). */
+export function decodeStaffTokenUser(): StaffUser | null {
+  const token = getStaffToken();
+  if (!token) return null;
+  try {
+    const part = token.split(".")[1];
+    if (!part) return null;
+    const json = atob(part.replace(/-/g, "+").replace(/_/g, "/"));
+    const payload = JSON.parse(json) as {
+      email?: string;
+      role?: string;
+      name?: string;
+      id?: string;
+      exp?: number;
+    };
+    if (payload.exp && payload.exp * 1000 < Date.now()) return null;
+    if (!payload.email) return null;
+    return {
+      email: payload.email,
+      role: payload.role || "staff",
+      name: payload.name,
+      id: payload.id,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function getBootStaffUser(): StaffUser | null {
+  return getCachedStaffUser() ?? decodeStaffTokenUser();
+}
+
 export function setStaffSession(token: string, user?: StaffUser) {
   localStorage.setItem(STAFF_TOKEN_KEY, token);
   if (user) {

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { StaffHeader } from "@/components/staff/StaffHeader";
-import { staffFetch } from "@/lib/staff/api-client";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency } from "@/lib/utils";
 
 interface CustomerRow {
@@ -17,13 +18,18 @@ interface CustomerRow {
 }
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<CustomerRow[]>([]);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
 
-  useEffect(() => {
-    const q = search ? `?search=${encodeURIComponent(search)}` : "";
-    staffFetch<CustomerRow[]>(`/api/staff/customers${q}`).then(setCustomers);
-  }, [search]);
+  const customersUrl = useMemo(() => {
+    const q = debouncedSearch ? `?search=${encodeURIComponent(debouncedSearch)}` : "";
+    return `/api/staff/customers${q}`;
+  }, [debouncedSearch]);
+
+  const { data } = useStaffQuery<CustomerRow[]>(customersUrl, {
+    ttlMs: 45_000,
+  });
+  const customers = data ?? [];
 
   function exportCsv() {
     const headers = ["name", "email", "phone", "orders", "spend"];

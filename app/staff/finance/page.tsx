@@ -1,25 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { StatCard } from "@/components/staff/ui/StatCard";
-import { staffFetch } from "@/lib/staff/api-client";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency } from "@/lib/utils";
 import { CATEGORY_LABELS, PAYMENT_METHOD_LABELS } from "@/lib/staff/constants";
 
 export default function FinancePage() {
   const [period, setPeriod] = useState("month");
-  const [data, setData] = useState<Record<string, unknown> | null>(null);
-  const [error, setError] = useState("");
+  const financeUrl = useMemo(() => `/api/staff/finance?period=${period}`, [period]);
+  const { data, error: queryError } = useStaffQuery<Record<string, unknown>>(financeUrl, {
+    ttlMs: 60_000,
+  });
 
-  useEffect(() => {
-    staffFetch<Record<string, unknown>>(`/api/staff/finance?period=${period}`)
-      .then(setData)
-      .catch((e: Error & { status?: number }) => {
-        if (e.status === 403) setError("Financial reports are available to Super Admin only.");
-        else setError(e.message);
-      });
-  }, [period]);
+  const displayError =
+    queryError?.includes("Super Admin") || queryError?.includes("403")
+      ? "Financial reports are available to Super Admin only."
+      : queryError || "";
 
   function exportCsv() {
     if (!data) return;
@@ -39,8 +37,8 @@ export default function FinancePage() {
     <>
       <StaffHeader title="Finance & Revenue" />
       <main className="flex-1 p-4 sm:p-6 overflow-auto">
-        {error ? (
-          <div className="card p-6 text-brand-gray-700">{error}</div>
+        {displayError ? (
+          <div className="card p-6 text-brand-gray-700">{displayError}</div>
         ) : (
           <>
             <div className="flex gap-2 mb-4">

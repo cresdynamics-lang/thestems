@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { StaffPage } from "@/components/staff/StaffPage";
-import { staffFetch } from "@/lib/staff/api-client";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency } from "@/lib/utils";
 import { CATEGORY_LABELS } from "@/lib/staff/constants";
 import { isProductPublished, type Product } from "@/lib/db";
@@ -19,17 +19,12 @@ const COLLECTION_LINKS: Record<string, string> = {
 };
 
 export default function StaffShopPreviewPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { data } = useStaffQuery<Product[]>("/api/staff/products?summary=1", {
+    ttlMs: 60_000,
+  });
+  const products = data ?? [];
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    staffFetch<Product[]>("/api/staff/products?summary=1")
-      .then(setProducts)
-      .finally(() => setLoading(false));
-  }, []);
 
   const published = useMemo(() => products.filter(isProductPublished), [products]);
   const drafts = products.length - published.length;
@@ -106,10 +101,12 @@ export default function StaffShopPreviewPage() {
         </div>
       </div>
 
-      {loading ? (
-        <p className="text-[var(--staff-muted)]">Loading catalogue…</p>
-      ) : visible.length === 0 ? (
-        <p className="text-[var(--staff-muted)]">No published products match your filters.</p>
+      {visible.length === 0 ? (
+        <p className="text-[var(--staff-muted)]">
+          {products.length === 0
+            ? "Loading catalogue…"
+            : "No published products match your filters."}
+        </p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {visible.map((p) => (

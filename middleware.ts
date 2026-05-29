@@ -43,6 +43,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Legacy admin panel → staff (faster, unified panel)
+  if (pathname === "/admin/orders" || pathname.startsWith("/admin/orders/")) {
+    return NextResponse.redirect(
+      new URL(pathname.replace(/^\/admin/, "/staff"), request.url)
+    );
+  }
+  if (pathname === "/admin/products" || pathname.startsWith("/admin/products/")) {
+    return NextResponse.redirect(
+      new URL(pathname.replace(/^\/admin/, "/staff"), request.url)
+    );
+  }
+
   // Staff auth is handled client-side (StaffAuthGuard) and on /api/staff/* routes.
   // Do not redirect here — httpOnly cookie timing caused login → blog redirect loops.
 
@@ -51,6 +63,15 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith("/staff")) {
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
     response.headers.set("Pragma", "no-cache");
+  } else if (
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/api") &&
+    !pathname.startsWith("/_next")
+  ) {
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=600"
+    );
   }
 
   // Add CORS headers for Chrome compatibility (only for API routes)

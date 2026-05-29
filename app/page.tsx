@@ -14,6 +14,7 @@ import { SITE_URL, stableSortByKey } from "@/lib/seo";
 import { pickUniqueProducts } from "@/lib/productDisplay";
 import { getHomepageProductSections } from "@/lib/homepage-sections";
 import { isSupabaseConfigured } from "@/lib/supabaseConfig";
+import { HOME_SEO_KEYWORDS } from "@/lib/seo-keywords";
 
 const baseUrl = SITE_URL;
 
@@ -24,145 +25,7 @@ export const metadata: Metadata = {
   title: "Florist Nairobi CBD | Red Roses, Gift Hampers & Same-Day Delivery | The Stems Flowers",
   description:
     "Fresh flowers, gift hampers, wines and teddy bears delivered across Nairobi same day. Visit The Stems at Delta Hotel, University Way or order online with M-Pesa for fast delivery.",
-  keywords: [
-    // Occasion-based Core Keywords
-    "anniversary flowers Nairobi",
-    "anniversary gifts Nairobi",
-    "birthday flowers Nairobi",
-    "birthday gifts Nairobi",
-    "surprise gifts Nairobi",
-    "apology flowers Nairobi",
-    "sorry flowers Nairobi",
-    "romantic flowers Nairobi",
-    "gift hampers Nairobi",
-    "flower delivery Nairobi",
-    "same-day delivery Nairobi",
-
-    // Anniversary Keywords
-    "anniversary flowers for wife Nairobi",
-    "anniversary gifts for husband Nairobi",
-    "wedding anniversary flowers Nairobi",
-    "1st anniversary flowers Nairobi",
-    "5th anniversary gifts Nairobi",
-    "10th anniversary flowers Nairobi",
-    "25th anniversary flowers Nairobi",
-    "50th anniversary flowers Nairobi",
-    "romantic anniversary gifts Nairobi",
-    "anniversary surprise Nairobi",
-    "anniversary bouquet Nairobi",
-    "anniversary hampers Nairobi",
-
-    // Birthday Keywords
-    "birthday flowers for her Nairobi",
-    "birthday flowers for him Nairobi",
-    "birthday surprise gifts Nairobi",
-    "birthday gift hampers Nairobi",
-    "birthday bouquet Nairobi",
-    "birthday flowers delivery Nairobi",
-    "surprise birthday gifts Nairobi",
-    "birthday flowers and chocolates Nairobi",
-    "birthday teddy bears Nairobi",
-    "birthday wine gifts Nairobi",
-
-    // Surprise & Spontaneous Keywords
-    "surprise flowers Nairobi",
-    "surprise gifts for girlfriend Nairobi",
-    "surprise gifts for boyfriend Nairobi",
-    "surprise gifts for wife Nairobi",
-    "surprise gifts for husband Nairobi",
-    "just because flowers Nairobi",
-    "spontaneous gifts Nairobi",
-    "unexpected flowers Nairobi",
-    "surprise delivery Nairobi",
-    "romantic surprises Nairobi",
-
-    // Apology & Reconciliation Keywords
-    "apology flowers Nairobi",
-    "sorry flowers Nairobi",
-    "I'm sorry flowers Nairobi",
-    "forgiveness flowers Nairobi",
-    "apology gift hampers Nairobi",
-    "sorry bouquet Nairobi",
-    "make up flowers Nairobi",
-    "reconciliation gifts Nairobi",
-    "apology flowers delivery Nairobi",
-    "express sorry with flowers Nairobi",
-
-    // Relationship-based Keywords
-    "gifts for wife Nairobi",
-    "gifts for husband Nairobi",
-    "gifts for girlfriend Nairobi",
-    "gifts for boyfriend Nairobi",
-    "gifts for mom Nairobi",
-    "gifts for dad Nairobi",
-    "gifts for loved ones Nairobi",
-    "romantic gifts Nairobi",
-    "thoughtful gifts Nairobi",
-
-    // Product-specific Keywords
-    "roses Nairobi",
-    "flower bouquets Nairobi",
-    "chocolate hampers Nairobi",
-    "wine gifts Nairobi",
-    "teddy bears Nairobi",
-    "money bouquet Nairobi",
-    "luxury hampers Nairobi",
-    "premium flowers Nairobi",
-    "fresh flowers Nairobi",
-
-    // Location-specific Keywords
-    "flower delivery Nairobi CBD",
-    "flowers Westlands",
-    "gifts Karen Nairobi",
-    "flower delivery Lavington",
-    "gifts Kilimani",
-    "flowers Kilimani",
-    "gifts Westlands",
-    "flower delivery Kileleshwa",
-
-    // Timing & Urgency Keywords
-    "same-day flower delivery Nairobi",
-    "urgent flower delivery Nairobi",
-    "last minute gifts Nairobi",
-    "express delivery Nairobi",
-    "rush flower delivery Nairobi",
-    "emergency flowers Nairobi",
-
-    // Search Intent Keywords
-    "where to buy flowers Nairobi",
-    "best florist Nairobi",
-    "gift ideas Nairobi",
-    "how to surprise someone Nairobi",
-    "romantic gestures Nairobi",
-    "affordable gifts Nairobi",
-    "luxury gifts Nairobi",
-    "online flower delivery Nairobi",
-    "order flowers online Nairobi",
-
-    // Voice & Long-tail Keywords
-    "find flowers near me Nairobi",
-    "florist near me Kenya",
-    "order flowers online Nairobi",
-    "gift delivery near me",
-    "beautiful flower arrangements Nairobi",
-    "personalized gift hampers Nairobi",
-    "thoughtful presents Nairobi",
-    "memorable gifts Nairobi",
-    "unique gift ideas Nairobi",
-
-    // Corporate & Business Keywords
-    "corporate gifts Nairobi",
-    "business gifts Nairobi",
-    "employee appreciation gifts Nairobi",
-    "client gifts Nairobi",
-
-    // Traditional Keywords
-    "best gifts for men Nairobi",
-    "best gifts for women Nairobi",
-    "best gifts for couples Nairobi",
-    "romantic flowers Kenya",
-    "gift hampers Kenya",
-  ],
+  keywords: HOME_SEO_KEYWORDS,
   alternates: {
     canonical: baseUrl,
   },
@@ -224,7 +87,7 @@ const localBusinessHomeJsonLd = {
   openingHours: "Mo-Sa 08:00-20:00",
   description:
     "The Stems Flowers — Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, flower bouquets, gift hampers and teddy bears with same-day delivery across Nairobi. Pay with M-Pesa.",
-  priceRange: "KSh KSh",
+  priceRange: "$$",
   paymentAccepted: "M-Pesa, Cash, Card",
   hasMap: "https://maps.google.com/?q=Delta+Hotel+University+Way+Nairobi",
 };

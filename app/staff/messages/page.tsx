@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { Badge } from "@/components/staff/ui/Badge";
 import { staffFetch } from "@/lib/staff/api-client";
+import { invalidateStaffCache } from "@/lib/staff/staff-cache";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatDateTime } from "@/lib/utils";
 
 interface Message {
@@ -17,18 +19,19 @@ interface Message {
 }
 
 export default function MessagesPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [waLogs, setWaLogs] = useState<{ message: string; created_at: string; phone?: string }[]>([]);
+  const { data, refetch } = useStaffQuery<{
+    messages: Message[];
+    whatsappLogs: { message: string; created_at: string; phone?: string }[];
+  }>("/api/staff/messages", { ttlMs: 30_000 });
+  const messages = data?.messages ?? [];
+  const waLogs = data?.whatsappLogs ?? [];
   const [reply, setReply] = useState("");
   const [active, setActive] = useState<Message | null>(null);
 
-  const load = () =>
-    staffFetch<{ messages: Message[]; whatsappLogs: typeof waLogs }>("/api/staff/messages").then((d) => {
-      setMessages(d.messages);
-      setWaLogs(d.whatsappLogs);
-    });
-
-  useEffect(() => { load(); }, []);
+  const load = () => {
+    invalidateStaffCache("/api/staff/messages");
+    void refetch(false);
+  };
 
   async function resolve(id: string, status: string) {
     await staffFetch("/api/staff/messages", {

@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { StaffPage } from "@/components/staff/StaffPage";
 import { Badge } from "@/components/staff/ui/Badge";
 import { Modal } from "@/components/staff/ui/Modal";
 import { staffFetch } from "@/lib/staff/api-client";
+import { invalidateStaffCache } from "@/lib/staff/staff-cache";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { useStaff } from "@/components/staff/StaffAuthGuard";
 import { canDelete } from "@/lib/staff/permissions";
 import { formatCurrency } from "@/lib/utils";
@@ -15,25 +18,30 @@ import type { Product } from "@/lib/db";
 
 export default function StaffProductsPage() {
   const { user } = useStaff();
-  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search);
   const [category, setCategory] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkPrice, setBulkPrice] = useState("");
 
-  const load = () => {
+  const productsUrl = useMemo(() => {
     const q = new URLSearchParams();
     if (category) q.set("category", category);
-    if (search) q.set("search", search);
-    const params = new URLSearchParams(q);
-    params.set("summary", "1");
-    staffFetch<Product[]>(`/api/staff/products?${params}`).then(setProducts);
-  };
+    if (debouncedSearch) q.set("search", debouncedSearch);
+    q.set("summary", "1");
+    return `/api/staff/products?${q}`;
+  }, [category, debouncedSearch]);
 
-  useEffect(() => {
-    load();
-  }, [category, search]);
+  const { data, refetch } = useStaffQuery<Product[]>(productsUrl, {
+    ttlMs: 45_000,
+  });
+  const products = data ?? [];
+
+  const reload = () => {
+    invalidateStaffCache("/api/staff/products");
+    void refetch(false);
+  };
 
   async function bulkAction(action: string) {
     await staffFetch("/api/staff/products", {
@@ -46,13 +54,13 @@ export default function StaffProductsPage() {
     });
     setSelected([]);
     setBulkOpen(false);
-    load();
+    reload();
   }
 
   async function deleteOne(id: string) {
     if (!confirm("Remove this product from the catalogue?")) return;
     await staffFetch(`/api/staff/products/${id}`, { method: "DELETE" });
-    load();
+    reload();
   }
 
   return (

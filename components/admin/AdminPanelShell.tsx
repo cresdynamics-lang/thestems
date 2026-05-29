@@ -17,7 +17,7 @@ export function AdminPanelShell({ children }: { children: React.ReactNode }) {
         </div>
         <nav className="flex-1 py-4 px-3 space-y-1 text-sm">
           <Link
-            href="/admin"
+            href="/staff"
             className="block px-3 py-2 rounded-lg text-brand-gray-800 hover:bg-brand-green/5 hover:text-brand-green"
           >
             Dashboard
@@ -35,13 +35,13 @@ export function AdminPanelShell({ children }: { children: React.ReactNode }) {
             Shop preview
           </Link>
           <Link
-            href="/admin/orders"
+            href="/staff/orders"
             className="block px-3 py-2 rounded-lg text-brand-gray-800 hover:bg-brand-green/5 hover:text-brand-green"
           >
             Orders
           </Link>
           <Link
-            href="/admin/products"
+            href="/staff/products"
             className="block px-3 py-2 rounded-lg text-brand-gray-800 hover:bg-brand-green/5 hover:text-brand-green"
           >
             Products

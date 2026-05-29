@@ -68,6 +68,10 @@ export function isProductPublished(product: { visibility?: string | null }): boo
   return !v || v === "published";
 }
 
+/** Columns for catalogue/list views — smaller payload than select("*"). */
+export const PUBLIC_PRODUCT_COLUMNS =
+  "id, slug, title, description, short_description, price, category, subcategory, tags, teddy_size, teddy_color, images, visibility, created_at, updated_at";
+
 export async function getProducts(filters?: {
   category?: string;
   subcategory?: string;
@@ -83,7 +87,10 @@ export async function getProducts(filters?: {
   }
 
   try {
-    let query = supabase.from("products").select("*").order("created_at", { ascending: false });
+    let query = supabase
+      .from("products")
+      .select(PUBLIC_PRODUCT_COLUMNS)
+      .order("created_at", { ascending: false });
 
     if (filters?.category) {
       query = query.eq("category", filters.category);

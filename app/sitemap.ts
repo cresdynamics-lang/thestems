@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
 import { SITE_URL } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
 function staticPage(
@@ -19,8 +21,12 @@ function staticPage(
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [{ data: products }, { data: posts }] = await Promise.all([
-    (supabaseAdmin.from("products") as any).select("slug, updated_at"),
-    (supabaseAdmin.from("blog_posts") as any).select("slug, updated_at"),
+    (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
+      .select("slug, updated_at, visibility")
+      .or("visibility.is.null,visibility.eq.published"),
+    (supabaseAdmin.from("blog_posts") as ReturnType<typeof supabaseAdmin.from>).select(
+      "slug, updated_at"
+    ),
   ]).catch(() => [{ data: null }, { data: null }]) as [
     { data: { slug: string; updated_at?: string }[] | null },
     { data: { slug: string; updated_at?: string }[] | null },

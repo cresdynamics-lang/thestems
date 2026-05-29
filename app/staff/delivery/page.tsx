@@ -1,37 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { staffFetch } from "@/lib/staff/api-client";
+import { invalidateStaffCache } from "@/lib/staff/staff-cache";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency } from "@/lib/utils";
 import type { Order } from "@/lib/db";
 
-export default function DeliveryPage() {
-  const [zones, setZones] = useState<{ id: string; name: string; delivery_fee: number }[]>([]);
-  const [personnel, setPersonnel] = useState<{ id: string; name: string; phone: string }[]>([]);
-  const [pending, setPending] = useState<Order[]>([]);
+type DeliveryData = {
+  zones: { id: string; name: string; delivery_fee: number }[];
+  personnel: { id: string; name: string; phone: string }[];
+  pendingDeliveries: Order[];
+};
 
-  useEffect(() => {
-    staffFetch<{
-      zones: typeof zones;
-      personnel: typeof personnel;
-      pendingDeliveries: Order[];
-    }>("/api/staff/delivery").then((d) => {
-      setZones(d.zones);
-      setPersonnel(d.personnel);
-      setPending(d.pendingDeliveries);
-    });
-  }, []);
+export default function DeliveryPage() {
+  const { data, refetch } = useStaffQuery<DeliveryData>("/api/staff/delivery", {
+    ttlMs: 30_000,
+  });
+  const zones = data?.zones ?? [];
+  const personnel = data?.personnel ?? [];
+  const pending = data?.pendingDeliveries ?? [];
 
   async function assignOrder(orderId: string, assigned_to: string) {
     await staffFetch(`/api/staff/orders/${orderId}`, {
       method: "PATCH",
       body: JSON.stringify({ assigned_to, fulfillment_status: "out_for_delivery" }),
     });
-    staffFetch<{ pendingDeliveries: Order[] }>("/api/staff/delivery").then((d) =>
-      setPending(d.pendingDeliveries)
-    );
+    invalidateStaffCache("/api/staff/delivery");
+    void refetch(false);
   }
 
   return (

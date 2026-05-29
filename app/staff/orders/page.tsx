@@ -1,25 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { StaffPage } from "@/components/staff/StaffPage";
 import { Badge } from "@/components/staff/ui/Badge";
-import { staffFetch } from "@/lib/staff/api-client";
+import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { PAYMENT_METHOD_LABELS, ORDER_FULFILLMENT_STATUSES } from "@/lib/staff/constants";
 import type { Order } from "@/lib/db";
 
 export default function StaffOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
   const [status, setStatus] = useState("");
   const [payment, setPayment] = useState("");
 
-  useEffect(() => {
+  const ordersUrl = useMemo(() => {
     const q = new URLSearchParams();
     if (status) q.set("status", status);
     if (payment) q.set("payment_method", payment);
-    staffFetch<Order[]>(`/api/staff/orders?${q}`).then(setOrders);
+    const qs = q.toString();
+    return `/api/staff/orders${qs ? `?${qs}` : ""}`;
   }, [status, payment]);
+
+  const { data } = useStaffQuery<Order[]>(ordersUrl, { ttlMs: 30_000 });
+  const orders = data ?? [];
 
   return (
     <StaffPage title="Orders" description={`${orders.length} orders`}>
