@@ -1,11 +1,13 @@
 // PM2 config for The Stems (DigitalOcean)
+const path = require('path');
+
 module.exports = {
   apps: [
     {
       name: 'thestems',
-      script: 'npm',
-      args: 'start',
-      cwd: '/var/www/thestems',
+      script: path.join(__dirname, 'node_modules/next/dist/bin/next'),
+      args: 'start -p 3000',
+      cwd: __dirname,
       instances: 1,
       exec_mode: 'fork',
       env: {
@@ -13,8 +15,8 @@ module.exports = {
         PORT: 3000,
         NODE_OPTIONS: '--max-old-space-size=2048',
       },
-      error_file: '/var/www/thestems/logs/pm2-error.log',
-      out_file: '/var/www/thestems/logs/pm2-out.log',
+      error_file: path.join(__dirname, 'logs/pm2-error.log'),
+      out_file: path.join(__dirname, 'logs/pm2-out.log'),
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
       autorestart: true,

@@ -62,7 +62,7 @@ Save and exit (Ctrl+X, Y, Enter).
 ### 6. Build and run with PM2
 
 ```bash
-npm install --production
+npm ci
 NODE_OPTIONS='--max-old-space-size=4096' npm run build
 mkdir -p logs
 pm2 start ecosystem.config.js
@@ -70,42 +70,23 @@ pm2 save
 pm2 startup   # run the command it prints to start PM2 on boot
 ```
 
-### 7. (Optional) Nginx and HTTPS
+Verify the app is healthy:
 
-To serve on port 80/443 and use a domain (e.g. thestemsflowers.co.ke):
+```bash
+curl -s http://127.0.0.1:3000/api/health
+```
+
+### 7. Nginx and HTTPS
+
+To serve on port 80/443 with your domain:
 
 ```bash
 sudo apt install -y nginx certbot python3-certbot-nginx
-sudo nano /etc/nginx/sites-available/thestems
-```
-
-Example config (replace `thestemsflowers.co.ke` with your domain):
-
-```nginx
-server {
-    listen 80;
-    server_name thestemsflowers.co.ke 178.128.70.10;
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-Then:
-
-```bash
-sudo ln -s /etc/nginx/sites-available/thestems /etc/nginx/sites-enabled/
+sudo cp nginx/thestems.conf /etc/nginx/sites-available/thestems
+sudo ln -sf /etc/nginx/sites-available/thestems /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-# HTTPS (when DNS points to 178.128.70.10):
-# sudo certbot --nginx -d thestemsflowers.co.ke
+# HTTPS (when DNS A record points to 178.128.70.10):
+sudo certbot --nginx -d thestemsflowers.co.ke -d www.thestemsflowers.co.ke
 ```
 
 ---
@@ -142,10 +123,7 @@ ssh root@178.128.70.10 "cd /var/www/thestems && git pull origin main && npm ci -
 
 ```bash
 cd /var/www/thestems
-git pull origin main
-npm install
-NODE_OPTIONS='--max-old-space-size=4096' npm run build
-pm2 restart thestems
+bash scripts/deploy-on-server.sh
 ```
 
 ---

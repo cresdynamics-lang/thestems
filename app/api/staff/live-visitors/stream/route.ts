@@ -18,34 +18,49 @@ export async function GET(request: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       let closed = false;
-
-      const push = async () => {
-        if (closed) return;
-        try {
-          const payload = await getLiveVisitorsDashboard({ compact });
-          const line = `data: ${JSON.stringify({ ...payload, at: Date.now() })}\n\n`;
-          controller.enqueue(encoder.encode(line));
-        } catch (e) {
-          const message = e instanceof Error ? e.message : "stream error";
-          controller.enqueue(
-            encoder.encode(`event: error\ndata: ${JSON.stringify({ message })}\n\n`)
-          );
-        }
-      };
-
-      await push();
-      const interval = setInterval(push, STREAM_INTERVAL_MS);
+      let interval: ReturnType<typeof setInterval> | null = null;
 
       const close = () => {
         if (closed) return;
         closed = true;
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
         try {
           controller.close();
         } catch {
           /* already closed */
         }
       };
+
+      const enqueue = (chunk: Uint8Array) => {
+        if (closed) return;
+        try {
+          controller.enqueue(chunk);
+        } catch {
+          close();
+        }
+      };
+
+      const push = async () => {
+        if (closed) return;
+        try {
+          const payload = await getLiveVisitorsDashboard({ compact });
+          if (closed) return;
+          enqueue(
+            encoder.encode(`data: ${JSON.stringify({ ...payload, at: Date.now() })}\n\n`)
+          );
+        } catch (e) {
+          if (closed) return;
+          const message = e instanceof Error ? e.message : "stream error";
+          enqueue(
+            encoder.encode(`event: error\ndata: ${JSON.stringify({ message })}\n\n`)
+          );
+        }
+      };
+
+      await push();
+      interval = setInterval(() => {
+        void push();
+      }, STREAM_INTERVAL_MS);
 
       request.signal.addEventListener("abort", close);
     },

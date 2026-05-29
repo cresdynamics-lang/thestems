@@ -43,3 +43,7 @@ environment
 next-env.d.ts
 
 .keys
+
+# local admin credential scripts (never commit)
+update-admin.js
+update-admin-pg.js

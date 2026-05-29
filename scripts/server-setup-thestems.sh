@@ -39,7 +39,7 @@ if [ ! -f .env.local ]; then
 fi
 
 # Install and build
-npm install
+npm ci
 NODE_OPTIONS='--max-old-space-size=4096' npm run build
 
 # PM2

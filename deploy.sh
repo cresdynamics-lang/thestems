@@ -24,7 +24,7 @@ ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && git pull origin main"
 
 # Step 2: Install/update dependencies
 echo -e "${YELLOW}📦 Installing dependencies...${NC}"
-ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && npm install"
+ssh ${SERVER_USER}@${SERVER_IP} "cd ${PROJECT_PATH} && npm ci"
 
 # Step 3: Build the application
 echo -e "${YELLOW}🔨 Building the application...${NC}"
