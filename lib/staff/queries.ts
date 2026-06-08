@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const ORDER_LIST_COLUMNS =
-  "id, customer_name, phone, email, delivery_address, delivery_city, delivery_date, payment_method, status, fulfillment_status, total_amount, created_at, updated_at";
+  "id, customer_name, phone, email, delivery_address, delivery_city, delivery_date, payment_method, status, fulfillment_status, total_amount, items, created_at, updated_at";
 
 export type StaffOrderRow = {
   id: string;
@@ -36,7 +36,9 @@ export async function listOrdersForStaff(options?: {
     .limit(limit);
 
   if (options?.status) {
-    query = query.eq("status", options.status);
+    query = query.or(
+      `status.eq.${options.status},fulfillment_status.eq.${options.status}`
+    );
   }
 
   if (options?.paymentMethod) {

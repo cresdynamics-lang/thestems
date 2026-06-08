@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { Badge } from "@/components/staff/ui/Badge";
+import { OrderItemsList, type OrderLineItem } from "@/components/staff/OrderItemsList";
 import { staffFetch } from "@/lib/staff/api-client";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { ORDER_FULFILLMENT_STATUSES, PAYMENT_METHOD_LABELS } from "@/lib/staff/constants";
@@ -40,7 +41,7 @@ export default function OrderDetailPage() {
 
   if (!order) return <StaffHeader title="Order" />;
 
-  const items = (order.items as Array<{ name: string; quantity: number; price: number }>) || [];
+  const items = (order.items as OrderLineItem[]) || [];
 
   return (
     <>
@@ -67,16 +68,11 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="card p-6 mb-4">
-          <h3 className="font-semibold mb-2">Items</h3>
-          <ul className="space-y-2 text-sm">
-            {items.map((item, i) => (
-              <li key={i} className="flex justify-between">
-                <span>{item.name} × {item.quantity}</span>
-                <span>{formatCurrency(item.price * item.quantity)}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="font-bold mt-3 text-right">{formatCurrency(Number(order.total_amount || 0))}</p>
+          <h3 className="font-semibold mb-3">Items</h3>
+          <OrderItemsList items={items} />
+          <p className="font-bold mt-4 text-right border-t border-brand-gray-100 pt-3">
+            {formatCurrency(Number(order.total_amount || 0))}
+          </p>
         </div>
 
         <div className="card p-6 space-y-3 no-print">

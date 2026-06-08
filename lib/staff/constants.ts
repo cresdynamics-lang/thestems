@@ -32,6 +32,20 @@ export const ORDER_FULFILLMENT_STATUSES = [
   "cancelled",
 ] as const;
 
+/** Payment statuses stored on orders.status */
+export const ORDER_PAYMENT_STATUSES = [
+  "pending",
+  "paid",
+  "failed",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;
+
+export const ORDER_STATUS_FILTERS = [
+  ...new Set([...ORDER_PAYMENT_STATUSES, ...ORDER_FULFILLMENT_STATUSES]),
+] as string[];
+
 export const PAYMENT_METHOD_LABELS: Record<string, string> = {
   mpesa: "M-PESA",
   mpesa_till: "M-PESA Till",
