@@ -6,6 +6,7 @@ import Link from "next/link";
 import axios from "axios";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import type { Order } from "@/lib/db";
+import { AdminOrderDeliveryDetails } from "@/components/staff/OrderDeliveryDetails";
 
 export default function AdminOrdersPage() {
   const router = useRouter();
@@ -344,8 +345,8 @@ export default function AdminOrdersPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Delivery Information</h3>
-                  <p className="text-sm"><strong>Address:</strong> {selectedOrder.delivery_address}</p>
-                  <p className="text-sm"><strong>Date:</strong> {formatDateTime(selectedOrder.delivery_date)}</p>
+                  <AdminOrderDeliveryDetails order={selectedOrder} />
+                  <p className="text-sm mt-3"><strong>Date:</strong> {formatDateTime(selectedOrder.delivery_date)}</p>
                 </div>
               </div>
 
@@ -462,7 +463,7 @@ export default function AdminOrdersPage() {
 
               {selectedOrder.notes && (
                 <div className="mb-6">
-                  <h3 className="font-semibold mb-2">Order Notes</h3>
+                  <h3 className="font-semibold mb-2">Internal Notes</h3>
                   <p className="text-sm text-gray-600">{selectedOrder.notes}</p>
                 </div>
               )}

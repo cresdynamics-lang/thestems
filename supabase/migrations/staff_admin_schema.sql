@@ -111,6 +111,10 @@ ALTER TABLE orders ADD COLUMN IF NOT EXISTS fulfillment_status TEXT DEFAULT 'pen
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS status_history JSONB DEFAULT '[]';
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_time TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS special_instructions TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS gift_message TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_location TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS recipient_name TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS recipient_phone TEXT;
 
 -- Contact messages
 CREATE TABLE IF NOT EXISTS contact_messages (

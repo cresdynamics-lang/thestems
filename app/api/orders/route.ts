@@ -21,12 +21,17 @@ export async function POST(request: NextRequest) {
       phone: body.phone,
       email: body.email || null,
       delivery_address: body.delivery_address,
-      delivery_city: body.delivery_city || "Nairobi",
+      delivery_city: body.delivery_city || body.delivery_location || "Nairobi",
+      delivery_location: body.delivery_location || body.delivery_city || null,
+      gift_message: body.gift_message || null,
+      special_instructions: body.special_instructions || null,
+      recipient_name: body.recipient_name || null,
+      recipient_phone: body.recipient_phone || null,
       delivery_date: body.delivery_date,
       payment_method: body.payment_method || "whatsapp",
       status: "pending",
       notes: body.notes || null,
-    } as any);
+    } as Parameters<typeof createOrder>[0]);
 
     if (!order) {
       console.error("❌ Failed to create order in database");

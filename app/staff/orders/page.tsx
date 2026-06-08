@@ -7,6 +7,7 @@ import { Badge } from "@/components/staff/ui/Badge";
 import { OrderItemsList, type OrderLineItem } from "@/components/staff/OrderItemsList";
 import { useStaffQuery } from "@/hooks/useStaffQuery";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
+import { getOrderDeliveryLocation } from "@/lib/orderDisplay";
 import { PAYMENT_METHOD_LABELS, ORDER_STATUS_FILTERS } from "@/lib/staff/constants";
 import type { Order } from "@/lib/db";
 
@@ -130,7 +131,8 @@ export default function StaffOrdersPage() {
                           />
                         </td>
                         <td className="text-xs text-[var(--staff-muted)] whitespace-nowrap">
-                          {formatDateTime(o.delivery_date)}
+                          <div>{getOrderDeliveryLocation(o as Order) || "—"}</div>
+                          <div>{formatDateTime(o.delivery_date)}</div>
                         </td>
                       </tr>
                     );

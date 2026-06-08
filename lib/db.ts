@@ -46,6 +46,11 @@ export interface Order {
   email?: string | null;
   delivery_address: string;
   delivery_city?: string | null;
+  delivery_location?: string | null;
+  gift_message?: string | null;
+  special_instructions?: string | null;
+  recipient_name?: string | null;
+  recipient_phone?: string | null;
   delivery_date: string;
   payment_method: "mpesa" | "mpesa_till" | "mpesa_paybill" | "card" | "whatsapp";
   mpesa_checkout_request_id?: string | null;
@@ -226,12 +231,17 @@ export async function createOrder(order: Omit<Order, "id" | "created_at" | "upda
       customer_name: order.customer_name,
       phone: order.phone,
       email: order.email || null,
-      delivery_city: order.delivery_city || null,
+      delivery_city: order.delivery_city || order.delivery_location || null,
+      delivery_location: order.delivery_location || order.delivery_city || null,
       delivery_date: order.delivery_date,
       payment_method: order.payment_method,
       status: order.status || "pending",
       mpesa_checkout_request_id: order.mpesa_checkout_request_id || null,
       notes: order.notes || null,
+      gift_message: order.gift_message || null,
+      special_instructions: order.special_instructions || null,
+      recipient_name: order.recipient_name || null,
+      recipient_phone: order.recipient_phone || null,
     };
     
     // Use delivery_address - the database column has been renamed

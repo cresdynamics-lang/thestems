@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { StaffHeader } from "@/components/staff/StaffHeader";
 import { Badge } from "@/components/staff/ui/Badge";
 import { OrderItemsList, type OrderLineItem } from "@/components/staff/OrderItemsList";
+import { OrderDeliveryDetailsPanel } from "@/components/staff/OrderDeliveryDetails";
 import { staffFetch } from "@/lib/staff/api-client";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { ORDER_FULFILLMENT_STATUSES, PAYMENT_METHOD_LABELS } from "@/lib/staff/constants";
@@ -56,14 +57,28 @@ export default function OrderDetailPage() {
             </div>
             <Badge status={String(order.fulfillment_status || order.status)} />
           </div>
-          <p className="text-sm"><strong>Address:</strong> {String(order.delivery_address)}</p>
           <p className="text-sm"><strong>Delivery:</strong> {formatDateTime(String(order.delivery_date))}</p>
           <p className="text-sm"><strong>Payment:</strong> {PAYMENT_METHOD_LABELS[String(order.payment_method)] || String(order.payment_method)}</p>
-          {order.special_instructions ? (
-            <p className="text-sm"><strong>Instructions:</strong> {String(order.special_instructions)}</p>
-          ) : null}
+        </div>
+
+        <div className="card p-6 mb-4">
+          <h3 className="font-semibold mb-3">Delivery &amp; messages</h3>
+          <OrderDeliveryDetailsPanel
+            order={{
+              delivery_location: order.delivery_location as string | null,
+              delivery_address: order.delivery_address as string | null,
+              delivery_city: order.delivery_city as string | null,
+              gift_message: order.gift_message as string | null,
+              special_instructions: order.special_instructions as string | null,
+              recipient_name: order.recipient_name as string | null,
+              recipient_phone: order.recipient_phone as string | null,
+              notes: order.notes as string | null,
+            }}
+          />
           {order.notes ? (
-            <p className="text-sm"><strong>Notes:</strong> {String(order.notes)}</p>
+            <p className="text-sm mt-4 pt-3 border-t border-brand-gray-100">
+              <strong>Internal notes:</strong> {String(order.notes)}
+            </p>
           ) : null}
         </div>
 

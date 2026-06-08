@@ -65,6 +65,13 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS visibility TEXT DEFAULT 'published
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status);
 
+-- Order checkout fields (location, card message, recipient)
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS gift_message TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_location TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS recipient_name TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS recipient_phone TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS special_instructions TEXT;
+
 -- 5) Seed homepage sections if empty
 INSERT INTO homepage_sections (key, title, product_ids, is_active, sort_order)
 SELECT v.key, v.title, '{}'::uuid[], true, v.sort_order

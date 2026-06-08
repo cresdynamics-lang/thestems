@@ -11,6 +11,7 @@ import { generateWhatsAppLink } from "@/lib/whatsapp";
 import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
+import { buildCheckoutOrderMeta } from "@/lib/orderDisplay";
 
 function getCheckoutErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {
@@ -194,6 +195,9 @@ export default function CheckoutPage() {
       // Handle Till or Paybill - redirect to WhatsApp
       if (paymentMethod === "till" || paymentMethod === "paybill") {
         // Create order in database
+        const customerName =
+          firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer";
+
         const orderResponse = await axios.post("/api/orders", {
           items: (orderData?.items || items).map((item) => ({
             productId: item.id,
@@ -205,11 +209,10 @@ export default function CheckoutPage() {
             options: item.options,
           })),
           total: total,
-          customer_name: firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer",
+          customer_name: customerName,
           phone: formatPhone(phoneNumber || phone),
           email: email || null,
-          delivery_address: address || "To be confirmed",
-          delivery_city: city || "Nairobi",
+          ...buildCheckoutOrderMeta(orderData, { address, city }),
           delivery_date: new Date().toISOString(),
           payment_method: paymentMethod === "till" ? "mpesa_till" : "mpesa_paybill",
           notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
@@ -291,8 +294,7 @@ export default function CheckoutPage() {
           customer_name: customerName,
           phone: msisdn,
           email: email || null,
-          delivery_address: address || orderData?.delivery?.address || "To be confirmed",
-          delivery_city: city || orderData?.delivery?.location || "Nairobi",
+          ...buildCheckoutOrderMeta(orderData, { address, city }),
           delivery_date: new Date().toISOString(),
           payment_method: "card",
           notes: `Payment via Pesapal (card / M-Pesa STK). Total: ${formatCurrency(total)}`,
