@@ -62,3 +62,80 @@ export function generateProductWhatsAppLink(
   return `https://wa.me/${SHOP_INFO.whatsapp}?text=${encoded}`;
 }
 
+export type PaidOrderWhatsAppInput = {
+  id: string;
+  total_amount?: number;
+  total?: number;
+  items?: Array<{ name: string; quantity?: number }>;
+  customer_name?: string;
+};
+
+/** Message sent after online payment is confirmed (Pesapal / card). */
+export function buildPaidOrderWhatsAppMessage(order: PaidOrderWhatsAppInput): string {
+  const shortId = order.id.slice(0, 8);
+  const total = order.total_amount || order.total || 0;
+  const itemLines = (order.items || [])
+    .map((item) => `• ${item.quantity || 1}x ${item.name}`)
+    .join("\n");
+
+  return `🌸 Hello! I just completed payment for order #${shortId}.
+
+📦 Order Details:
+${itemLines || `• ${(order.items || []).length} product(s)`}
+• Total: ${formatCurrency(total)}
+• Payment: ✅ Confirmed
+${order.customer_name ? `• Name: ${order.customer_name}` : ""}
+
+Please confirm receipt and delivery details. Thank you! 🌺`;
+}
+
+export function getPaidOrderWhatsAppUrl(order: PaidOrderWhatsAppInput): string {
+  return `https://wa.me/${SHOP_INFO.whatsapp}?text=${encodeURIComponent(buildPaidOrderWhatsAppMessage(order))}`;
+}
+
+/** Navigate to WhatsApp (more reliable than window.open after payment). */
+export function redirectToWhatsApp(url: string): void {
+  window.location.assign(url);
+}
+
+const WHATSAPP_REDIRECT_KEY = "whatsapp_redirected_";
+const WHATSAPP_TIMER_KEY = "whatsapp_timer_started_";
+
+export function hasWhatsAppRedirectScheduled(orderId: string): boolean {
+  if (typeof window === "undefined") return false;
+  return Boolean(
+    sessionStorage.getItem(`${WHATSAPP_REDIRECT_KEY}${orderId}`) ||
+      sessionStorage.getItem(`${WHATSAPP_TIMER_KEY}${orderId}`)
+  );
+}
+
+export function markWhatsAppRedirectScheduled(orderId: string): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(`${WHATSAPP_TIMER_KEY}${orderId}`, "true");
+}
+
+export function markWhatsAppRedirectDone(orderId: string): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(`${WHATSAPP_REDIRECT_KEY}${orderId}`, "true");
+}
+
+/** Schedule redirect after successful payment; returns false if already scheduled. */
+export function schedulePaidOrderWhatsAppRedirect(
+  order: PaidOrderWhatsAppInput,
+  options?: { delayMs?: number; onScheduled?: () => void }
+): boolean {
+  if (typeof window === "undefined") return false;
+  if (hasWhatsAppRedirectScheduled(order.id)) return false;
+
+  markWhatsAppRedirectScheduled(order.id);
+  options?.onScheduled?.();
+
+  const delayMs = options?.delayMs ?? 5000;
+  window.setTimeout(() => {
+    markWhatsAppRedirectDone(order.id);
+    redirectToWhatsApp(getPaidOrderWhatsAppUrl(order));
+  }, delayMs);
+
+  return true;
+}
+

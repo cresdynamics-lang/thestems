@@ -4,6 +4,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Resend } from "resend";
 import { SHOP_INFO } from "@/lib/constants";
 import { getOrderById, updateOrder } from "@/lib/db";
+import { SITE_URL } from "@/lib/seo";
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -352,7 +353,7 @@ export async function GET(request: NextRequest) {
   if (orderTrackingId && orderMerchantReference) {
     // Redirect to order success page and mark as pending so we can poll + WhatsApp redirect
     const redirectUrl = `/order/success?id=${orderMerchantReference}&pesapal_tracking_id=${orderTrackingId}&pending=true`;
-    return NextResponse.redirect(new URL(redirectUrl, request.url));
+    return NextResponse.redirect(new URL(redirectUrl, SITE_URL));
   }
 
   return NextResponse.json({ error: "Invalid redirect parameters" }, { status: 400 });

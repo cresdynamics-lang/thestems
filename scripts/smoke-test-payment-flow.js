@@ -83,6 +83,7 @@ function runCodeTests() {
   const required = [
     "app/api/pesapal/callback/route.ts",
     "app/order/success/page.tsx",
+    "lib/whatsapp.ts",
     "app/checkout/page.tsx",
     "components/staff/OrderItemsList.tsx",
     "components/staff/OrderDeliveryDetails.tsx",
@@ -98,8 +99,10 @@ function runCodeTests() {
     const content = fs.readFileSync(full, "utf8");
     if (rel.includes("pesapal/callback") && content.includes('newStatus === "paid"') && content.includes("resend.emails.send")) {
       pass(`Payment email on paid: ${rel}`);
-    } else if (rel.includes("order/success") && content.includes("whatsappLink") && content.includes('status === "paid"')) {
+    } else if (rel.includes("order/success") && content.includes("schedulePaidOrderWhatsAppRedirect") && content.includes('status === "paid"')) {
       pass(`WhatsApp redirect on paid: ${rel}`);
+    } else if (rel.includes("lib/whatsapp") && content.includes("redirectToWhatsApp") && content.includes("schedulePaidOrderWhatsAppRedirect")) {
+      pass(`WhatsApp redirect helpers: lib/whatsapp.ts`);
     } else if (rel.includes("checkout") && content.includes("buildCheckoutOrderMeta")) {
       pass(`Checkout saves delivery meta: ${rel}`);
     } else if (rel.includes("OrderItemsList") && content.includes("/product/")) {

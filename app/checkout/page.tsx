@@ -262,7 +262,7 @@ export default function CheckoutPage() {
         Analytics.trackPurchase(orderId, total, paymentMethod || "whatsapp");
         
         // Redirect to success page
-        router.push(`/order/success?orderId=${orderId}`);
+        router.push(`/order/success?id=${orderId}`);
         return;
       }
 
