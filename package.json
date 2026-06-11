@@ -13,6 +13,8 @@
     "build:low-memory": "node --max-old-space-size=2048 ./node_modules/next/dist/bin/next build --webpack",
     "start": "next start",
     "lint": "next lint",
+    "test:smoke": "node scripts/smoke-test-payment-flow.js",
+    "test:smoke:live": "node scripts/smoke-test-payment-flow.js https://thestemsflowers.co.ke",
     "preview": "next start -p 3001",
     "export-sitemap": "node scripts/generate-sitemap.js"
   },
