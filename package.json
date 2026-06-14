@@ -11,7 +11,7 @@
     "dev:fresh": "npm run dev:clean && next dev",
     "build": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build --webpack",
     "build:low-memory": "node --max-old-space-size=2048 ./node_modules/next/dist/bin/next build --webpack",
-    "start": "next start",
+    "start": "next start -H 127.0.0.1 -p 3000",
     "lint": "next lint",
     "test:smoke": "node scripts/smoke-test-payment-flow.js",
     "test:smoke:live": "node scripts/smoke-test-payment-flow.js https://thestemsflowers.co.ke",
