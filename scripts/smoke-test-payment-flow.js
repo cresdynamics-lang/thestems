@@ -62,13 +62,26 @@ async function runHttpTests() {
   );
   if (pesapalRedirect.res.status >= 300 && pesapalRedirect.res.status < 400) {
     const location = pesapalRedirect.res.headers.get("location") || "";
-    if (location.includes("/order/success") && location.includes("pending=true")) {
+    if (location.includes("/order/success") && location.includes("pending=true") && !location.includes(":3000")) {
       pass("Pesapal success redirect", location.slice(0, 80));
     } else {
       fail("Pesapal success redirect", `unexpected location: ${location}`);
     }
   } else {
     fail("Pesapal success redirect", `status ${pesapalRedirect.res.status}`);
+  }
+
+  const wwwBase = BASE.includes("www.") ? BASE : BASE.replace("://", "://www.");
+  const wwwRedirect = await fetchJson(`${wwwBase}/`);
+  if (wwwRedirect.res.status >= 300 && wwwRedirect.res.status < 400) {
+    const location = wwwRedirect.res.headers.get("location") || "";
+    if (location.startsWith("https://thestemsflowers.co.ke") && !location.includes(":3000")) {
+      pass("WWW redirects to apex (no port 3000)", location);
+    } else {
+      fail("WWW redirects to apex", location || "no location header");
+    }
+  } else {
+    fail("WWW redirects to apex", `status ${wwwRedirect.res.status}`);
   }
 
   const ordersPublic = await fetchJson(`${BASE}/api/orders`);

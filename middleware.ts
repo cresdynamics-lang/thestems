@@ -13,10 +13,8 @@ export function middleware(request: NextRequest) {
 
   // Force one canonical origin for SEO signal consolidation.
   if (isCanonicalVariant && (!isCanonicalHost || isHttp)) {
-    const redirectUrl = request.nextUrl.clone();
-    redirectUrl.protocol = "https:";
-    redirectUrl.host = canonicalHost;
-    return NextResponse.redirect(redirectUrl, 301);
+    const path = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+    return NextResponse.redirect(`https://${canonicalHost}${path}`, 301);
   }
 
   const pathname = request.nextUrl.pathname;
@@ -74,21 +72,31 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // Add CORS headers for Chrome compatibility (only for API routes)
+  // CORS for API routes — restrict to shop domain in production
   if (request.nextUrl.pathname.startsWith("/api/")) {
+    const allowedOrigin =
+      process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
+    const origin = request.headers.get("origin");
+    const corsOrigin =
+      origin && (origin === allowedOrigin || origin.startsWith("http://localhost"))
+        ? origin
+        : allowedOrigin;
+
     if (request.method === "OPTIONS") {
       return new NextResponse(null, {
         status: 204,
         headers: {
-          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Origin": corsOrigin,
           "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Credentials": "true",
         },
       });
     }
-    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Origin", corsOrigin);
     response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    response.headers.set("Access-Control-Allow-Credentials", "true");
   }
 
   // Cache static assets aggressively
