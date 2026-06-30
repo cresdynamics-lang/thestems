@@ -142,7 +142,7 @@ export default function HomePage() {
         <HomepageHero />
         <HomepageProductSections />
 
-                {/* Explore Collections Section */}
+        {/* Explore Collections Section */}
         <section className="py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
                style={{
