@@ -105,6 +105,8 @@ export default async function AreaLandingPage({ config }: AreaLandingPageProps) 
                 slug={product.slug}
                 shortDescription={product.short_description}
                 category={product.category}
+                images={product.images}
+                variantLabel={product.teddy_color}
               />
             ))}
           </div>

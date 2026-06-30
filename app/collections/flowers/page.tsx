@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import FlowersPageClient from "./FlowersPageClient";
-import { getProducts, type Product } from "@/lib/db";
+import { getCachedProductsByCategory } from "@/lib/cache";
+import type { Product } from "@/lib/db";
 
 import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
 import { FLOWERS_SEO_KEYWORDS } from "@/lib/seo-keywords";
@@ -105,7 +106,7 @@ const FLOWER_IMAGES = FLOWER_PRODUCTS.map(p => p.image);
 
 export default async function FlowersPage() {
   try {
-    const products = await getProducts({ category: "flowers" });
+    const products = await getCachedProductsByCategory("flowers");
     const safeProducts = Array.isArray(products) ? products : [];
     const itemListJsonLd = buildFlowersItemListJsonLd(safeProducts);
 

@@ -284,6 +284,8 @@ export default function TeddyBearsPageClient({ products, allTeddyImages = [], te
                   slug={product.slug}
                   shortDescription={description}
                   category={product.category}
+                  images={product.images}
+                  variantLabel={product.teddy_color}
                   hideDetailsButton={true}
                 />
               );

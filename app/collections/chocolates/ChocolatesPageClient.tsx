@@ -100,6 +100,7 @@ export default function ChocolatesPageClient({ products, allChocolateImages = []
                   slug={item.slug}
                   shortDescription={item.short_description}
                   category={item.category}
+                  images={item.images}
                 />
               );
             })}

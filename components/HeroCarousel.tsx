@@ -28,7 +28,7 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
     if (!slides.length) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 6000);
 
     return () => clearInterval(timer);
   }, [slides.length]);
@@ -47,117 +47,150 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
     slideIndex(currentSlide - 1, slides.length),
   ]);
 
+  const active = slides[currentSlide];
+
   return (
-    <section className="relative h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] overflow-hidden">
-      {slides.map((slide, index) => {
-        if (!visibleIndexes.has(index)) return null;
+    <section className="relative overflow-hidden bg-gradient-to-br from-brand-blush via-brand-cream-light to-brand-blush">
+      {/* Soft romantic glow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-40"
+        aria-hidden
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 80% 60% at 20% 50%, rgba(231, 84, 128, 0.15), transparent), radial-gradient(ellipse 60% 50% at 90% 30%, rgba(248, 200, 220, 0.5), transparent)",
+        }}
+      />
 
-        const isActive = index === currentSlide;
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid min-h-[420px] grid-cols-1 items-stretch gap-0 lg:min-h-[520px] lg:grid-cols-2 lg:gap-8 xl:min-h-[560px]">
+          {/* Left — romantic copy */}
+          <div className="relative z-10 flex flex-col justify-center py-8 sm:py-10 lg:py-14 order-2 lg:order-1">
+            <p className="font-[family-name:var(--font-dancing)] text-2xl sm:text-3xl text-brand-rose-deep mb-2 sm:mb-3">
+              Every moment deserves to bloom
+            </p>
 
-        return (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              isActive ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-            aria-hidden={!isActive}
-          >
-            <Image
-              src={slide.image}
-              alt={slide.title}
-              fill
-              className="object-cover"
-              priority={index === 0}
-              sizes="100vw"
-              fetchPriority={index === 0 ? "high" : "auto"}
-            />
-            <div className="absolute inset-0 bg-black/40 flex items-center">
-              <div className="container mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                <div className="flex items-center justify-between gap-4 md:gap-8">
-                  <div className="text-left text-white max-w-2xl flex-1">
-                    <h2 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 md:mb-3 lg:mb-4">
-                      {slide.title}
-                    </h2>
-                    <p className="text-sm md:text-base lg:text-lg xl:text-xl mb-4 md:mb-6 lg:mb-8 text-white/90">
-                      {slide.subtitle}
-                    </p>
-                    {slide.ctaText && slide.ctaLink ? (
-                      <Link
-                        href={slide.ctaLink}
-                        className="btn-primary inline-block text-xs md:text-sm lg:text-base px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-4"
-                      >
-                        {slide.ctaText}
-                      </Link>
-                    ) : null}
-                  </div>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-px w-10 bg-brand-rose-deep/50" aria-hidden />
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-brand-gray-600">
+                The Stems Flowers · Nairobi
+              </span>
+            </div>
 
-                  <div className="hidden md:flex items-center justify-end flex-shrink-0 relative">
-                    <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48">
-                      <div
-                        className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-10"
-                        style={{ transform: "translate(68px, 68px)" }}
-                      >
-                        <Image
-                          src={slides[slideIndex(index + 1, slides.length)].image}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="192px"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div
-                        className="absolute bottom-0 right-0 w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full overflow-hidden shadow-lg border-2 border-white/20 z-20"
-                        style={{ transform: "translate(-68px, -68px)" }}
-                      >
-                        <Image
-                          src={slides[slideIndex(index + 2, slides.length)].image}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="192px"
-                          loading="lazy"
-                        />
-                      </div>
-                    </div>
-                  </div>
+            <div className="relative min-h-[140px] sm:min-h-[160px] lg:min-h-[180px]">
+              {slides.map((slide, index) => (
+                <div
+                  key={slide.id}
+                  className={`absolute inset-0 transition-all duration-700 ease-out ${
+                    index === currentSlide
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-3 pointer-events-none"
+                  }`}
+                  aria-hidden={index !== currentSlide}
+                >
+                  <h2 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] leading-tight text-brand-gray-900 mb-3 sm:mb-4">
+                    {slide.title}
+                  </h2>
+                  <p className="text-sm sm:text-base lg:text-lg text-brand-gray-600 leading-relaxed max-w-lg">
+                    {slide.subtitle}
+                  </p>
                 </div>
+              ))}
+            </div>
+
+            {active.ctaText && active.ctaLink ? (
+              <Link
+                href={active.ctaLink}
+                className="btn-primary inline-flex items-center gap-2 self-start mt-2 sm:mt-4 text-sm sm:text-base px-6 sm:px-8 py-2.5 sm:py-3 rounded-full shadow-md hover:shadow-lg transition-shadow"
+              >
+                {active.ctaText}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : null}
+
+            <div className="mt-6 sm:mt-8 flex items-center gap-4">
+              <div className="flex gap-2">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => goToSlide(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide
+                        ? "w-8 bg-brand-rose-deep"
+                        : "w-2 bg-brand-rose-deep/30 hover:bg-brand-rose-deep/50"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                    aria-current={index === currentSlide ? "true" : undefined}
+                  />
+                ))}
+              </div>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={goToPrevious}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-rose-deep/30 text-brand-rose-deep hover:bg-brand-rose-deep hover:text-white transition-colors"
+                  aria-label="Previous slide"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={goToNext}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-rose-deep/30 text-brand-rose-deep hover:bg-brand-rose-deep hover:text-white transition-colors"
+                  aria-label="Next slide"
+                >
+                  ›
+                </button>
               </div>
             </div>
           </div>
-        );
-      })}
 
-      <button
-        type="button"
-        onClick={goToPrevious}
-        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 rounded-full bg-black/30 p-2 text-white hover:bg-black/50 sr-only focus:not-sr-only"
-        aria-label="Previous slide"
-      >
-        ‹
-      </button>
-      <button
-        type="button"
-        onClick={goToNext}
-        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 rounded-full bg-black/30 p-2 text-white hover:bg-black/50 sr-only focus:not-sr-only"
-        aria-label="Next slide"
-      >
-        ›
-      </button>
+          {/* Right — hero image */}
+          <div className="relative order-1 lg:order-2 min-h-[260px] sm:min-h-[320px] lg:min-h-0">
+            <div className="relative h-full min-h-[inherit] lg:py-6 xl:py-8">
+              {/* Decorative frame */}
+              <div
+                className="pointer-events-none absolute -right-2 top-4 bottom-4 w-[calc(100%+0.5rem)] rounded-2xl lg:rounded-3xl border border-brand-rose-deep/20 bg-brand-rose-deep/5"
+                aria-hidden
+              />
 
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => goToSlide(index)}
-            className={`h-3 rounded-full transition-all ${
-              index === currentSlide ? "bg-white w-8" : "bg-white/50 hover:bg-white/75 w-3"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-            aria-current={index === currentSlide ? "true" : undefined}
-          />
-        ))}
+              <div className="relative h-full min-h-[inherit] overflow-hidden rounded-2xl lg:rounded-3xl shadow-[0_20px_60px_-15px_rgba(231,84,128,0.35)] ring-1 ring-white/80">
+                {slides.map((slide, index) => {
+                  if (!visibleIndexes.has(index)) return null;
+
+                  return (
+                    <div
+                      key={slide.id}
+                      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                        index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                      }`}
+                      aria-hidden={index !== currentSlide}
+                    >
+                      <Image
+                        src={slide.image}
+                        alt={slide.title}
+                        fill
+                        className="object-cover object-center"
+                        priority={index === 0}
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-brand-blush/10 lg:to-brand-blush/20" />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Soft corner accent */}
+              <div
+                className="pointer-events-none absolute -bottom-2 -left-2 h-16 w-16 rounded-full bg-brand-rose-deep/10 blur-xl"
+                aria-hidden
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

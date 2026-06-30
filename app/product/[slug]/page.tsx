@@ -1,7 +1,10 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
+import ProductRecommendations from "@/components/product/ProductRecommendations";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { getProductBySlug } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
@@ -182,6 +185,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
       </div>
+
+      <Suspense fallback={null}>
+        <ProductRecommendations product={product} />
+      </Suspense>
+
+      <NewsletterSignup />
     </>
   );
 }

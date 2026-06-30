@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
-import ImageModal from "@/components/ImageModal";
 import { Analytics } from "@/lib/analytics";
 import { getCleanProductTitle, getProductImageAlt } from "@/lib/productDisplay";
 
@@ -22,6 +20,27 @@ interface ProductCardProps {
   hideDetailsButton?: boolean;
   homePage?: boolean;
   priority?: boolean;
+  images?: string[];
+  compareAtPrice?: number | null;
+  variantLabel?: string | null;
+  soldOut?: boolean;
+}
+
+function getFallbackImage(category?: string): string {
+  switch (category) {
+    case "flowers":
+      return "/images/products/flowers/BouquetFlowers3.jpg";
+    case "hampers":
+      return "/images/products/hampers/GiftAmper3.jpg";
+    case "teddy":
+      return "/images/products/teddies/Teddybear1.jpg";
+    case "chocolates":
+      return "/images/products/Chocolates/Chocolates1.jpg";
+    case "wines":
+      return "/images/products/wines/Wines1.jpg";
+    default:
+      return "/images/products/hampers/GiftAmper3.jpg";
+  }
 }
 
 export default function ProductCard({
@@ -30,179 +49,153 @@ export default function ProductCard({
   price,
   image,
   slug,
-  shortDescription,
   category,
-  hideDetailsButton = false,
   homePage = false,
   priority = false,
+  images,
+  compareAtPrice,
+  soldOut = false,
 }: ProductCardProps) {
   const displayName = getCleanProductTitle(name);
   const imageAlt = getProductImageAlt(name, category);
+  const gallery = useMemo(() => {
+    const list = (images?.length ? images : image ? [image] : []).filter(Boolean);
+    return list.length ? list : [getFallbackImage(category)];
+  }, [images, image, category]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeImage = gallery[activeIndex] ?? gallery[0];
+  const extraImages = gallery.length > 4 ? gallery.length - 4 : 0;
 
   const { addItem } = useCartStore();
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  const onSale =
+    typeof compareAtPrice === "number" &&
+    compareAtPrice > price;
+
   useEffect(() => {
-    // Homepage shows many cards — skip per-card analytics to reduce /api/analytics noise
+    setImageError(false);
+  }, [activeImage]);
+
+  useEffect(() => {
     if (homePage || !id || !name || !category) return;
     Analytics.trackProductView(id, name, category, price);
   }, [id, name, category, price, homePage]);
 
-  const handleAddToCart = () => {
-    const cartImage = imageError
-      ? (category === "flowers"
-          ? "/images/products/flowers/BouquetFlowers3.jpg"
-          : category === "hampers"
-          ? "/images/products/hampers/GiftAmper3.jpg"
-          : category === "teddy"
-          ? "/images/products/teddies/Teddybear1.jpg"
-          : category === "chocolates"
-          ? "/images/products/Chocolates/Chocolates1.jpg"
-          : category === "wines"
-          ? "/images/products/wines/Wines1.jpg"
-          : "/images/products/hampers/GiftAmper3.jpg")
-      : image;
+  const resolvedImage = imageError ? getFallbackImage(category) : activeImage;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (soldOut) return;
 
     addItem({
       id,
       name: displayName,
       price,
-      image: cartImage,
+      image: resolvedImage,
       slug,
     });
-    // Track add to cart
     Analytics.trackAddToCart(id, displayName, price, 1);
   };
 
-  const handleImageClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (image || imageError) {
-      setIsImageModalOpen(true);
-    }
-  };
-
-  const handleBasketClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleAddToCart();
-  };
-
   return (
-    <>
-      <div className="card p-2 sm:p-3 md:p-4 group">
-        <div className="mb-1.5 sm:mb-2 md:mb-3">
-          <div 
-            className="relative aspect-square overflow-hidden rounded-lg bg-brand-gray-100 cursor-pointer group/image"
-            onClick={handleImageClick}
-          >
-            {image && !imageError ? (
-              <>
-                <Image
-                  src={image}
-                  alt={imageAlt}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  loading={priority ? "eager" : "lazy"}
-                  priority={priority}
-                  fetchPriority={priority ? "high" : "auto"}
-                  onError={() => setImageError(true)}
-                />
-                {/* Basket icon overlay - always visible */}
-                <button
-                  type="button"
-                  onClick={handleBasketClick}
-                  className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 bg-white rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-brand-red hover:text-white transition-all duration-300 group-hover:scale-110"
-                  aria-label={`Add ${displayName} to cart`}
-                >
-                  <ShoppingCartIconSolid className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-brand-red group-hover:text-white transition-colors" />
-                </button>
-                {/* Click indicator overlay */}
-                {!homePage && (
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/image:bg-opacity-10 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 bg-white bg-opacity-80 rounded-full p-2">
-                      <MagnifyingGlassIcon className="w-6 h-6 text-brand-gray-900" />
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <Image
-                src={
-                  category === "flowers"
-                    ? "/images/products/flowers/BouquetFlowers3.jpg"
-                    : category === "hampers"
-                    ? "/images/products/hampers/GiftAmper3.jpg"
-                    : category === "teddy"
-                    ? "/images/products/teddies/Teddybear1.jpg"
-                    : category === "chocolates"
-                    ? "/images/products/Chocolates/Chocolates1.jpg"
-                    : category === "wines"
-                    ? "/images/products/wines/Wines1.jpg"
-                    : "/images/products/hampers/GiftAmper3.jpg"
-                }
-                alt={`${name} - Fallback image`}
-                fill
-                className="object-cover opacity-60 group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                loading={priority ? "eager" : "lazy"}
-                priority={priority}
-                fetchPriority={priority ? "high" : "auto"}
-              />
-            )}
-          </div>
-        </div>
-
-      <Link href={`/product/${slug}`} className="block">
-        <h3 className="font-heading font-semibold text-xs sm:text-sm md:text-base text-brand-gray-900 mb-0.5 sm:mb-1 group-hover:text-brand-green transition-colors line-clamp-2">
-          {displayName}
-        </h3>
-        {shortDescription && (
-          <p className="text-brand-gray-600 text-xs sm:text-xs md:text-sm mb-0.5 sm:mb-1 md:mb-2 line-clamp-2">{shortDescription}</p>
-        )}
-        <p className="font-mono font-semibold text-brand-green text-xs sm:text-sm md:text-base mb-1 sm:mb-2 md:mb-3">
-          {formatCurrency(price)}
-        </p>
-      </Link>
-
-      {/* Details button - only for gift hampers */}
-      {category === "hampers" && !hideDetailsButton && (
+    <article className="product-card group/card flex h-full flex-col bg-white transition-shadow hover:shadow-cardHover">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-brand-gray-50">
         <Link
           href={`/product/${slug}`}
-          className="btn-outline w-full text-center text-xs sm:text-xs md:text-sm py-1 sm:py-1.5 md:py-2 mt-1 sm:mt-2"
-          aria-label={`View details for ${displayName}`}
+          className="absolute inset-0 z-0 block"
+          aria-label={`View ${displayName}`}
         >
-          Details
+          <Image
+            src={resolvedImage}
+            alt={imageAlt}
+            fill
+            className="object-cover transition-transform duration-500 group-hover/card:scale-[1.03]"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            loading={priority ? "eager" : "lazy"}
+            priority={priority}
+            fetchPriority={priority ? "high" : "auto"}
+            onError={() => setImageError(true)}
+          />
         </Link>
-      )}
+
+        {soldOut ? (
+          <span className="absolute left-2 top-2 z-10 rounded-sm bg-brand-gray-900 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white sm:text-[10px]">
+            Sold out
+          </span>
+        ) : onSale ? (
+          <span className="absolute left-2 top-2 z-10 rounded-sm bg-brand-red px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white sm:text-[10px]">
+            Sale
+          </span>
+        ) : null}
+
+        {!soldOut && (
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="absolute right-1 top-1 z-20 p-1 transition-transform hover:scale-110 sm:right-1.5 sm:top-1.5"
+            aria-label={`Add ${displayName} to cart`}
+          >
+            <ShoppingCartIconSolid className="h-4 w-4 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)] sm:h-5 sm:w-5" />
+          </button>
+        )}
       </div>
 
-      {/* Image Modal */}
-      {(image || imageError) && (
-        <ImageModal
-          isOpen={isImageModalOpen}
-          onClose={() => setIsImageModalOpen(false)}
-          imageUrl={
-            imageError
-              ? (category === "flowers"
-                  ? "/images/products/flowers/BouquetFlowers3.jpg"
-                  : category === "hampers"
-                  ? "/images/products/hampers/GiftAmper3.jpg"
-                  : category === "teddy"
-                  ? "/images/products/teddies/Teddybear1.jpg"
-                  : category === "chocolates"
-                  ? "/images/products/Chocolates/Chocolates1.jpg"
-                  : category === "wines"
-                  ? "/images/products/wines/Wines1.jpg"
-                  : "/images/products/hampers/GiftAmper3.jpg")
-              : image
-          }
-          alt={displayName}
-        />
+      {gallery.length > 1 && (
+        <div className="flex items-center justify-center gap-1 border-t border-brand-gray-100 bg-white px-2 py-2 sm:gap-1.5 sm:px-3">
+          {gallery.slice(0, 4).map((thumb, index) => (
+            <button
+              key={`${thumb}-${index}`}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              className={`relative h-6 w-6 shrink-0 overflow-hidden rounded-full border-2 transition-all sm:h-8 sm:w-8 ${
+                activeIndex === index
+                  ? "border-brand-gray-900 ring-1 ring-brand-gray-900"
+                  : "border-brand-gray-200 hover:border-brand-gray-400"
+              }`}
+              aria-label={`Show image ${index + 1} of ${displayName}`}
+            >
+              <Image
+                src={thumb}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="32px"
+              />
+            </button>
+          ))}
+          {extraImages > 0 && (
+            <span className="text-[9px] font-medium text-brand-gray-500 sm:text-[11px]">
+              +{extraImages} more
+            </span>
+          )}
+        </div>
       )}
-    </>
+
+      {/* Name & price on white background below image */}
+      <div className="bg-white px-2.5 pb-3 pt-2.5 sm:px-3.5 sm:pb-3.5 sm:pt-3">
+        <Link href={`/product/${slug}`} className="block text-left">
+          <h3 className="font-heading text-[10px] font-medium uppercase tracking-[0.14em] leading-snug text-brand-gray-900 line-clamp-2 xs:text-[11px] sm:text-xs md:text-sm group-hover/card:text-brand-rose-deep transition-colors duration-300">
+            {displayName}
+          </h3>
+          <div
+            className="my-2 h-px w-full bg-gradient-to-r from-brand-rose-deep/40 via-brand-rose-deep/20 to-transparent"
+            aria-hidden
+          />
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <p className="font-heading text-[11px] font-semibold tracking-wide text-brand-rose-deep xs:text-xs sm:text-sm md:text-base">
+              {formatCurrency(price)}
+            </p>
+            {onSale && (
+              <p className="font-heading text-[9px] font-normal tracking-wide text-brand-gray-400 line-through xs:text-[10px] sm:text-xs">
+                {formatCurrency(compareAtPrice!)}
+              </p>
+            )}
+          </div>
+        </Link>
+      </div>
+    </article>
   );
 }
-

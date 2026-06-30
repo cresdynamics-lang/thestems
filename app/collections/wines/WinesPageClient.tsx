@@ -103,6 +103,7 @@ export default function WinesPageClient({ products, allWineImages = [], wineProd
                   slug={item.slug}
                   shortDescription={item.short_description}
                   category={item.category}
+                  images={item.images}
                 />
               );
             })}

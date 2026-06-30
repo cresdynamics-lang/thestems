@@ -14,6 +14,14 @@ export const getCachedAllProducts = unstable_cache(
   { revalidate: 60, tags: ["products"] }
 );
 
+/** Filter cached catalogue — avoids extra Supabase calls on collection pages. */
+export async function getCachedProductsByCategory(
+  category: Product["category"]
+): Promise<Product[]> {
+  const all = await getCachedAllProducts();
+  return all.filter((p) => p.category === category);
+}
+
 export const getCachedHeroSlides = unstable_cache(
   async (): Promise<HeroSlideConfig[]> => getActiveHeroSlides(),
   ["hero-slides"],

@@ -2,17 +2,18 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
-import CartSidebar from "./CartSidebar";
 import Logo from "./Logo";
-import { SHOP_INFO } from "@/lib/constants";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/db";
+
+const CartSidebar = dynamic(() => import("./CartSidebar"), { ssr: false });
 
 const navigation: { name: string; href: string }[] = [
   { name: "Flower Bouquets", href: "/collections/flowers" },
@@ -336,7 +337,7 @@ export default function Header() {
           </Dialog>
         </Transition>
       </header>
-      <CartSidebar />
+      {cartOpen ? <CartSidebar /> : null}
     </>
   );
 }

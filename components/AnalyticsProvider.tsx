@@ -18,9 +18,13 @@ export default function AnalyticsProvider({ children }: { children: React.ReactN
     if (!pathname || pathname.startsWith("/staff") || pathname.startsWith("/admin")) {
       return;
     }
-    const tick = () => Analytics.trackHeartbeat(pathname);
+    const tick = () => {
+      if (document.visibilityState === "visible") {
+        Analytics.trackHeartbeat(pathname);
+      }
+    };
     tick();
-    const interval = setInterval(tick, 15_000);
+    const interval = setInterval(tick, 30_000);
     return () => clearInterval(interval);
   }, [pathname]);
 

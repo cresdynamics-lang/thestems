@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import TeddyBearsPageClient from "./TeddyBearsPageClient";
-import { getProducts, type Product } from "@/lib/db";
+import { getCachedProductsByCategory } from "@/lib/cache";
+import type { Product } from "@/lib/db";
 
 import { WHATSAPP_DISPLAY } from "@/lib/contact";
 import { SITE_URL } from "@/lib/seo";
@@ -208,7 +209,7 @@ function buildTeddyItemListJsonLd(products: Product[]) {
 
 export default async function TeddyBearsPage() {
   try {
-    const products = await getProducts({ category: "teddy" });
+    const products = await getCachedProductsByCategory("teddy");
     const safeProducts = Array.isArray(products) ? products : [];
     const itemListJsonLd = buildTeddyItemListJsonLd(safeProducts);
     return (

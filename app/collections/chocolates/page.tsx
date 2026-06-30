@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import ChocolatesPageClient from "./ChocolatesPageClient";
-import { getProducts } from "@/lib/db";
+import { getCachedProductsByCategory } from "@/lib/cache";
 import { CHOCOLATE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
 import { WHATSAPP_DISPLAY } from "@/lib/contact";
@@ -97,7 +97,7 @@ const CHOCOLATE_IMAGES = CHOCOLATE_PRODUCTS.map(p => p.image);
 
 export default async function ChocolatesPage() {
   try {
-    const dbProducts = await getProducts({ category: "chocolates" });
+    const dbProducts = await getCachedProductsByCategory("chocolates");
     const predefinedProducts = getPredefinedProducts("chocolates");
     const dbSlugs = new Set(dbProducts.map(p => p.slug));
     const uniquePredefined = predefinedProducts.filter(p => !dbSlugs.has(p.slug));

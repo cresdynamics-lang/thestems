@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import WinesPageClient from "./WinesPageClient";
-import { getProducts, type Product } from "@/lib/db";
+import { getCachedProductsByCategory } from "@/lib/cache";
+import type { Product } from "@/lib/db";
 import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
@@ -133,7 +134,7 @@ function buildWinesItemListJsonLd(products: Product[]) {
 
 export default async function WinesPage() {
   try {
-    const dbProducts = await getProducts({ category: "wines" });
+    const dbProducts = await getCachedProductsByCategory("wines");
     const predefinedProducts = getPredefinedProducts("wines");
     const dbSlugs = new Set(dbProducts.map(p => p.slug));
     const uniquePredefined = predefinedProducts.filter(p => !dbSlugs.has(p.slug));

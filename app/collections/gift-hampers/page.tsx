@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import GiftHampersPageClient from "./GiftHampersPageClient";
-import { getProducts, type Product } from "@/lib/db";
+import { getCachedProductsByCategory } from "@/lib/cache";
+import type { Product } from "@/lib/db";
 
 import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
 
@@ -158,7 +159,7 @@ function buildHampersItemListJsonLd(products: Product[]) {
 
 export default async function GiftHampersPage() {
   try {
-    const products = await getProducts({ category: "hampers" });
+    const products = await getCachedProductsByCategory("hampers");
     const safeProducts = Array.isArray(products) ? products : [];
     const itemListJsonLd = buildHampersItemListJsonLd(safeProducts);
     return (

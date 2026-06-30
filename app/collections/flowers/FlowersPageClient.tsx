@@ -241,7 +241,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-            {filteredProducts.map((product) => {
+            {filteredProducts.map((product, index) => {
               const imageUrl = product.images && product.images.length > 0 && product.images[0] 
                 ? product.images[0] 
                 : getCategoryFallbackImage(product.category);
@@ -256,7 +256,9 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
                   slug={product.slug}
                   shortDescription={product.short_description}
                   category={product.category}
+                  images={product.images}
                   hideDetailsButton={true}
+                  priority={index < 4}
                 />
               );
             })}

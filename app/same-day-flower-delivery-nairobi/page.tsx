@@ -92,6 +92,7 @@ export default async function SameDayFlowerDeliveryNairobiPage() {
               slug={product.slug}
               shortDescription={product.short_description}
               category={product.category}
+              images={product.images}
               hideDetailsButton={product.category !== "hampers"}
             />
           ))}

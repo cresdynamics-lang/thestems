@@ -52,6 +52,10 @@
   .card {
     @apply bg-white rounded-lg border border-brand-gray-200 shadow-card hover:shadow-cardHover transition-shadow;
   }
+
+  .product-card {
+    @apply bg-white shadow-card hover:shadow-cardHover transition-shadow;
+  }
   
   .input-field {
     @apply w-full px-4 py-3 border border-brand-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-teal focus:border-transparent;
