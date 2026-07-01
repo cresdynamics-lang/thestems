@@ -39,11 +39,9 @@ export default async function HomepageHero() {
   const slides = heroSlides.length ? heroSlides : FALLBACK_HERO_SLIDES;
 
   return (
-    <div data-hero-root className="relative">
+    <div data-hero-root className="relative isolate">
       <HeroStaticSection slide={slides[0]} />
-      <div className="absolute inset-0 z-10">
-        <HeroCarouselLoader slides={slides} />
-      </div>
+      <HeroCarouselLoader slides={slides} />
     </div>
   );
 }

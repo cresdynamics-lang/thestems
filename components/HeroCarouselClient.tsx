@@ -21,12 +21,12 @@ export default function HeroCarouselClient({ slides }: HeroCarouselClientProps) 
   useEffect(() => {
     const staticHero = document.querySelector("[data-hero-static]");
     if (staticHero instanceof HTMLElement) {
-      staticHero.hidden = true;
+      staticHero.style.display = "none";
     }
     setReady(true);
     return () => {
       if (staticHero instanceof HTMLElement) {
-        staticHero.hidden = false;
+        staticHero.style.display = "";
       }
     };
   }, []);
