@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase";
-import type { HeroSlideConfig } from "@/components/HeroCarousel";
+import type { HeroSlideConfig } from "@/components/HeroCarousel.types";
 import { isSupabaseConfigured } from "@/lib/supabaseConfig";
 
 export async function getActiveHeroSlides(): Promise<HeroSlideConfig[]> {

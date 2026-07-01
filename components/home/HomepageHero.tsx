@@ -1,5 +1,6 @@
-import { Suspense } from "react";
-import HeroCarousel, { HeroSlideConfig } from "@/components/HeroCarousel";
+import HeroStaticSection from "@/components/home/HeroStaticSection";
+import HeroCarouselLoader from "@/components/home/HeroCarouselLoader";
+import type { HeroSlideConfig } from "@/components/HeroCarousel.types";
 import { getCachedHeroSlides } from "@/lib/cache";
 
 export const FALLBACK_HERO_SLIDES: HeroSlideConfig[] = [
@@ -32,19 +33,17 @@ export const FALLBACK_HERO_SLIDES: HeroSlideConfig[] = [
   },
 ];
 
-async function HomepageHeroInner() {
+/** Server hero + client-only carousel (no hydration of interactive hero). */
+export default async function HomepageHero() {
   const heroSlides = await getCachedHeroSlides();
-  return (
-    <HeroCarousel
-      slides={heroSlides.length ? heroSlides : FALLBACK_HERO_SLIDES}
-    />
-  );
-}
+  const slides = heroSlides.length ? heroSlides : FALLBACK_HERO_SLIDES;
 
-export default function HomepageHero() {
   return (
-    <Suspense fallback={<HeroCarousel slides={FALLBACK_HERO_SLIDES} />}>
-      <HomepageHeroInner />
-    </Suspense>
+    <div data-hero-root className="relative">
+      <HeroStaticSection slide={slides[0]} />
+      <div className="absolute inset-0 z-10">
+        <HeroCarouselLoader slides={slides} />
+      </div>
+    </div>
   );
 }

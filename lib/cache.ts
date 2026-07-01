@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { getProducts, type Product } from "@/lib/db";
 import { getActiveHeroSlides } from "@/lib/hero";
-import type { HeroSlideConfig } from "@/components/HeroCarousel";
+import type { HeroSlideConfig } from "@/components/HeroCarousel.types";
 import {
   getCachedHomepageSections as getCachedHomepageSectionsImpl,
   type HomepageSectionConfig,
