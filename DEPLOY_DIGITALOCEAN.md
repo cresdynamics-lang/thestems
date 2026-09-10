@@ -1,6 +1,6 @@
 # The Stems – Deploy to DigitalOcean
 
-**Droplet IP:** `178.128.70.10`
+**Droplet IP:** `13.140.33.232`
 
 ---
 
@@ -11,7 +11,7 @@
 From your local machine:
 
 ```bash
-ssh root@178.128.70.10
+ssh root@13.140.33.232
 ```
 
 Use the droplet password when prompted (or use an SSH key if you’ve added one).
@@ -28,9 +28,9 @@ node -v   # should show v20.x
 
 ```bash
 sudo npm install -g pm2
-sudo mkdir -p /var/www/thestems
-sudo chown $USER:$USER /var/www/thestems
-cd /var/www/thestems
+sudo mkdir -p /var/www/sites/thestemsflowers.co.ke
+sudo chown $USER:$USER /var/www/sites/thestemsflowers.co.ke
+cd /var/www/sites/thestemsflowers.co.ke
 ```
 
 ### 4. Clone the repo
@@ -85,7 +85,7 @@ sudo apt install -y nginx certbot python3-certbot-nginx
 sudo cp nginx/thestems.conf /etc/nginx/sites-available/thestems
 sudo ln -sf /etc/nginx/sites-available/thestems /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-# HTTPS (when DNS A record points to 178.128.70.10):
+# HTTPS (when DNS A record points to 13.140.33.232):
 sudo certbot --nginx -d thestemsflowers.co.ke -d www.thestemsflowers.co.ke
 ```
 
@@ -100,29 +100,29 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
-Defaults: IP `178.128.70.10`, user `root`, path `/var/www/thestems`.  
+Defaults: IP `13.140.33.232`, user `root`, path `/var/www/sites/thestemsflowers.co.ke`.  
 You’ll be prompted for the server password (or use SSH key so no password).
 
 Override defaults:
 
 ```bash
-./deploy.sh 178.128.70.10 root /var/www/thestems
+./deploy.sh 13.140.33.232 root /var/www/sites/thestemsflowers.co.ke
 ```
 
 ### Option B: One-line SSH
 
 ```bash
-ssh root@178.128.70.10 "cd /var/www/thestems && git pull origin main && npm ci --omit=dev && NODE_OPTIONS='--max-old-space-size=4096' npm run build && pm2 restart thestems"
+ssh root@13.140.33.232 "cd /var/www/sites/thestemsflowers.co.ke && git pull origin main && npm ci --omit=dev && NODE_OPTIONS='--max-old-space-size=4096' npm run build && pm2 restart thestems"
 ```
 
 ### Option C: Manual
 
 1. Push to GitHub: `git push origin main`
-2. SSH in: `ssh root@178.128.70.10`
+2. SSH in: `ssh root@13.140.33.232`
 3. Run:
 
 ```bash
-cd /var/www/thestems
+cd /var/www/sites/thestemsflowers.co.ke
 bash scripts/deploy-on-server.sh
 ```
 
@@ -141,4 +141,4 @@ pm2 restart thestems
 ## Security note
 
 - Do **not** commit the droplet password to the repo or store it in any script.
-- Prefer SSH key login: `ssh-copy-id root@178.128.70.10` from your machine, then you can run `./deploy.sh` without typing the password.
+- Prefer SSH key login: `ssh-copy-id root@13.140.33.232` from your machine, then you can run `./deploy.sh` without typing the password.

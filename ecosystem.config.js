@@ -1,4 +1,4 @@
-// PM2 config for The Stems (DigitalOcean)
+// PM2 config for The Stems (13.140.33.232)
 const path = require('path');
 
 module.exports = {
@@ -6,13 +6,13 @@ module.exports = {
     {
       name: 'thestems',
       script: path.join(__dirname, 'node_modules/next/dist/bin/next'),
-      args: 'start -H 127.0.0.1 -p 3000',
+      args: 'start -H 127.0.0.1 -p 3004',
       cwd: __dirname,
       instances: 1,
       exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: 3004,
         NODE_OPTIONS: '--max-old-space-size=2048',
       },
       error_file: path.join(__dirname, 'logs/pm2-error.log'),

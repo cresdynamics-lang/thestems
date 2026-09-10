@@ -1,6 +1,6 @@
 #!/bin/bash
-# Run this script ON the DigitalOcean droplet (178.128.70.10) after SSH login.
-# Usage: ssh root@178.128.70.10, then paste or run this script.
+# Run this script ON the DigitalOcean droplet (13.140.33.232) after SSH login.
+# Usage: ssh root@13.140.33.232, then paste or run this script.
 
 set -e
 echo "=== The Stems – Server setup ==="
@@ -19,8 +19,8 @@ if ! command -v pm2 &>/dev/null; then
 fi
 
 # Project dir
-mkdir -p /var/www/thestems
-cd /var/www/thestems
+mkdir -p /var/www/sites/thestemsflowers.co.ke
+cd /var/www/sites/thestemsflowers.co.ke
 
 # Clone if not already present
 if [ ! -f package.json ]; then
@@ -49,4 +49,4 @@ pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
 
-echo "=== Done. App running on port 3000. Visit http://178.128.70.10:3000 ==="
+echo "=== Done. App running on port 3000. Visit http://13.140.33.232:3000 ==="

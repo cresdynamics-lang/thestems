@@ -11,10 +11,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Configuration – The Stems (DigitalOcean droplet 178.128.70.10)
-SERVER_IP="${1:-178.128.70.10}"
+# Configuration – The Stems (DigitalOcean droplet 13.140.33.232)
+SERVER_IP="${1:-13.140.33.232}"
 SERVER_USER="${2:-root}"
-PROJECT_PATH="${3:-/var/www/thestems}"
+PROJECT_PATH="${3:-/var/www/sites/thestemsflowers.co.ke}"
 
 echo -e "${GREEN}🚀 Deploying The Stems to Digital Ocean (${SERVER_IP})...${NC}"
 

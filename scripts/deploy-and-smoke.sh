@@ -2,9 +2,9 @@
 # Deploy to production and run smoke tests on the server + public URL
 set -e
 
-SERVER_IP="${1:-178.128.70.10}"
+SERVER_IP="${1:-13.140.33.232}"
 SERVER_USER="${2:-root}"
-PROJECT_PATH="${3:-/var/www/thestems}"
+PROJECT_PATH="${3:-/var/www/sites/thestemsflowers.co.ke}"
 PUBLIC_URL="${4:-https://thestemsflowers.co.ke}"
 
 echo "🚀 Deploying to ${SERVER_USER}@${SERVER_IP}:${PROJECT_PATH}..."
