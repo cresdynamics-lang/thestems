@@ -5,6 +5,10 @@ import { Resend } from "resend";
 import { SHOP_INFO } from "@/lib/constants";
 import { getOrderById, updateOrder } from "@/lib/db";
 import { SITE_URL } from "@/lib/seo";
+import {
+  formatPaidOrderSms,
+  notifyOwnerPhoneBackground,
+} from "@/lib/notify-owner";
 
 // Retry configuration
 const MAX_RETRIES = 3;
@@ -280,7 +284,7 @@ export async function POST(request: NextRequest) {
           </html>
         `;
 
-        const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+        const resend = new Resend(process.env.RESEND_API_KEY || "");
         const recipientEmail = process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com";
         const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
@@ -308,6 +312,18 @@ export async function POST(request: NextRequest) {
           orderId: orderId.slice(0, 8)
         });
       }
+
+      notifyOwnerPhoneBackground(
+        formatPaidOrderSms({
+          id: orderId,
+          customer_name: order.customer_name,
+          phone: order.phone,
+          total_amount: order.total_amount,
+          total: order.total,
+          payment_method: paymentMethod || "pesapal",
+        }),
+        "payment_paid"
+      );
     } else {
       console.log("ℹ️ Pesapal: Not sending email - payment status is:", newStatus);
     }

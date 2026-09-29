@@ -3,6 +3,10 @@ import { createOrder, getOrders } from "@/lib/db";
 import { Resend } from "resend";
 import { formatCurrency } from "@/lib/utils";
 import { SHOP_INFO } from "@/lib/constants";
+import {
+  formatNewOrderSms,
+  notifyOwnerPhoneBackground,
+} from "@/lib/notify-owner";
 
 /** Fire-and-forget "new order (pending)" email: admin always, customer when email provided. */
 async function sendPendingOrderNotifications(order: any) {
@@ -167,6 +171,9 @@ export async function POST(request: NextRequest) {
     } catch (emailErr) {
       console.error("❌ Pending-order notification error:", emailErr);
     }
+
+    // SMS / WhatsApp to owner phone (fire-and-forget)
+    notifyOwnerPhoneBackground(formatNewOrderSms(order), "new_order");
 
     return NextResponse.json(order);
   } catch (error: unknown) {

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { supabaseAdmin } from "@/lib/supabase";
+import {
+  formatContactSms,
+  notifyOwnerPhoneBackground,
+} from "@/lib/notify-owner";
 
 const RECIPIENT_EMAIL = process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com";
-const RESEND_API_KEY = process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR";
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 // Use onboarding@resend.dev as default (always verified by Resend)
 // For production, verify your own domain in Resend dashboard and use that
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
@@ -29,6 +33,17 @@ export async function POST(request: NextRequest) {
       } catch (dbErr) {
         console.error("contact_messages insert:", dbErr);
       }
+
+      notifyOwnerPhoneBackground(
+        formatContactSms({
+          name,
+          phone,
+          email,
+          subject,
+          message: String(message),
+        }),
+        "contact"
+      );
     }
 
     if (!subject || (!message && !html)) {
