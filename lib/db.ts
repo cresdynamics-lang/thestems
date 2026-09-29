@@ -24,6 +24,10 @@ export interface Product {
   upsells?: string[] | null;
   stock?: number | null;
   visibility?: "published" | "draft" | string | null;
+  sale_price?: number | null;
+  sku?: string | null;
+  low_stock_threshold?: number | null;
+  featured_image_index?: number | null;
   created_at: string;
   updated_at: string;
 }
