@@ -14,24 +14,33 @@ interface ProductDetailClientProps {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCartStore();
+  const onSale =
+    typeof product.sale_price === "number" &&
+    product.sale_price > 0 &&
+    product.sale_price < product.price;
+  const displayPrice = onSale ? (product.sale_price as number) : product.price;
 
   useEffect(() => {
-    Analytics.trackProductView(product.id, product.title, product.category, product.price);
-  }, [product.id, product.title, product.category, product.price]);
+    Analytics.trackProductView(product.id, product.title, product.category, product.price, {
+      onSale,
+      salePrice: onSale ? (product.sale_price as number) : undefined,
+    });
+  }, [product.id, product.title, product.category, product.price, product.sale_price, onSale]);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
       addItem({
         id: product.id,
         name: product.title,
-        price: product.price,
+        price: displayPrice,
         image: product.images[0] || "",
         slug: product.slug,
       });
     }
+    Analytics.trackAddToCart(product.id, product.title, displayPrice, quantity);
   };
 
-  const whatsappLink = generateProductWhatsAppLink(product.title, product.price, quantity);
+  const whatsappLink = generateProductWhatsAppLink(product.title, displayPrice, quantity);
 
   return (
     <div className="space-y-4">
@@ -74,6 +83,14 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           href={whatsappLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            Analytics.trackWhatsAppOrder("product_detail", {
+              content_ids: [product.id],
+              content_name: product.title,
+              value: displayPrice / 100,
+              currency: "KES",
+            })
+          }
           className="btn-secondary px-6 flex items-center justify-center"
           aria-label={`Order ${product.title} via WhatsApp`}
         >
@@ -83,4 +100,3 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     </div>
   );
 }
-

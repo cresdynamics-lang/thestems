@@ -25,6 +25,9 @@ export const SHOP_INFO = {
   },
 } as const;
 
+/** Meta (Facebook) Pixel ID for thestemsflowers.co.ke */
+export const META_PIXEL_ID = "1060289073286123";
+
 export const DELIVERY_ZONES = {
   nairobi: {
     name: "Nairobi",

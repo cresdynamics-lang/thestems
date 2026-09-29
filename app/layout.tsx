@@ -5,6 +5,7 @@ import { StoreChrome } from "@/components/StoreChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import ClientGoogleAnalytics from "@/components/ClientGoogleAnalytics";
+import ClientMetaPixel from "@/components/ClientMetaPixel";
 import StructuredData from "@/components/StructuredData";
 import { SITE_URL, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
@@ -122,6 +123,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
         {process.env.NEXT_PUBLIC_SUPABASE_URL ? (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} crossOrigin="" />
         ) : null}
@@ -131,6 +134,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <AnalyticsProvider>
             <ClientGoogleAnalytics />
+            <ClientMetaPixel />
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>

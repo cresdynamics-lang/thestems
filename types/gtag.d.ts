@@ -8,5 +8,7 @@ interface Window {
     }
   ) => void;
   dataLayer: any[];
+  fbq?: (...args: any[]) => void;
+  _fbq?: (...args: any[]) => void;
 }
 

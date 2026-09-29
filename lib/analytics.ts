@@ -1,14 +1,43 @@
 "use client";
 
 import Cookies from "js-cookie";
+import { META_PIXEL_ID } from "@/lib/constants";
 
-// Analytics tracking with hidden cookies
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+    _fbq?: (...args: any[]) => void;
+  }
+}
+
+/** Fire a Meta Pixel standard/custom event when the pixel is loaded. */
+function trackMeta(
+  event: string,
+  params?: Record<string, unknown>,
+  options?: { eventID?: string }
+) {
+  if (typeof window === "undefined" || !META_PIXEL_ID || !window.fbq) return;
+  try {
+    if (options?.eventID) {
+      window.fbq("track", event, params || {}, { eventID: options.eventID });
+    } else {
+      window.fbq("track", event, params || {});
+    }
+  } catch {
+    // Pixel must never break the shop
+  }
+}
+
+function kes(amountCents: number): number {
+  return Math.round((amountCents / 100) * 100) / 100;
+}
+
+// Analytics tracking with cookies + Meta Pixel forwarding
 export class Analytics {
   private static readonly COOKIE_NAME = "_fw_analytics";
   private static readonly SESSION_COOKIE = "_fw_session";
   private static readonly USER_ID_COOKIE = "_fw_uid";
 
-  // Generate or get user ID
   static getUserId(): string {
     let userId = Cookies.get(this.USER_ID_COOKIE);
     if (!userId) {
@@ -18,7 +47,6 @@ export class Analytics {
     return userId;
   }
 
-  // Get or create session ID
   static getSessionId(): string {
     let sessionId = Cookies.get(this.SESSION_COOKIE);
     if (!sessionId) {
@@ -42,7 +70,7 @@ export class Analytics {
     });
   }
 
-  // Track page view
+  /** Meta PageView */
   static trackPageView(path: string, title?: string) {
     if (typeof window === "undefined") return;
 
@@ -61,15 +89,19 @@ export class Analytics {
       },
     };
 
-    // Store in hidden cookie
     Cookies.set(this.COOKIE_NAME, JSON.stringify(data), { expires: 1, sameSite: "lax" });
-
-    // Send to analytics endpoint (if configured)
     this.sendToServer(data);
+    trackMeta("PageView");
   }
 
-  // Track product view
-  static trackProductView(productId: string, productName: string, category: string, price: number) {
+  /** Meta ViewContent (product / sale page) */
+  static trackProductView(
+    productId: string,
+    productName: string,
+    category: string,
+    price: number,
+    options?: { onSale?: boolean; salePrice?: number }
+  ) {
     if (typeof window === "undefined") return;
 
     const data = {
@@ -84,10 +116,36 @@ export class Analytics {
     };
 
     this.sendToServer(data);
+
+    const value = kes(options?.salePrice ?? price);
+    trackMeta("ViewContent", {
+      content_ids: [productId],
+      content_name: productName,
+      content_type: "product",
+      content_category: options?.onSale ? "sale" : category,
+      value,
+      currency: "KES",
+    });
+
+    if (options?.onSale) {
+      trackMeta("Sale", {
+        content_ids: [productId],
+        content_name: productName,
+        content_type: "product",
+        content_category: "sale",
+        value,
+        currency: "KES",
+      });
+    }
   }
 
-  // Track add to cart
-  static trackAddToCart(productId: string, productName: string, price: number, quantity: number) {
+  /** Meta AddToCart */
+  static trackAddToCart(
+    productId: string,
+    productName: string,
+    price: number,
+    quantity: number
+  ) {
     if (typeof window === "undefined") return;
 
     const data = {
@@ -102,10 +160,19 @@ export class Analytics {
     };
 
     this.sendToServer(data);
+    trackMeta("AddToCart", {
+      content_ids: [productId],
+      content_name: productName,
+      content_type: "product",
+      value: kes(price * quantity),
+      currency: "KES",
+      contents: [{ id: productId, quantity }],
+      num_items: quantity,
+    });
   }
 
-  // Track checkout start
-  static trackCheckoutStart(total: number, items: number) {
+  /** Meta InitiateCheckout */
+  static trackCheckoutStart(total: number, items: number, contentIds?: string[]) {
     if (typeof window === "undefined") return;
 
     const data = {
@@ -118,10 +185,22 @@ export class Analytics {
     };
 
     this.sendToServer(data);
+    trackMeta("InitiateCheckout", {
+      content_ids: contentIds || [],
+      content_type: "product",
+      value: kes(total),
+      currency: "KES",
+      num_items: items,
+    });
   }
 
-  // Track purchase
-  static trackPurchase(orderId: string, total: number, paymentMethod: string) {
+  /** Meta Purchase */
+  static trackPurchase(
+    orderId: string,
+    total: number,
+    paymentMethod: string,
+    options?: { contentIds?: string[]; numItems?: number }
+  ) {
     if (typeof window === "undefined") return;
 
     const data = {
@@ -135,9 +214,46 @@ export class Analytics {
     };
 
     this.sendToServer(data);
+    trackMeta(
+      "Purchase",
+      {
+        content_ids: options?.contentIds || [],
+        content_type: "product",
+        value: kes(total),
+        currency: "KES",
+        num_items: options?.numItems,
+        order_id: orderId,
+      },
+      { eventID: orderId }
+    );
   }
 
-  // Track collection view
+  /** Meta Contact — WhatsApp order / chat CTAs */
+  static trackWhatsAppOrder(source: string, extras?: Record<string, unknown>) {
+    if (typeof window === "undefined") return;
+
+    const data = {
+      event: "whatsapp_order",
+      source,
+      ...extras,
+      userId: this.getUserId(),
+      sessionId: this.getSessionId(),
+      timestamp: new Date().toISOString(),
+    };
+
+    this.sendToServer(data);
+    trackMeta("Contact", {
+      content_category: "whatsapp",
+      content_name: source,
+      ...extras,
+    });
+    trackMeta("WhatsAppOrder", {
+      content_category: "whatsapp",
+      content_name: source,
+      ...extras,
+    });
+  }
+
   static trackCollectionView(category: string, productCount: number) {
     if (typeof window === "undefined") return;
 
@@ -151,17 +267,20 @@ export class Analytics {
     };
 
     this.sendToServer(data);
+    trackMeta("ViewContent", {
+      content_type: "product_group",
+      content_category: category,
+      content_name: category,
+      num_items: productCount,
+    });
   }
 
-  // Send data to server (non-blocking)
   private static sendToServer(data: any) {
     if (typeof window === "undefined") return;
 
-    // Use sendBeacon for reliable, non-blocking delivery
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
     navigator.sendBeacon("/api/analytics", blob);
 
-    // Fallback to fetch if sendBeacon not available
     if (!navigator.sendBeacon) {
       fetch("/api/analytics", {
         method: "POST",
@@ -174,4 +293,3 @@ export class Analytics {
     }
   }
 }
-

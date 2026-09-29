@@ -13,6 +13,7 @@ import {
 } from "@/lib/whatsapp";
 import axios from "axios";
 import { useCartStore } from "@/lib/store/cart";
+import { Analytics } from "@/lib/analytics";
 
 const WHATSAPP_REDIRECT_DELAY_MS = 5000;
 
@@ -28,6 +29,7 @@ function OrderSuccessContent() {
   const [paymentTimedOut, setPaymentTimedOut] = useState(false);
   const [whatsappRedirecting, setWhatsappRedirecting] = useState(false);
   const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
+  const [purchaseTracked, setPurchaseTracked] = useState(false);
   const { clearCart } = useCartStore();
 
   const clearCartIfNeeded = useCallback(() => {
@@ -38,17 +40,39 @@ function OrderSuccessContent() {
     }
   }, [cartCleared, clearCart]);
 
+  const trackPaidPurchase = useCallback(
+    (paidOrder: Order) => {
+      if (purchaseTracked || paidOrder.status !== "paid") return;
+      setPurchaseTracked(true);
+      const total = paidOrder.total_amount ?? paidOrder.total ?? 0;
+      const contentIds = Array.isArray(paidOrder.items)
+        ? paidOrder.items
+            .map((item: any) => item.productId || item.id || item.slug)
+            .filter(Boolean)
+        : [];
+      Analytics.trackPurchase(paidOrder.id, total, paidOrder.payment_method || "card", {
+        contentIds,
+        numItems: Array.isArray(paidOrder.items) ? paidOrder.items.length : undefined,
+      });
+    },
+    [purchaseTracked]
+  );
+
   const triggerWhatsAppRedirect = useCallback(
     (paidOrder: Order) => {
       if (paidOrder.status !== "paid") return;
 
       clearCartIfNeeded();
+      trackPaidPurchase(paidOrder);
 
       const scheduled = schedulePaidOrderWhatsAppRedirect(paidOrder, {
         delayMs: WHATSAPP_REDIRECT_DELAY_MS,
         onScheduled: () => {
           setWhatsappRedirecting(true);
           setRedirectCountdown(Math.ceil(WHATSAPP_REDIRECT_DELAY_MS / 1000));
+          Analytics.trackWhatsAppOrder("order_success_auto", {
+            order_id: paidOrder.id,
+          });
         },
       });
 
@@ -57,7 +81,7 @@ function OrderSuccessContent() {
         setWhatsappRedirecting(false);
       }
     },
-    [clearCartIfNeeded]
+    [clearCartIfNeeded, trackPaidPurchase]
   );
 
   useEffect(() => {
@@ -230,7 +254,12 @@ function OrderSuccessContent() {
               <button
                 type="button"
                 className="btn-secondary mt-3 text-sm w-full"
-                onClick={() => redirectToWhatsApp(whatsappUrl)}
+                onClick={() => {
+                  Analytics.trackWhatsAppOrder("order_success_manual", {
+                    order_id: order.id,
+                  });
+                  redirectToWhatsApp(whatsappUrl);
+                }}
               >
                 Open WhatsApp now
               </button>
@@ -347,6 +376,10 @@ function OrderSuccessContent() {
               href={whatsappUrl}
               className="btn-secondary flex-1 text-center"
               onClick={(e) => {
+                Analytics.trackWhatsAppOrder(
+                  order.status === "paid" ? "order_success_continue" : "order_success_contact",
+                  { order_id: order.id }
+                );
                 if (order.status === "paid") {
                   e.preventDefault();
                   redirectToWhatsApp(whatsappUrl);

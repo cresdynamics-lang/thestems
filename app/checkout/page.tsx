@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -91,6 +91,7 @@ export default function CheckoutPage() {
   const [phoneError, setPhoneError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
+  const checkoutTracked = useRef(false);
 
   useEffect(() => {
     // If cart is empty, redirect to cart
@@ -161,6 +162,16 @@ export default function CheckoutPage() {
       });
     }
   }, [router, items.length, getTotal, items]);
+
+  useEffect(() => {
+    if (!orderData || checkoutTracked.current) return;
+    checkoutTracked.current = true;
+    Analytics.trackCheckoutStart(
+      orderData.total || getTotal(),
+      orderData.items?.length || items.length,
+      (orderData.items || items).map((item) => item.id)
+    );
+  }, [orderData, getTotal, items]);
 
   // Show loading only while redirecting or if cart is empty
   if (items.length === 0 || !orderData) {
@@ -258,8 +269,16 @@ export default function CheckoutPage() {
         // Open WhatsApp
         window.open(whatsappLink, "_blank");
         
-        // Track order
-        Analytics.trackPurchase(orderId, total, paymentMethod || "whatsapp");
+        // Track order + WhatsApp CTA
+        Analytics.trackPurchase(orderId, total, paymentMethod || "whatsapp", {
+          contentIds: (orderData?.items || items).map((item) => item.id),
+          numItems: (orderData?.items || items).length,
+        });
+        Analytics.trackWhatsAppOrder("checkout_whatsapp", {
+          order_id: orderId,
+          value: total / 100,
+          currency: "KES",
+        });
         
         // Redirect to success page
         router.push(`/order/success?id=${orderId}`);

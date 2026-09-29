@@ -80,8 +80,11 @@ export default function ProductCard({
 
   useEffect(() => {
     if (homePage || !id || !name || !category) return;
-    Analytics.trackProductView(id, name, category, price);
-  }, [id, name, category, price, homePage]);
+    Analytics.trackProductView(id, name, category, price, {
+      onSale,
+      salePrice: onSale ? price : undefined,
+    });
+  }, [id, name, category, price, homePage, onSale]);
 
   const resolvedImage = imageError ? getFallbackImage(category) : activeImage;
 
