@@ -235,10 +235,10 @@ export default function Header() {
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-[family-name:var(--font-gift)] text-base text-brand-gray-900 group-hover:text-brand-red transition-colors truncate">
+                            <h3 className="font-product text-[15px] font-semibold tracking-tight text-brand-gray-900 group-hover:text-brand-red transition-colors truncate">
                               {product.title}
                             </h3>
-                            <p className="text-sm font-semibold text-brand-rose-deep mt-0.5">
+                            <p className="font-price text-sm font-bold tabular-nums text-brand-rose-deep mt-0.5">
                               {formatCurrency(product.price)}
                             </p>
                           </div>

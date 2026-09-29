@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Lato, Dancing_Script, Great_Vibes } from "next/font/google";
+import { Montserrat, Lato, Dancing_Script, Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 import { StoreChrome } from "@/components/StoreChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -34,12 +34,22 @@ const dancingScript = Dancing_Script({
   preload: false,
 });
 
-const greatVibes = Great_Vibes({
+/** Product card titles — soft display serif, easy to read at small sizes */
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-gift",
+  weight: ["500", "600", "700"],
+  variable: "--font-product",
   display: "swap",
-  preload: false,
+  preload: true,
+});
+
+/** Product prices — clean modern sans, crystal-clear numerals */
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-price",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -127,7 +137,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-KE"
-      className={`${montserrat.variable} ${lato.variable} ${dancingScript.variable} ${greatVibes.variable}`}
+      className={`${montserrat.variable} ${lato.variable} ${dancingScript.variable} ${fraunces.variable} ${outfit.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />

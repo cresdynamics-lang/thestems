@@ -238,7 +238,7 @@ export default function ProductCard({
 
       <div className="bg-white px-2.5 pb-2.5 pt-2 sm:px-3.5 sm:pb-3 sm:pt-2.5">
         <Link href={`/product/${slug}`} className="block text-left">
-          <h3 className="font-[family-name:var(--font-gift)] text-[15px] leading-snug text-brand-gray-900 line-clamp-2 sm:text-lg md:text-xl group-hover/card:text-brand-rose-deep transition-colors duration-300">
+          <h3 className="font-product text-[15px] font-semibold leading-[1.25] tracking-[-0.01em] text-brand-gray-900 line-clamp-2 sm:text-[17px] md:text-[19px] group-hover/card:text-brand-rose-deep transition-colors duration-300">
             {displayName}
           </h3>
         </Link>
@@ -248,11 +248,11 @@ export default function ProductCard({
         />
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="font-[family-name:var(--font-gift)] text-sm font-semibold text-brand-rose-deep sm:text-base md:text-lg">
+            <p className="font-price text-[15px] font-bold tabular-nums tracking-tight text-brand-rose-deep sm:text-[17px] md:text-[19px]">
               {formatCurrency(price)}
             </p>
             {onSale && (
-              <p className="text-[10px] font-normal tracking-wide text-brand-gray-400 line-through sm:text-xs">
+              <p className="font-price text-[11px] font-medium tabular-nums tracking-wide text-brand-gray-400 line-through sm:text-xs">
                 {formatCurrency(compareAtPrice!)}
               </p>
             )}

@@ -28,7 +28,7 @@ export default function HomeProductSection({
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-3 md:mb-4 flex items-center justify-between">
           <div>
-            <h2 className="font-[family-name:var(--font-gift)] font-semibold text-xl sm:text-2xl md:text-3xl text-brand-gray-900">
+            <h2 className="font-product font-semibold text-xl sm:text-2xl md:text-3xl tracking-tight text-brand-gray-900">
               {title}
             </h2>
             {subtitle && (
