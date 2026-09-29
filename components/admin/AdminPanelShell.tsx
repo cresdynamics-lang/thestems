@@ -47,7 +47,7 @@ export function AdminPanelShell({ children }: { children: React.ReactNode }) {
             Products
           </Link>
           <Link
-            href="/staff/blogs"
+            href="/admin/blogs"
             className="block px-3 py-2 rounded-lg text-brand-gray-800 hover:bg-brand-green/5 hover:text-brand-green"
           >
             Blog

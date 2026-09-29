@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase";
 import { listBlogPosts, mapBlogPost } from "@/lib/blog-admin-service";
+import { blogInsertFromBody } from "@/lib/blog-write";
 
 export const dynamic = "force-dynamic";
 
@@ -38,34 +39,7 @@ export async function POST(request: NextRequest) {
   try {
     requireAdmin(request);
     const body = await request.json();
-
-    const {
-      slug,
-      title,
-      excerpt,
-      content,
-      author,
-      publishedAt,
-      image,
-      category,
-      tags,
-      readTime,
-      featured,
-    } = body;
-
-    const insertData = {
-      slug,
-      title,
-      excerpt,
-      content,
-      author: author || "The Stems Team",
-      published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
-      image,
-      category,
-      tags: Array.isArray(tags) ? tags : [],
-      read_time: typeof readTime === "number" ? readTime : 5,
-      featured: !!featured,
-    };
+    const insertData = blogInsertFromBody(body);
 
     const { data, error } = await (supabaseAdmin
       .from("blog_posts") as any)
@@ -77,11 +51,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: error.message || "Failed to create blog post" }, { status: 400 });
     }
 
-    // Revalidate blog listing and blog detail page
     revalidatePath("/blog");
     revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemap.xml");
 
-    return NextResponse.json(data);
+    return NextResponse.json(mapBlogPost(data));
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -92,4 +66,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

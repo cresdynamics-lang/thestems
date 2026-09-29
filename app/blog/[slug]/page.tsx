@@ -22,22 +22,42 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) return {};
 
+  const rawTitle = (post.metaTitle || post.title).trim();
   const title =
-    post.title.length <= 55 ? `${post.title} | The Stems` : `${post.title.slice(0, 52).trim()}… | The Stems`;
-  const description =
-    post.excerpt ??
-    `Flower and gift tips from The Stems Flowers — Nairobi florist at Delta Hotel, University Way. Same-day delivery across CBD, Westlands, Karen and Kilimani.`;
+    rawTitle.length <= 55
+      ? `${rawTitle} | The Stems`
+      : `${rawTitle.slice(0, 52).trim()}… | The Stems`;
+  const description = (
+    post.metaDescription ||
+    post.excerpt ||
+    `Flower and gift tips from The Stems Flowers — Nairobi florist at Delta Hotel, University Way. Same-day delivery across CBD, Westlands, Karen and Kilimani.`
+  ).slice(0, 160);
+  const keywords = [
+    post.focusKeyword,
+    ...(post.tags || []),
+    "florist Nairobi",
+    "flower delivery Nairobi",
+  ].filter(Boolean) as string[];
 
   return {
     title,
     description,
+    keywords,
+    alternates: {
+      canonical: `${baseUrl}/blog/${slug}`,
+    },
     openGraph: {
       title,
       description,
-      images: post.image ? [{ url: post.image }] : [],
+      images: post.image ? [{ url: post.image.startsWith("http") ? post.image : `${baseUrl}${post.image}` }] : [],
       url: `${baseUrl}/blog/${slug}`,
       type: "article",
       publishedTime: post.publishedAt,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -60,10 +80,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
+    headline: post.metaTitle || post.title,
+    description: post.metaDescription || post.excerpt,
     image: `${baseUrl}${post.image}`,
     datePublished: post.publishedAt,
+    keywords: post.focusKeyword || (post.tags || []).join(", "),
     author: {
       "@type": "Organization",
       name: post.author,

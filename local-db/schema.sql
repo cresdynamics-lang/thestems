@@ -122,6 +122,9 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   tags TEXT[] DEFAULT '{}',
   read_time INTEGER NOT NULL DEFAULT 5,
   featured BOOLEAN DEFAULT false,
+  meta_title TEXT,
+  meta_description TEXT,
+  focus_keyword TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

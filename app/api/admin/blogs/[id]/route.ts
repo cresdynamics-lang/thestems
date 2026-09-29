@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { mapBlogPost } from "@/lib/blog-admin-service";
+import { blogUpdateFromBody } from "@/lib/blog-write";
 
 export const dynamic = "force-dynamic";
 
@@ -27,22 +29,7 @@ export async function GET(
       return NextResponse.json({ message: "Blog post not found" }, { status: 404 });
     }
 
-    return NextResponse.json({
-      id: data.id,
-      slug: data.slug,
-      title: data.title,
-      excerpt: data.excerpt,
-      content: data.content,
-      author: data.author,
-      published_at: data.published_at,
-      image: data.image,
-      category: data.category,
-      tags: data.tags || [],
-      read_time: data.read_time,
-      featured: data.featured,
-      created_at: data.created_at,
-      updated_at: data.updated_at,
-    });
+    return NextResponse.json(mapBlogPost(data));
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -62,37 +49,7 @@ export async function PUT(
     requireAdmin(request);
     const { id } = await params;
     const body = await request.json();
-
-    const {
-      slug,
-      title,
-      excerpt,
-      content,
-      author,
-      publishedAt,
-      image,
-      category,
-      tags,
-      readTime,
-      featured,
-    } = body;
-
-    const updateData: any = {
-      slug,
-      title,
-      excerpt,
-      content,
-      author: author || "The Stems Team",
-      image,
-      category,
-      tags: Array.isArray(tags) ? tags : [],
-      read_time: typeof readTime === "number" ? readTime : undefined,
-      featured: featured,
-    };
-
-    if (publishedAt) {
-      updateData.published_at = new Date(publishedAt).toISOString();
-    }
+    const updateData = blogUpdateFromBody(body);
 
     const { data, error } = await (supabaseAdmin
       .from("blog_posts") as any)
@@ -107,8 +64,9 @@ export async function PUT(
 
     revalidatePath("/blog");
     revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemap.xml");
 
-    return NextResponse.json(data);
+    return NextResponse.json(mapBlogPost(data));
   } catch (error: any) {
     if (error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -151,6 +109,7 @@ export async function DELETE(
     if (existing?.slug) {
       revalidatePath(`/blog/${existing.slug}`);
     }
+    revalidatePath("/sitemap.xml");
 
     return NextResponse.json({ message: "Blog post deleted" });
   } catch (error: any) {

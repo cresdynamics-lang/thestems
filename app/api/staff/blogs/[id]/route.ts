@@ -3,6 +3,7 @@ import { requireStaff } from "@/lib/staff/auth";
 import { supabaseAdmin } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { getBlogPostById, mapBlogPost } from "@/lib/blog-admin-service";
+import { blogUpdateFromBody } from "@/lib/blog-write";
 
 export const dynamic = "force-dynamic";
 
@@ -45,37 +46,7 @@ export async function PUT(
     requireStaff(request);
     const { id } = await params;
     const body = await request.json();
-
-    const {
-      slug,
-      title,
-      excerpt,
-      content,
-      author,
-      publishedAt,
-      image,
-      category,
-      tags,
-      readTime,
-      featured,
-    } = body;
-
-    const updateData: Record<string, unknown> = {
-      slug,
-      title,
-      excerpt,
-      content,
-      author: author || "The Stems Team",
-      image,
-      category,
-      tags: Array.isArray(tags) ? tags : [],
-      read_time: typeof readTime === "number" ? readTime : undefined,
-      featured,
-    };
-
-    if (publishedAt) {
-      updateData.published_at = new Date(publishedAt).toISOString();
-    }
+    const updateData = blogUpdateFromBody(body);
 
     const { data, error } = await supabaseAdmin
       .from("blog_posts")
@@ -93,8 +64,9 @@ export async function PUT(
 
     revalidatePath("/blog");
     revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemap.xml");
 
-    return NextResponse.json(data);
+    return NextResponse.json(mapBlogPost(data as Parameters<typeof mapBlogPost>[0]));
   } catch (error: unknown) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -138,6 +110,7 @@ export async function DELETE(
     if (existing?.slug) {
       revalidatePath(`/blog/${existing.slug}`);
     }
+    revalidatePath("/sitemap.xml");
 
     return NextResponse.json({ message: "Blog post deleted" });
   } catch (error: unknown) {

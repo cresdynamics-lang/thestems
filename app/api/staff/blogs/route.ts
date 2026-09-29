@@ -3,6 +3,7 @@ import { requireStaff } from "@/lib/staff/auth";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase";
 import { listBlogPosts, mapBlogPost } from "@/lib/blog-admin-service";
+import { blogInsertFromBody } from "@/lib/blog-write";
 
 export const dynamic = "force-dynamic";
 
@@ -40,34 +41,7 @@ export async function POST(request: NextRequest) {
   try {
     requireStaff(request);
     const body = await request.json();
-
-    const {
-      slug,
-      title,
-      excerpt,
-      content,
-      author,
-      publishedAt,
-      image,
-      category,
-      tags,
-      readTime,
-      featured,
-    } = body;
-
-    const insertData = {
-      slug,
-      title,
-      excerpt,
-      content,
-      author: author || "The Stems Team",
-      published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
-      image,
-      category,
-      tags: Array.isArray(tags) ? tags : [],
-      read_time: typeof readTime === "number" ? readTime : 5,
-      featured: !!featured,
-    };
+    const insertData = blogInsertFromBody(body);
 
     const { data, error } = await supabaseAdmin
       .from("blog_posts")
@@ -84,8 +58,9 @@ export async function POST(request: NextRequest) {
 
     revalidatePath("/blog");
     revalidatePath(`/blog/${data.slug}`);
+    revalidatePath("/sitemap.xml");
 
-    return NextResponse.json(data);
+    return NextResponse.json(mapBlogPost(data as Parameters<typeof mapBlogPost>[0]));
   } catch (error: unknown) {
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

@@ -19,6 +19,9 @@ interface BlogPost {
   tags: string[];
   read_time: number;
   featured: boolean;
+  meta_title?: string;
+  meta_description?: string;
+  focus_keyword?: string;
   created_at: string;
   updated_at: string;
 }
@@ -60,6 +63,9 @@ export function BlogManager({
     tags: "",
     readTime: 5,
     featured: false,
+    metaTitle: "",
+    metaDescription: "",
+    focusKeyword: "",
   });
 
   const authHeaders = useCallback(() => {
@@ -175,6 +181,9 @@ export function BlogManager({
         tags: full.tags.join(", "),
         readTime: full.read_time,
         featured: full.featured,
+        metaTitle: full.meta_title || "",
+        metaDescription: full.meta_description || "",
+        focusKeyword: full.focus_keyword || "",
       });
       setShowForm(true);
     } catch (error: unknown) {
@@ -225,6 +234,9 @@ export function BlogManager({
       tags: "",
       readTime: 5,
       featured: false,
+      metaTitle: "",
+      metaDescription: "",
+      focusKeyword: "",
     });
   };
 
@@ -388,6 +400,59 @@ export function BlogManager({
                 rows={3}
                 className="input-field"
               />
+            </div>
+
+            <div className="rounded-lg border border-brand-rose-deep/25 bg-brand-blush/40 p-4 space-y-4">
+              <div>
+                <h3 className="font-heading font-semibold text-brand-gray-900">SEO (Google search)</h3>
+                <p className="text-xs text-brand-gray-600 mt-0.5">
+                  These fields control the search title &amp; snippet. Leave blank to use the post title and excerpt.
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-brand-gray-900 mb-1">
+                  SEO title{" "}
+                  <span className="text-brand-gray-500 font-normal">
+                    ({formData.metaTitle.length}/60)
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.metaTitle}
+                  maxLength={70}
+                  onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                  className="input-field"
+                  placeholder="e.g. Same-Day Flower Delivery Nairobi | Tips from The Stems"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-brand-gray-900 mb-1">
+                  Meta description{" "}
+                  <span className="text-brand-gray-500 font-normal">
+                    ({formData.metaDescription.length}/160)
+                  </span>
+                </label>
+                <textarea
+                  value={formData.metaDescription}
+                  maxLength={180}
+                  onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                  rows={3}
+                  className="input-field"
+                  placeholder="1–2 sentences with Nairobi + occasion keywords for Google"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-brand-gray-900 mb-1">
+                  Focus keyword
+                </label>
+                <input
+                  type="text"
+                  value={formData.focusKeyword}
+                  onChange={(e) => setFormData({ ...formData, focusKeyword: e.target.value })}
+                  className="input-field"
+                  placeholder="e.g. birthday flowers Nairobi"
+                />
+              </div>
             </div>
 
             <div>

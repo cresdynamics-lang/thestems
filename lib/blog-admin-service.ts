@@ -1,7 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const BLOG_LIST_SELECT =
-  "id, slug, title, excerpt, author, published_at, image, category, tags, read_time, featured, created_at, updated_at";
+  "id, slug, title, excerpt, author, published_at, image, category, tags, read_time, featured, meta_title, meta_description, focus_keyword, created_at, updated_at";
 
 export type BlogPostRow = {
   id: string;
@@ -16,6 +16,9 @@ export type BlogPostRow = {
   tags: string[] | null;
   read_time: number;
   featured: boolean;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  focus_keyword?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -34,6 +37,9 @@ export function mapBlogPost(p: BlogPostRow) {
     tags: p.tags || [],
     read_time: p.read_time,
     featured: p.featured,
+    meta_title: p.meta_title || "",
+    meta_description: p.meta_description || "",
+    focus_keyword: p.focus_keyword || "",
     created_at: p.created_at,
     updated_at: p.updated_at,
   };

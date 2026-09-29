@@ -17,9 +17,12 @@ export interface BlogPost {
   tags: string[];
   readTime: number;
   featured: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  focusKeyword?: string;
 }
 
-// Database interface (matches Supabase schema)
+// Database interface (matches local Postgres blog_posts via PostgREST)
 export interface BlogPostDB {
   id: string;
   slug: string;
@@ -33,6 +36,9 @@ export interface BlogPostDB {
   tags: string[];
   read_time: number;
   featured: boolean;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  focus_keyword?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -51,6 +57,9 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
     tags: dbPost.tags || [],
     readTime: dbPost.read_time,
     featured: dbPost.featured,
+    metaTitle: dbPost.meta_title || undefined,
+    metaDescription: dbPost.meta_description || undefined,
+    focusKeyword: dbPost.focus_keyword || undefined,
   };
 }
 
