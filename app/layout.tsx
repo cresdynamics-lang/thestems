@@ -6,6 +6,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import ClientGoogleAnalytics from "@/components/ClientGoogleAnalytics";
 import ClientMetaPixel from "@/components/ClientMetaPixel";
+import TawkToChat from "@/components/TawkToChat";
 import StructuredData from "@/components/StructuredData";
 import { SITE_URL, SITE_NAME, absoluteUrl } from "@/lib/seo";
 
@@ -135,6 +136,7 @@ export default function RootLayout({
           <AnalyticsProvider>
             <ClientGoogleAnalytics />
             <ClientMetaPixel />
+            <TawkToChat />
             <a href="#main-content" className="skip-link">
               Skip to main content
             </a>
