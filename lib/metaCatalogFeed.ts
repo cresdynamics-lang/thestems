@@ -77,7 +77,6 @@ export function buildMetaCatalogCsv(products: MetaFeedProduct[]): string {
     "google_product_category",
     "product_type",
     "sale_price",
-    "item_group_id",
     "custom_label_0",
     "custom_label_1",
     "quantity_to_sell_on_facebook",
@@ -112,6 +111,7 @@ export function buildMetaCatalogCsv(products: MetaFeedProduct[]): string {
     const inventory =
       typeof product.stock === "number" && product.stock > 0 ? product.stock : 100;
 
+    // No item_group_id — each row is a standalone product (not grouped by category)
     return [
       csvEscape(product.sku || product.slug || product.id),
       csvEscape(title),
@@ -126,7 +126,6 @@ export function buildMetaCatalogCsv(products: MetaFeedProduct[]): string {
       csvEscape(GOOGLE_CATEGORY[product.category] || "Arts & Entertainment > Party & Celebration > Gift Giving"),
       csvEscape(productType(product)),
       sale ? csvEscape(kesPrice(sale)) : "",
-      csvEscape(product.category),
       csvEscape(product.category),
       csvEscape((product.tags || []).slice(0, 3).join("|") || "nairobi"),
       String(inventory),
