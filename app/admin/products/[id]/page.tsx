@@ -72,6 +72,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDescribing, setIsDescribing] = useState(false);
+  const [seoHint, setSeoHint] = useState<string | null>(null);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -426,6 +428,94 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+    }
+  };
+
+  const applySeoFromImage = async (imageUrl: string, force = false) => {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      alert("Please log in again.");
+      return;
+    }
+
+    setIsDescribing(true);
+    setSeoHint("Generating SEO title & description from image…");
+    try {
+      const response = await fetch("/api/admin/describe-product", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageUrl }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.message || "Could not describe image");
+      }
+      const s = data.suggestion;
+      if (!s) throw new Error("No suggestion returned");
+
+      const fill = (field: keyof ProductFormData, value: string) => {
+        const current = watch(field);
+        if (force || !current || String(current).trim() === "") {
+          setValue(field, value as any, { shouldValidate: true, shouldDirty: true });
+        }
+      };
+
+      fill("title", s.title);
+      fill("slug", s.slug);
+      fill("short_description", s.short_description);
+      fill("description", s.description);
+
+      if (s.category && (force || !category)) {
+        handleCategoryChange(s.category);
+      }
+
+      const suggestedCategory = (s.category || category) as string;
+      if (suggestedCategory === "flowers" && Array.isArray(s.tags)) {
+        const allowed = getSubcategoriesForCategory("flowers");
+        const matched = s.tags
+          .map((t: string) =>
+            allowed.find(
+              (a) =>
+                a.toLowerCase() === t.toLowerCase() ||
+                a.toLowerCase().includes(t.toLowerCase()) ||
+                t.toLowerCase().includes(a.toLowerCase().split(" ")[0])
+            )
+          )
+          .filter(Boolean) as string[];
+        const unique = [...new Set(matched)].slice(0, 4);
+        if (unique.length > 0 && (force || selectedSubcategories.length === 0)) {
+          setSelectedSubcategories(unique);
+          setValue("subcategory", unique[0], { shouldDirty: true });
+        }
+      }
+
+      if (
+        Array.isArray(s.included_items) &&
+        s.included_items.length > 0 &&
+        (force || includedItems.length === 0)
+      ) {
+        setIncludedItems(
+          s.included_items.map((item: { name: string; qty: number; note?: string }) => ({
+            name: item.name,
+            qty: item.qty || 1,
+            ...(item.note ? { note: item.note } : {}),
+          }))
+        );
+      }
+
+      setSeoHint(
+        force
+          ? "SEO fields updated from the product photo. Review before saving."
+          : "Empty SEO fields filled from the product photo."
+      );
+    } catch (err: any) {
+      console.error("SEO describe error:", err);
+      setSeoHint(err?.message || "Could not generate SEO from image.");
+    } finally {
+      setIsDescribing(false);
     }
   };
 
@@ -786,6 +876,25 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               >
                 {isUploading ? "Uploading..." : "+ Upload Image from Phone"}
               </button>
+              {images.length > 0 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    void applySeoFromImage(images[0], true);
+                  }}
+                  disabled={isDescribing || isUploading}
+                  className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed ml-2"
+                >
+                  {isDescribing ? "Describing…" : "Generate SEO from image"}
+                </button>
+              )}
+              {(isDescribing || seoHint) && (
+                <p className="text-xs text-brand-gray-600 mt-2">
+                  {isDescribing ? "Generating SEO title & description from image…" : seoHint}
+                </p>
+              )}
             </div>
           </div>
 

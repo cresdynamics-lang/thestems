@@ -40,10 +40,13 @@ export default function NewProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDescribing, setIsDescribing] = useState(false);
+  const [seoHint, setSeoHint] = useState<string | null>(null);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const seoAppliedRef = useRef(false);
 
   const {
     register,
@@ -100,6 +103,94 @@ export default function NewProductPage() {
 
   const removeIncludedItem = (index: number) => {
     setIncludedItems(includedItems.filter((_, i) => i !== index));
+  };
+
+  const applySeoFromImage = async (imageUrl: string, force = false) => {
+    if (!force && seoAppliedRef.current) return;
+
+    const token = localStorage.getItem("admin_token");
+    if (!token) return;
+
+    setIsDescribing(true);
+    setSeoHint("Generating SEO title & description from image…");
+    try {
+      const response = await fetch("/api/admin/describe-product", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageUrl }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.message || "Could not describe image");
+      }
+
+      const s = data.suggestion;
+      if (!s) throw new Error("No suggestion returned");
+
+      const fillIfEmpty = (field: keyof ProductFormData, value: string) => {
+        const current = watch(field);
+        if (force || !current || String(current).trim() === "") {
+          setValue(field, value as any, { shouldValidate: true, shouldDirty: true });
+        }
+      };
+
+      fillIfEmpty("title", s.title);
+      fillIfEmpty("slug", s.slug);
+      fillIfEmpty("short_description", s.short_description);
+      fillIfEmpty("description", s.description);
+
+      if (s.category && (force || !category)) {
+        handleCategoryChange(s.category);
+      }
+
+      const suggestedCategory = (s.category || category) as string;
+      if (suggestedCategory === "flowers" && Array.isArray(s.tags)) {
+        const allowed = getSubcategoriesForCategory("flowers");
+        const matched = s.tags
+          .map((t: string) =>
+            allowed.find(
+              (a) =>
+                a.toLowerCase() === t.toLowerCase() ||
+                a.toLowerCase().includes(t.toLowerCase()) ||
+                t.toLowerCase().includes(a.toLowerCase().split(" ")[0])
+            )
+          )
+          .filter(Boolean) as string[];
+        const unique = [...new Set(matched)].slice(0, 4);
+        if (unique.length > 0 && (force || selectedSubcategories.length === 0)) {
+          setSelectedSubcategories(unique);
+          setValue("subcategory", unique[0], { shouldDirty: true });
+        }
+      }
+
+      if (
+        Array.isArray(s.included_items) &&
+        s.included_items.length > 0 &&
+        (force || includedItems.length === 0)
+      ) {
+        setIncludedItems(
+          s.included_items.map((item: { name: string; qty: number; note?: string }) => ({
+            name: item.name,
+            qty: item.qty || 1,
+            ...(item.note ? { note: item.note } : {}),
+          }))
+        );
+        if (suggestedCategory !== "hampers" && (force || !category)) {
+          // Keep Gemini category; included items still useful for hampers
+        }
+      }
+
+      seoAppliedRef.current = true;
+      setSeoHint("SEO fields filled from the product photo. Review and edit before saving.");
+    } catch (err: any) {
+      console.error("SEO describe error:", err);
+      setSeoHint(err?.message || "Could not generate SEO from image. Fill fields manually.");
+    } finally {
+      setIsDescribing(false);
+    }
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,6 +284,12 @@ export default function NewProductPage() {
 
       const uploadedUrls = await Promise.all(uploadPromises);
       setImages((prev) => [...prev, ...uploadedUrls]);
+
+      // Auto SEO from first uploaded image (once per form session)
+      if (uploadedUrls[0]) {
+        const wasEmpty = images.length === 0;
+        void applySeoFromImage(uploadedUrls[0], wasEmpty);
+      }
     } catch (error: any) {
       console.error("Upload error:", error);
       const errorMessage = error.message || "Failed to upload image. Please try again.";
@@ -639,6 +736,25 @@ export default function NewProductPage() {
               >
                 {isUploading ? "Uploading..." : "+ Upload Image from Phone"}
               </button>
+              {images.length > 0 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    void applySeoFromImage(images[0], true);
+                  }}
+                  disabled={isDescribing || isUploading}
+                  className="btn-outline text-sm disabled:opacity-50 disabled:cursor-not-allowed ml-2"
+                >
+                  {isDescribing ? "Describing…" : "Generate SEO from image"}
+                </button>
+              )}
+              {(isDescribing || seoHint) && (
+                <p className="text-xs text-brand-gray-600 mt-2">
+                  {isDescribing ? "Generating SEO title & description from image…" : seoHint}
+                </p>
+              )}
               {!category && (
                 <p className="text-xs text-brand-gray-500 mt-2">
                   Please select a category first to upload images from your phone.
