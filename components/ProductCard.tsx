@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
@@ -9,6 +9,7 @@ import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/s
 import { Analytics } from "@/lib/analytics";
 import { getCleanProductTitle, getProductImageAlt } from "@/lib/productDisplay";
 import { generateProductWhatsAppLink } from "@/lib/whatsapp";
+import { registerAtcCard } from "@/lib/atcSpotlight";
 
 interface ProductCardProps {
   id: string;
@@ -44,19 +45,6 @@ function getFallbackImage(category?: string): string {
   }
 }
 
-/** Stable stagger offset (ms) per product so ATC animations don't sync. */
-function staggerMs(seed: string): number {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return 1800 + (h % 5200); // 1.8s – 7s between cycles
-}
-
-function cycleOpenMs(seed: string): number {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 17 + seed.charCodeAt(i)) >>> 0;
-  return 1400 + (h % 1600); // how long label stays open
-}
-
 export default function ProductCard({
   id,
   name,
@@ -85,6 +73,8 @@ export default function ProductCard({
   const [imageError, setImageError] = useState(false);
   const [atcExpanded, setAtcExpanded] = useState(false);
   const [atcSpin, setAtcSpin] = useState(false);
+  const [isSpotlight, setIsSpotlight] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
 
   const onSale =
     typeof compareAtPrice === "number" &&
@@ -104,33 +94,41 @@ export default function ProductCard({
     });
   }, [id, name, category, price, homePage, onSale]);
 
-  // Staggered ATC pill: rotate → open “Add to cart” → close (per-card timing)
+  // Only one on-screen card animates ATC at a time
   useEffect(() => {
-    if (soldOut) return;
+    if (soldOut || !id || !cardRef.current) return;
+    return registerAtcCard(id, cardRef.current, setIsSpotlight);
+  }, [id, soldOut]);
+
+  useEffect(() => {
+    if (!isSpotlight || soldOut) {
+      setAtcSpin(false);
+      setAtcExpanded(false);
+      return;
+    }
+
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout>;
 
-    const runCycle = () => {
+    setAtcSpin(true);
+    setAtcExpanded(false);
+    timeoutId = setTimeout(() => {
       if (cancelled) return;
-      setAtcSpin(true);
+      setAtcSpin(false);
+      setAtcExpanded(true);
       timeoutId = setTimeout(() => {
         if (cancelled) return;
-        setAtcSpin(false);
-        setAtcExpanded(true);
-        timeoutId = setTimeout(() => {
-          if (cancelled) return;
-          setAtcExpanded(false);
-          timeoutId = setTimeout(runCycle, staggerMs(id || slug || name));
-        }, cycleOpenMs(id || slug || name));
-      }, 650);
-    };
+        setAtcExpanded(false);
+      }, 1800);
+    }, 650);
 
-    timeoutId = setTimeout(runCycle, staggerMs(`${id}-start`) % 3500);
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
+      setAtcSpin(false);
+      setAtcExpanded(false);
     };
-  }, [id, slug, name, soldOut]);
+  }, [isSpotlight, soldOut]);
 
   const resolvedImage = imageError ? getFallbackImage(category) : activeImage;
 
@@ -150,7 +148,10 @@ export default function ProductCard({
   };
 
   return (
-    <article className="product-card group/card flex h-full flex-col bg-white transition-shadow hover:shadow-cardHover">
+    <article
+      ref={cardRef}
+      className="product-card group/card flex h-full flex-col bg-white transition-shadow hover:shadow-cardHover"
+    >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-brand-gray-50">
         <Link
           href={`/product/${slug}`}
