@@ -9,6 +9,12 @@ declare global {
       onLoad?: () => void;
       hideWidget?: () => void;
       showWidget?: () => void;
+      customStyle?: {
+        visibility?: {
+          desktop?: { position?: string; xOffset?: number; yOffset?: number };
+          mobile?: { position?: string; xOffset?: number; yOffset?: number };
+        };
+      };
     };
     Tawk_LoadStart?: Date;
   }
@@ -18,8 +24,8 @@ const PROPERTY_ID = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID || "";
 const WIDGET_ID = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || "";
 
 /**
- * Tawk.to live chat — owner gets push notifications on the Tawk mobile app
- * when visitors message. Set NEXT_PUBLIC_TAWK_PROPERTY_ID + NEXT_PUBLIC_TAWK_WIDGET_ID.
+ * Tawk.to live chat — pinned bottom-left so WhatsApp can stay bottom-right.
+ * Owner gets push notifications on the Tawk mobile app when visitors message.
  */
 export default function TawkToChat() {
   const pathname = usePathname();
@@ -35,6 +41,13 @@ export default function TawkToChat() {
 
     window.Tawk_API = window.Tawk_API || {};
     window.Tawk_LoadStart = new Date();
+    // bl = bottom-left (WhatsApp button stays bottom-right)
+    window.Tawk_API.customStyle = {
+      visibility: {
+        desktop: { position: "bl", xOffset: 24, yOffset: 24 },
+        mobile: { position: "bl", xOffset: 16, yOffset: 16 },
+      },
+    };
 
     const script = document.createElement("script");
     script.id = "tawk-script";
@@ -43,10 +56,6 @@ export default function TawkToChat() {
     script.charset = "UTF-8";
     script.setAttribute("crossorigin", "*");
     document.body.appendChild(script);
-
-    return () => {
-      // Keep widget across client navigations; only remove on full unmount of storefront
-    };
   }, [isPrivate]);
 
   if (isPrivate || !PROPERTY_ID || !WIDGET_ID) return null;
