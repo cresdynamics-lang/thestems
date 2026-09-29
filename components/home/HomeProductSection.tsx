@@ -18,7 +18,7 @@ export default function HomeProductSection({
   eagerImages?: boolean;
 }) {
   return (
-    <section className={`py-10 md:py-14 lg:py-16 ${bgColor} relative overflow-hidden`}>
+    <section className={`py-5 md:py-7 lg:py-8 ${bgColor} relative overflow-hidden`}>
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -26,13 +26,13 @@ export default function HomeProductSection({
         }}
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 md:mb-8 flex items-center justify-between">
+        <div className="mb-3 md:mb-4 flex items-center justify-between">
           <div>
-            <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-brand-gray-900">
+            <h2 className="font-[family-name:var(--font-gift)] font-semibold text-xl sm:text-2xl md:text-3xl text-brand-gray-900">
               {title}
             </h2>
             {subtitle && (
-              <p className="text-xs sm:text-sm md:text-base text-brand-gray-600 mt-1 md:mt-2">
+              <p className="text-xs sm:text-sm text-brand-gray-600 mt-0.5 md:mt-1">
                 {subtitle}
               </p>
             )}
@@ -40,14 +40,14 @@ export default function HomeProductSection({
           {linkHref && (
             <Link
               href={linkHref}
-              className="text-brand-red hover:text-brand-red/80 font-medium text-base md:text-lg transition-colors"
+              className="text-brand-red hover:text-brand-red/80 font-medium text-sm md:text-base transition-colors"
             >
               View all
             </Link>
           )}
         </div>
         {products.length > 0 ? (
-          <div className="flex overflow-x-auto gap-3 md:gap-5 lg:gap-6 pb-4 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto gap-2.5 md:gap-3.5 lg:gap-4 pb-2 scrollbar-thin scrollbar-thumb-brand-gray-300 scrollbar-track-transparent -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
             {products.map((product, index) => (
               <div
                 key={`${product.id}-${index}`}
@@ -79,10 +79,10 @@ export default function HomeProductSection({
 
 export function HomeProductSectionSkeleton() {
   return (
-    <section className="py-10 md:py-14 bg-brand-blush">
+    <section className="py-5 md:py-7 bg-brand-blush">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="h-8 w-56 bg-brand-gray-200 rounded animate-pulse mb-6" />
-        <div className="flex gap-4 overflow-hidden">
+        <div className="h-8 w-56 bg-brand-gray-200 rounded animate-pulse mb-4" />
+        <div className="flex gap-3 overflow-hidden">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex-shrink-0 w-[280px] product-card animate-pulse bg-white">
               <div className="aspect-[4/5] bg-brand-gray-200" />

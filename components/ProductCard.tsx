@@ -8,6 +8,7 @@ import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import { Analytics } from "@/lib/analytics";
 import { getCleanProductTitle, getProductImageAlt } from "@/lib/productDisplay";
+import { generateProductWhatsAppLink } from "@/lib/whatsapp";
 
 interface ProductCardProps {
   id: string;
@@ -43,6 +44,19 @@ function getFallbackImage(category?: string): string {
   }
 }
 
+/** Stable stagger offset (ms) per product so ATC animations don't sync. */
+function staggerMs(seed: string): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return 1800 + (h % 5200); // 1.8s – 7s between cycles
+}
+
+function cycleOpenMs(seed: string): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 17 + seed.charCodeAt(i)) >>> 0;
+  return 1400 + (h % 1600); // how long label stays open
+}
+
 export default function ProductCard({
   id,
   name,
@@ -69,10 +83,14 @@ export default function ProductCard({
 
   const { addItem } = useCartStore();
   const [imageError, setImageError] = useState(false);
+  const [atcExpanded, setAtcExpanded] = useState(false);
+  const [atcSpin, setAtcSpin] = useState(false);
 
   const onSale =
     typeof compareAtPrice === "number" &&
     compareAtPrice > price;
+
+  const whatsappLink = generateProductWhatsAppLink(displayName, price, 1);
 
   useEffect(() => {
     setImageError(false);
@@ -85,6 +103,34 @@ export default function ProductCard({
       salePrice: onSale ? price : undefined,
     });
   }, [id, name, category, price, homePage, onSale]);
+
+  // Staggered ATC pill: rotate → open “Add to cart” → close (per-card timing)
+  useEffect(() => {
+    if (soldOut) return;
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const runCycle = () => {
+      if (cancelled) return;
+      setAtcSpin(true);
+      timeoutId = setTimeout(() => {
+        if (cancelled) return;
+        setAtcSpin(false);
+        setAtcExpanded(true);
+        timeoutId = setTimeout(() => {
+          if (cancelled) return;
+          setAtcExpanded(false);
+          timeoutId = setTimeout(runCycle, staggerMs(id || slug || name));
+        }, cycleOpenMs(id || slug || name));
+      }, 650);
+    };
+
+    timeoutId = setTimeout(runCycle, staggerMs(`${id}-start`) % 3500);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [id, slug, name, soldOut]);
 
   const resolvedImage = imageError ? getFallbackImage(category) : activeImage;
 
@@ -138,16 +184,29 @@ export default function ProductCard({
           <button
             type="button"
             onClick={handleAddToCart}
-            className="absolute right-1 top-1 z-20 p-1 transition-transform hover:scale-110 sm:right-1.5 sm:top-1.5"
+            className={`absolute right-1.5 top-1.5 z-20 flex items-center gap-1.5 overflow-hidden rounded-full bg-white/95 text-brand-gray-900 shadow-md backdrop-blur-sm transition-all duration-500 ease-out hover:bg-brand-rose-deep hover:text-white ${
+              atcExpanded ? "px-2.5 py-1.5 max-w-[140px]" : "p-1.5 max-w-[36px]"
+            }`}
             aria-label={`Add ${displayName} to cart`}
           >
-            <ShoppingCartIconSolid className="h-4 w-4 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)] sm:h-5 sm:w-5" />
+            <ShoppingCartIconSolid
+              className={`h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px] transition-transform duration-500 ${
+                atcSpin ? "rotate-[360deg]" : "rotate-0"
+              }`}
+            />
+            <span
+              className={`whitespace-nowrap text-[10px] font-semibold tracking-wide sm:text-[11px] transition-all duration-400 ${
+                atcExpanded ? "opacity-100 w-auto translate-x-0" : "opacity-0 w-0 -translate-x-1 overflow-hidden"
+              }`}
+            >
+              Add to cart
+            </span>
           </button>
         )}
       </div>
 
       {gallery.length > 1 && (
-        <div className="flex items-center justify-center gap-1 border-t border-brand-gray-100 bg-white px-2 py-2 sm:gap-1.5 sm:px-3">
+        <div className="flex items-center justify-center gap-1 border-t border-brand-gray-100 bg-white px-2 py-1.5 sm:gap-1.5 sm:px-3">
           {gallery.slice(0, 4).map((thumb, index) => (
             <button
               key={`${thumb}-${index}`}
@@ -177,27 +236,48 @@ export default function ProductCard({
         </div>
       )}
 
-      {/* Name & price on white background below image */}
-      <div className="bg-white px-2.5 pb-3 pt-2.5 sm:px-3.5 sm:pb-3.5 sm:pt-3">
+      <div className="bg-white px-2.5 pb-2.5 pt-2 sm:px-3.5 sm:pb-3 sm:pt-2.5">
         <Link href={`/product/${slug}`} className="block text-left">
-          <h3 className="font-heading text-[10px] font-medium uppercase tracking-[0.14em] leading-snug text-brand-gray-900 line-clamp-2 xs:text-[11px] sm:text-xs md:text-sm group-hover/card:text-brand-rose-deep transition-colors duration-300">
+          <h3 className="font-[family-name:var(--font-gift)] text-[15px] leading-snug text-brand-gray-900 line-clamp-2 sm:text-lg md:text-xl group-hover/card:text-brand-rose-deep transition-colors duration-300">
             {displayName}
           </h3>
-          <div
-            className="my-2 h-px w-full bg-gradient-to-r from-brand-rose-deep/40 via-brand-rose-deep/20 to-transparent"
-            aria-hidden
-          />
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="font-heading text-[11px] font-semibold tracking-wide text-brand-rose-deep xs:text-xs sm:text-sm md:text-base">
+        </Link>
+        <div
+          className="my-1.5 h-px w-full bg-gradient-to-r from-brand-rose-deep/40 via-brand-rose-deep/20 to-transparent"
+          aria-hidden
+        />
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <p className="font-[family-name:var(--font-gift)] text-sm font-semibold text-brand-rose-deep sm:text-base md:text-lg">
               {formatCurrency(price)}
             </p>
             {onSale && (
-              <p className="font-heading text-[9px] font-normal tracking-wide text-brand-gray-400 line-through xs:text-[10px] sm:text-xs">
+              <p className="text-[10px] font-normal tracking-wide text-brand-gray-400 line-through sm:text-xs">
                 {formatCurrency(compareAtPrice!)}
               </p>
             )}
           </div>
-        </Link>
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              Analytics.trackWhatsAppOrder("product_card", {
+                content_ids: [id],
+                content_name: displayName,
+                value: price / 100,
+                currency: "KES",
+              });
+            }}
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#25D366] text-white shadow-sm transition hover:bg-[#20BA5A] hover:scale-105"
+            aria-label={`Order ${displayName} on WhatsApp`}
+          >
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+          </a>
+        </div>
       </div>
     </article>
   );

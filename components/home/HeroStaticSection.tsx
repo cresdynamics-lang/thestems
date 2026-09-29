@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { HeroSlideConfig } from "@/components/HeroCarousel.types";
+import HeroGiftAudience from "@/components/home/HeroGiftAudience";
 
 /** Server-rendered first slide — always in HTML for SEO and first paint. */
 export default function HeroStaticSection({ slide }: { slide: HeroSlideConfig }) {
@@ -20,6 +21,7 @@ export default function HeroStaticSection({ slide }: { slide: HeroSlideConfig })
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid min-h-[420px] grid-cols-1 items-stretch gap-0 lg:min-h-[520px] lg:grid-cols-2 lg:gap-8 xl:min-h-[560px]">
           <div className="relative z-10 flex flex-col justify-center py-8 sm:py-10 lg:py-14 order-2 lg:order-1">
+            <HeroGiftAudience />
             <p className="font-[family-name:var(--font-dancing)] text-2xl sm:text-3xl text-brand-rose-deep mb-2 sm:mb-3">
               Every moment deserves to bloom
             </p>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Lato, Dancing_Script } from "next/font/google";
+import { Montserrat, Lato, Dancing_Script, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import { StoreChrome } from "@/components/StoreChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -30,6 +30,14 @@ const dancingScript = Dancing_Script({
   subsets: ["latin"],
   weight: ["600", "700"],
   variable: "--font-dancing",
+  display: "swap",
+  preload: false,
+});
+
+const greatVibes = Great_Vibes({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-gift",
   display: "swap",
   preload: false,
 });
@@ -119,7 +127,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-KE"
-      className={`${montserrat.variable} ${lato.variable} ${dancingScript.variable}`}
+      className={`${montserrat.variable} ${lato.variable} ${dancingScript.variable} ${greatVibes.variable}`}
     >
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
