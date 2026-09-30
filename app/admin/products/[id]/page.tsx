@@ -10,6 +10,8 @@ import Image from "next/image";
 import axios from "axios";
 import type { Product } from "@/lib/db";
 import { getSubcategoriesForCategory } from "@/lib/subcategories";
+import ProductFilterCheckboxes from "@/components/admin/ProductFilterCheckboxes";
+import { shopFilterTagsFromProduct } from "@/lib/productFilterTags";
 
 const schema = yup.object({
   slug: yup.string().required("Slug is required").matches(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens"),
@@ -75,7 +77,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [isDescribing, setIsDescribing] = useState(false);
   const [seoHint, setSeoHint] = useState<string | null>(null);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+  const [selectedFilterTags, setSelectedFilterTags] = useState<string[]>([]);
+  const [teddySize, setTeddySize] = useState<string>("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -96,21 +99,18 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   // Reset subcategory when category changes (only show for flowers and teddy)
   const handleCategoryChange = (newCategory: string) => {
     setValue("category", newCategory as any);
-    // Clear subcategory when switching categories
     setValue("subcategory", null);
-    setSelectedSubcategories([]);
-    // Clear color when switching away from teddy
+    setTeddySize("");
+    // Keep filter tags — product may still fit same occasions after category change
     if (newCategory !== "teddy") {
       setValue("teddy_color", null);
       setSelectedColors([]);
     }
   };
 
-  const handleSubcategoryToggle = (subcat: string) => {
-    setSelectedSubcategories(prev => 
-      prev.includes(subcat) 
-        ? prev.filter(s => s !== subcat)
-        : [...prev, subcat]
+  const handleFilterTagToggle = (tag: string) => {
+    setSelectedFilterTags((prev) =>
+      prev.includes(tag) ? prev.filter((s) => s !== tag) : [...prev, tag]
     );
   };
 
@@ -144,28 +144,25 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setImages(prod.images || []);
         setIncludedItems(prod.included_items || []);
         
-        // Load subcategories: single for teddy bears, multiple for flowers
-        const validSubcats = getSubcategoriesForCategory(prod.category as "flowers" | "teddy");
-        const subcatsFromTags = (prod.tags || []).filter((tag: string) => validSubcats.includes(tag));
-        
+        // Load shop filter tags (flower types / occasions / gift types)
+        setSelectedFilterTags(shopFilterTagsFromProduct(prod.tags, prod.subcategory));
+
+        let teddySizeValue: string | null = null;
         if (prod.category === "teddy") {
-          // Teddy bears: use first valid subcategory from tags or subcategory field
-          const singleSubcat = prod.subcategory && validSubcats.includes(prod.subcategory) 
-            ? [prod.subcategory] 
-            : subcatsFromTags.length > 0 
-            ? [subcatsFromTags[0]] 
-            : [];
-          setSelectedSubcategories(singleSubcat);
-          
-          // Load colors from tags (color:*) or from teddy_color field
+          const validSizes = getSubcategoriesForCategory("teddy");
+          teddySizeValue =
+            prod.subcategory && validSizes.includes(prod.subcategory as any)
+              ? prod.subcategory
+              : (prod.tags || []).find((t: string) => validSizes.includes(t as any)) || null;
+          setTeddySize(teddySizeValue || "");
+
           const colorTags = (prod.tags || []).filter((tag: string) => tag.startsWith("color:"));
           const colorsFromTags = colorTags.map((tag: string) => tag.replace("color:", ""));
           const colorFromField = prod.teddy_color ? [prod.teddy_color] : [];
           setSelectedColors([...new Set([...colorsFromTags, ...colorFromField])]);
         } else {
-          // Flowers: use all valid subcategories from tags (multiple selection)
-          const singleSubcat = prod.subcategory && validSubcats.includes(prod.subcategory) ? [prod.subcategory] : [];
-          setSelectedSubcategories([...new Set([...subcatsFromTags, ...singleSubcat])]);
+          setTeddySize("");
+          setSelectedColors([]);
         }
         
         reset({
@@ -175,7 +172,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           description: prod.description,
           price: prod.price / 100, // Convert from cents
           category: prod.category,
-          subcategory: prod.subcategory || null,
+          subcategory: teddySizeValue || (prod.category === "teddy" ? null : prod.subcategory) || null,
           teddy_size: prod.teddy_size,
           teddy_color: prod.teddy_color,
         });
@@ -244,28 +241,20 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       }
 
       try {
-        // Handle subcategories: single for teddy bears, multiple for flowers
-        let subcategoryValue: string | null = null;
-        let tagsArray: string[] = [];
-        
-        if (category === "teddy") {
-          // Teddy bears: single selection only
-          subcategoryValue = selectedSubcategories.length > 0 ? selectedSubcategories[0] : null;
-          tagsArray = subcategoryValue ? [subcategoryValue] : [];
-        } else if (category === "flowers") {
-          // Flowers: multiple selection allowed
-          tagsArray = selectedSubcategories.length > 0 ? selectedSubcategories : [];
-          subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
-        }
+        // Shop filter tags drive menus + landings; teddy size stored separately
+        let tagsArray: string[] = [...selectedFilterTags];
+        let subcategoryValue: string | null =
+          selectedFilterTags.length > 0 ? selectedFilterTags[0] : null;
 
-        // Handle colors: store first color for backward compatibility, all colors in tags
-        let teddyColorValue: string | null = null;
         if (category === "teddy") {
-          teddyColorValue = selectedColors.length > 0 ? selectedColors[0] : null;
-          // Add color tags to tags array
-          const colorTags = selectedColors.map(c => `color:${c}`);
+          subcategoryValue = teddySize || null;
+          if (teddySize) tagsArray = [...tagsArray, teddySize];
+          const colorTags = selectedColors.map((c) => `color:${c}`);
           tagsArray = [...tagsArray, ...colorTags];
         }
+
+        const teddyColorValue =
+          category === "teddy" && selectedColors.length > 0 ? selectedColors[0] : null;
 
         const response = await axios.put(
           `/api/admin/products/${productId}`,
@@ -486,8 +475,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           )
           .filter(Boolean) as string[];
         const unique = [...new Set(matched)].slice(0, 4);
-        if (unique.length > 0 && (force || selectedSubcategories.length === 0)) {
-          setSelectedSubcategories(unique);
+        if (unique.length > 0 && (force || selectedFilterTags.length === 0)) {
+          setSelectedFilterTags(unique);
           setValue("subcategory", unique[0], { shouldDirty: true });
         }
       }
@@ -668,66 +657,43 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Subcategory Field - appears after category is selected (only for flowers and teddy bears) */}
-          {category && (category === "flowers" || category === "teddy") && (
+          {/* Teddy size (single) */}
+          {category === "teddy" && (
             <div>
-              {category === "teddy" ? (
-                // Dropdown for teddy bears (single selection)
-                <div>
-                  <label htmlFor="teddy_size_select" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                    Size <span className="text-brand-red"> *</span>
-                  </label>
-                  <select
-                    id="teddy_size_select"
-                    value={selectedSubcategories[0] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setSelectedSubcategories(value ? [value] : []);
-                      setValue("subcategory", value || null);
-                    }}
-                    className="input-field"
-                  >
-                    <option value="">Select size</option>
-                    {getSubcategoriesForCategory("teddy").map((subcat) => (
-                      <option key={subcat} value={subcat}>
-                        {subcat}
-                      </option>
-                    ))}
-                  </select>
-                  {category === "teddy" && selectedSubcategories.length === 0 && (
-                    <p className="mt-1 text-sm text-brand-red">Size is required for teddy bears</p>
-                  )}
-                </div>
-              ) : (
-                // Checkboxes for flowers (multiple selection)
-                <div>
-                  <label className="block text-sm font-medium text-brand-gray-900 mb-2">
-                    Subcategory
-                    <span className="text-brand-gray-500 text-xs ml-2">(Select multiple if product fits multiple categories)</span>
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-brand-gray-300 rounded-lg bg-white max-h-48 overflow-y-auto">
-                    {getSubcategoriesForCategory("flowers").map((subcat) => (
-                      <label key={subcat} className="flex items-center space-x-2 cursor-pointer hover:bg-brand-gray-50 p-2 rounded">
-                        <input
-                          type="checkbox"
-                          checked={selectedSubcategories.includes(subcat)}
-                          onChange={() => handleSubcategoryToggle(subcat)}
-                          className="w-4 h-4 text-brand-green border-brand-gray-300 rounded focus:ring-brand-green"
-                        />
-                        <span className="text-sm text-brand-gray-900">{subcat}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {selectedSubcategories.length > 0 && (
-                    <p className="mt-2 text-xs text-brand-gray-600">
-                      Selected: {selectedSubcategories.join(", ")}
-                    </p>
-                  )}
-                </div>
+              <label htmlFor="teddy_size_select" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                Size <span className="text-brand-red"> *</span>
+              </label>
+              <select
+                id="teddy_size_select"
+                value={teddySize}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setTeddySize(value);
+                  setValue("subcategory", value || null);
+                }}
+                className="input-field"
+              >
+                <option value="">Select size</option>
+                {getSubcategoriesForCategory("teddy").map((subcat) => (
+                  <option key={subcat} value={subcat}>
+                    {subcat}
+                  </option>
+                ))}
+              </select>
+              {!teddySize && (
+                <p className="mt-1 text-sm text-brand-red">Size is required for teddy bears</p>
               )}
             </div>
           )}
 
+          {/* Multi-category checkboxes — drives filters & SEO landings */}
+          {category && (
+            <ProductFilterCheckboxes
+              selected={selectedFilterTags}
+              onToggle={handleFilterTagToggle}
+              showFlowerTypes={category === "flowers" || category === "hampers"}
+            />
+          )}
 
           {/* Color - Show for teddy bears (required), checkboxes for multiple selection */}
           {category === "teddy" && (

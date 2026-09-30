@@ -50,7 +50,7 @@ export async function PUT(
         price: body.price,
         category: body.category,
         subcategory: body.subcategory || null,
-        tags: [],
+        tags: Array.isArray(body.tags) ? body.tags : [],
         teddy_size: body.teddy_size || null,
         teddy_color: body.teddy_color || null,
         images: body.images || [],

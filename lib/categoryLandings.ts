@@ -220,7 +220,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
     ],
     productCategories: ["flowers"],
     productLimit: 8,
-    preferKeywords: ["mixed", "bouquet", "colour", "color"],
+    preferKeywords: ["mixed", "bouquet", "colour", "color", "Mixed Bouquets"],
     ctaPrimary: { href: "/collections/flowers", label: "Shop mixed bouquets" },
     relatedLinks: [
       { href: "/flowers", label: "Flowers hub" },
@@ -603,6 +603,262 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
       { href: "/contact", label: "Enquire for other towns" },
     ],
     breadcrumbLabel: "Flowers Across Kenya",
+  },
+
+  "lilies-nairobi": {
+    slug: "lilies-nairobi",
+    metaTitle: "Lilies Nairobi | Fresh Lily Bouquets Same-Day | The Stems",
+    metaDescription:
+      "Order lilies in Nairobi — elegant white and mixed lily bouquets with same-day delivery from The Stems Flowers CBD.",
+    h1: "Lilies Nairobi – Elegant Same-Day Bouquets",
+    intro: [
+      "Fresh lily bouquets in Nairobi for sympathy, congratulations, thank-yous and calm celebrations. The Stems Flowers prepares lily arrangements daily at our CBD studio.",
+      "Tag products with Lilies in admin so they appear here. Order by 4PM for same-day delivery across Nairobi.",
+    ],
+    faqs: [
+      {
+        question: "Do you deliver lily bouquets same day in Nairobi?",
+        answer: "Yes when in stock. Order by 4PM for same-day delivery to most Nairobi areas.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["lily", "lilies"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop all flowers" },
+    ctaSecondary: { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+    relatedLinks: [
+      { href: "/mixed-bouquets-nairobi", label: "Mixed bouquets" },
+      { href: "/roses-nairobi", label: "Roses Nairobi" },
+      { href: "/funeral-flowers-nairobi", label: "Sympathy flowers" },
+      { href: "/flowers", label: "Flowers hub" },
+    ],
+    breadcrumbLabel: "Lilies Nairobi",
+  },
+
+  "sunflowers-nairobi": {
+    slug: "sunflowers-nairobi",
+    metaTitle: "Sunflowers Nairobi | Bright Same-Day Bouquets | The Stems",
+    metaDescription:
+      "Sunflower bouquets in Nairobi for birthdays, congratulations and cheerful gifts. Same-day delivery from The Stems Flowers.",
+    h1: "Sunflowers Nairobi – Bright Bouquets Delivered",
+    intro: [
+      "Cheerful sunflower bouquets in Nairobi for birthdays, get-well wishes and just-because surprises. Prepared fresh at The Stems CBD florist.",
+      "Products tagged Sunflowers in admin appear on this page. Same-day delivery for orders by 4PM.",
+    ],
+    faqs: [
+      {
+        question: "Can I order sunflowers with other flowers?",
+        answer: "Yes — ask for a mixed bouquet with sunflowers on WhatsApp or tick Mixed Bouquets plus Sunflowers on the product in admin.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["sunflower", "sunflowers"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/birthday-flowers-nairobi", label: "Birthday flowers" },
+      { href: "/mixed-bouquets-nairobi", label: "Mixed bouquets" },
+      { href: "/get-well-soon-flowers-nairobi", label: "Get well flowers" },
+    ],
+    breadcrumbLabel: "Sunflowers Nairobi",
+  },
+
+  "gypsophila-nairobi": {
+    slug: "gypsophila-nairobi",
+    metaTitle: "Gypsophila / Baby's Breath Nairobi | Soft Bouquets | The Stems",
+    metaDescription:
+      "Gypsophila (baby's breath) bouquets and accents in Nairobi. Soft cloud-like arrangements with same-day delivery from The Stems.",
+    h1: "Gypsophila Nairobi – Baby's Breath Bouquets",
+    intro: [
+      "Soft gypsophila (baby's breath) arrangements in Nairobi for romantic gifts, wedding accents and delicate thank-yous.",
+      "Tick Gypsophila on products in admin so they filter onto this landing. Same-day city delivery available.",
+    ],
+    faqs: [
+      {
+        question: "Do you sell baby's breath alone or only as filler?",
+        answer: "Both — request a full gypsophila cloud bouquet or roses with baby's breath accents.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["gypsophila", "baby's breath", "babys breath"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/roses-nairobi", label: "Roses" },
+      { href: "/wedding-flowers-nairobi", label: "Wedding flowers" },
+      { href: "/mixed-bouquets-nairobi", label: "Mixed bouquets" },
+    ],
+    breadcrumbLabel: "Gypsophila Nairobi",
+  },
+
+  "flower-boxes-nairobi": {
+    slug: "flower-boxes-nairobi",
+    metaTitle: "Flower Boxes Nairobi | Boxed Rose Arrangements | The Stems",
+    metaDescription:
+      "Luxury flower boxes in Nairobi — boxed roses and premium arrangements with same-day delivery from The Stems Flowers.",
+    h1: "Flower Boxes Nairobi – Boxed Bouquets Delivered",
+    intro: [
+      "Elegant flower boxes in Nairobi for proposals, anniversaries and VIP gifts. Boxed roses and mixed premium blooms from our CBD florist.",
+      "Tag products Flower Boxes in admin to list them here. Order online or WhatsApp for custom colours.",
+    ],
+    faqs: [
+      {
+        question: "Are flower boxes available same day?",
+        answer: "Yes when materials are in stock. Order by 4PM for same-day Nairobi delivery.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["flower box", "flower boxes", "boxed", "box"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/hat-boxes-nairobi", label: "Hat boxes" },
+      { href: "/premium-luxury-flowers-nairobi", label: "Premium flowers" },
+      { href: "/red-roses-nairobi", label: "Red roses" },
+    ],
+    breadcrumbLabel: "Flower Boxes Nairobi",
+  },
+
+  "hat-boxes-nairobi": {
+    slug: "hat-boxes-nairobi",
+    metaTitle: "Hat Boxes Nairobi | Round Flower Hat Box Gifts | The Stems",
+    metaDescription:
+      "Flower hat boxes in Nairobi — round luxury rose hat boxes with same-day delivery from The Stems Flowers CBD.",
+    h1: "Hat Boxes Nairobi – Luxury Round Flower Gifts",
+    intro: [
+      "Round flower hat boxes in Nairobi for romantic surprises and milestone gifts. Premium presentation from The Stems Flowers.",
+      "Tick Hat Boxes on the product in admin so it appears in this collection and menu.",
+    ],
+    faqs: [
+      {
+        question: "What is a flower hat box?",
+        answer:
+          "A round gift box filled with roses or mixed blooms — popular for proposals and anniversaries.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["hat box", "hat boxes"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/flower-boxes-nairobi", label: "Flower boxes" },
+      { href: "/premium-luxury-flowers-nairobi", label: "Premium flowers" },
+      { href: "/anniversary-flowers-nairobi", label: "Anniversary flowers" },
+    ],
+    breadcrumbLabel: "Hat Boxes Nairobi",
+  },
+
+  "premium-luxury-flowers-nairobi": {
+    slug: "premium-luxury-flowers-nairobi",
+    metaTitle: "Premium & Luxury Flowers Nairobi | Designer Bouquets | The Stems",
+    metaDescription:
+      "Premium and luxury flower bouquets in Nairobi for VIP gifts, proposals and corporate hospitality. Same-day options from The Stems.",
+    h1: "Premium & Luxury Flowers Nairobi",
+    intro: [
+      "Designer and luxury flower arrangements in Nairobi for high-impact gifts. Large stem counts, premium wraps and statement boxes.",
+      "Mark products Premium Luxury in admin to feature them on this page.",
+    ],
+    faqs: [
+      {
+        question: "Can you customise a luxury bouquet?",
+        answer: "Yes — WhatsApp your budget and colour preference and we will design it.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["premium", "luxury", "designer"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/flower-boxes-nairobi", label: "Flower boxes" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/corporate-flowers-nairobi", label: "Corporate flowers" },
+    ],
+    breadcrumbLabel: "Premium Flowers Nairobi",
+  },
+
+  "thank-you-flowers-nairobi": {
+    slug: "thank-you-flowers-nairobi",
+    metaTitle: "Thank You Flowers Nairobi | Same-Day Gifts | The Stems",
+    metaDescription:
+      "Send thank you flowers in Nairobi — bouquets and gift combos with same-day delivery from The Stems Flowers.",
+    h1: "Thank You Flowers Nairobi",
+    intro: [
+      "Say thank you with fresh flowers in Nairobi. Soft mixed bouquets, roses and gift combos prepared at our CBD florist.",
+      "Tick Thank You on products in admin so they appear here for shoppers filtering by occasion.",
+    ],
+    faqs: [
+      {
+        question: "Can I add a thank-you note?",
+        answer: "Yes — add a gift message at checkout or on WhatsApp.",
+      },
+    ],
+    productCategories: ["flowers", "hampers", "chocolates"],
+    productLimit: 8,
+    preferKeywords: ["thank you", "thanks"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/mixed-bouquets-nairobi", label: "Mixed bouquets" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/occasions", label: "All occasions" },
+    ],
+    breadcrumbLabel: "Thank You Flowers",
+  },
+
+  "new-baby-flowers-nairobi": {
+    slug: "new-baby-flowers-nairobi",
+    metaTitle: "New Baby Flowers Nairobi | Soft Bouquets & Gifts | The Stems",
+    metaDescription:
+      "New baby flowers and gifts in Nairobi — soft bouquets, teddy bears and hampers with same-day delivery.",
+    h1: "New Baby Flowers & Gifts Nairobi",
+    intro: [
+      "Celebrate a new arrival with soft bouquets, teddy bears and thoughtful gift hampers delivered across Nairobi.",
+      "Tag products New Baby in admin so parents and friends find them under this occasion.",
+    ],
+    faqs: [
+      {
+        question: "Do you deliver to hospitals in Nairobi?",
+        answer: "Yes for many hospitals — share the ward and visiting hours on WhatsApp.",
+      },
+    ],
+    productCategories: ["flowers", "teddy", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["new baby", "baby", "newborn"],
+    ctaPrimary: { href: "/teddy-bears-nairobi", label: "Teddy bears" },
+    ctaSecondary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/teddy-bears-nairobi", label: "Teddy bears" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/mixed-bouquets-nairobi", label: "Mixed bouquets" },
+    ],
+    breadcrumbLabel: "New Baby Flowers",
+  },
+
+  "mothers-day-flowers-nairobi": {
+    slug: "mothers-day-flowers-nairobi",
+    metaTitle: "Mother's Day Flowers Nairobi | Bouquets & Gifts | The Stems",
+    metaDescription:
+      "Mother's Day flowers and gift hampers in Nairobi. Soft roses, mixed bouquets and same-day delivery from The Stems.",
+    h1: "Mother's Day Flowers Nairobi",
+    intro: [
+      "Honour Mum with fresh flowers and gift hampers in Nairobi. Soft roses, mixed bouquets and teddy combos from The Stems Flowers.",
+      "Tick Mothers Day Gifts on products in admin so they surface for this occasion year-round and for Mother's Day campaigns.",
+    ],
+    faqs: [
+      {
+        question: "When should I order Mother's Day flowers?",
+        answer: "Order early in the week of Mother's Day for the best selection; same-day is available when stock allows.",
+      },
+    ],
+    productCategories: ["flowers", "hampers", "teddy", "chocolates"],
+    productLimit: 8,
+    preferKeywords: ["mother", "mothers day", "mum", "mom"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers" },
+    relatedLinks: [
+      { href: "/roses-nairobi", label: "Roses" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/occasions", label: "All occasions" },
+    ],
+    breadcrumbLabel: "Mother's Day Flowers",
   },
 };
 

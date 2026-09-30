@@ -5,7 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/lib/db";
 import { getCategoryFallbackImage } from "@/lib/utils";
 import { Analytics } from "@/lib/analytics";
-import { SUBCATEGORIES } from "@/lib/subcategories";
+import { FLOWER_TYPE_TAGS, OCCASION_TAGS } from "@/lib/productFilterTags";
 import SeoInternalLinks from "@/components/SeoInternalLinks";
 import { whatsappUrl } from "@/lib/contact";
 
@@ -58,58 +58,52 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
     return [...safeProducts, ...flowerProductItems];
   }, [products, flowerProducts]);
 
-  // Show all subcategories on frontend (all active)
+  // Show flower types + occasions on frontend chips
   const validSubcategories = useMemo(() => {
-    return SUBCATEGORIES.flowers;
+    return [...FLOWER_TYPE_TAGS, ...OCCASION_TAGS];
   }, []);
 
   // Group products by subcategory - support multiple subcategories via tags
   const productsBySubcategory = useMemo(() => {
     const grouped: Record<string, Product[]> = {};
+    const allowed = new Set(validSubcategories);
 
     allDisplayItems.forEach((product) => {
-      // Get subcategories from tags (for multiple subcategories) or single subcategory field
-      const subcatsFromTags = (product.tags || []).filter(tag => 
-        SUBCATEGORIES.flowers.includes(tag as any)
-      ) as string[];
-      const singleSubcat = product.subcategory && SUBCATEGORIES.flowers.includes(product.subcategory as any) 
-        ? [product.subcategory] 
-        : [];
+      const subcatsFromTags = (product.tags || []).filter((tag) => allowed.has(tag));
+      const singleSubcat =
+        product.subcategory && allowed.has(product.subcategory)
+          ? [product.subcategory]
+          : [];
       const allSubcats = [...new Set([...subcatsFromTags, ...singleSubcat])];
 
-      // Add product to each of its subcategories
-      allSubcats.forEach(subcat => {
-        if (!grouped[subcat]) {
-          grouped[subcat] = [];
-        }
-        // Avoid duplicates
-        if (!grouped[subcat].some(p => p.id === product.id)) {
+      allSubcats.forEach((subcat) => {
+        if (!grouped[subcat]) grouped[subcat] = [];
+        if (!grouped[subcat].some((p) => p.id === product.id)) {
           grouped[subcat].push(product);
         }
       });
     });
 
     return grouped;
-  }, [allDisplayItems]);
+  }, [allDisplayItems, validSubcategories]);
 
   // Get filtered products based on selected subcategory
   const filteredProducts = useMemo(() => {
     if (!selectedSubcategory) {
-      // Show all products from all subcategories AND products without subcategories (that have images)
       const productsWithSubcats = Object.values(productsBySubcategory).flat();
-      const productsWithoutSubcats = allDisplayItems.filter(product => {
+      const allowed = new Set(validSubcategories);
+      const productsWithoutSubcats = allDisplayItems.filter((product) => {
         const hasImage = product.images && product.images.length > 0 && product.images[0];
-        const hasSubcat = product.subcategory || (product.tags && product.tags.some(tag => SUBCATEGORIES.flowers.includes(tag as any)));
+        const hasSubcat =
+          product.subcategory ||
+          (product.tags && product.tags.some((tag) => allowed.has(tag)));
         return hasImage && !hasSubcat;
       });
-      // Remove duplicates
       const allProducts = [...productsWithSubcats, ...productsWithoutSubcats];
-      const uniqueProducts = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
-      return uniqueProducts;
+      return Array.from(new Map(allProducts.map((p) => [p.id, p])).values());
     }
-    // Show only products from selected subcategory
     return productsBySubcategory[selectedSubcategory] || [];
-  }, [productsBySubcategory, selectedSubcategory, allDisplayItems]);
+  }, [productsBySubcategory, selectedSubcategory, allDisplayItems, validSubcategories]);
 
   const flowersFaqs = [
     {

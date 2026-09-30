@@ -68,9 +68,12 @@ export default function HeroCarouselClient({ slides }: HeroCarouselClientProps) 
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid min-h-[420px] grid-cols-1 items-stretch gap-0 lg:min-h-[520px] lg:grid-cols-2 lg:gap-8 xl:min-h-[560px]">
-          <div className="relative z-10 flex flex-col justify-center py-8 sm:py-10 lg:py-14 order-2 lg:order-1">
+        <div className="grid min-h-[420px] grid-cols-1 items-stretch gap-5 lg:min-h-[520px] lg:grid-cols-[240px_minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-6 xl:min-h-[560px] xl:gap-8 py-6 sm:py-8 lg:py-10">
+          <div className="order-3 lg:order-1 flex lg:items-stretch justify-center lg:justify-start lg:pt-2">
             <HeroGiftAudience />
+          </div>
+
+          <div className="relative z-10 flex flex-col justify-center order-2 lg:order-2">
             <p className="font-[family-name:var(--font-dancing)] text-2xl sm:text-3xl text-brand-rose-deep mb-2 sm:mb-3">
               Every Moment Deserves to Bloom
             </p>
@@ -153,8 +156,8 @@ export default function HeroCarouselClient({ slides }: HeroCarouselClientProps) 
             </div>
           </div>
 
-          <div className="relative order-1 lg:order-2 min-h-[260px] sm:min-h-[320px] lg:min-h-0">
-            <div className="relative h-full min-h-[inherit] lg:py-6 xl:py-8">
+          <div className="relative order-1 lg:order-3 min-h-[260px] sm:min-h-[320px] lg:min-h-0">
+            <div className="relative h-full min-h-[inherit] lg:py-2">
               <div
                 className="pointer-events-none absolute -right-2 top-4 bottom-4 w-[calc(100%+0.5rem)] rounded-2xl lg:rounded-3xl border border-brand-rose-deep/20 bg-brand-rose-deep/5"
                 aria-hidden
@@ -178,7 +181,7 @@ export default function HeroCarouselClient({ slides }: HeroCarouselClientProps) 
                         fill
                         className="object-cover object-center"
                         priority={index === 0}
-                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        sizes="(max-width: 1024px) 100vw, 40vw"
                         fetchPriority={index === 0 ? "high" : "auto"}
                       />
                       <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-brand-blush/10 lg:to-brand-blush/20" />

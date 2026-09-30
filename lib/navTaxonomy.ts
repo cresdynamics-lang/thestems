@@ -16,16 +16,16 @@ export type NavItem = {
 
 export const FLOWERS_NAV: NavLeaf[] = [
   { label: "All Flowers", href: "/collections/flowers" },
-  { label: "Roses", href: "/red-roses-nairobi" },
+  { label: "Roses", href: "/roses-nairobi" },
   { label: "Pink Roses", href: "/pink-roses-nairobi" },
   { label: "White Roses", href: "/white-roses-nairobi" },
   { label: "Mixed Flower Bouquets", href: "/mixed-bouquets-nairobi" },
-  { label: "Lilies", href: "/collections/flowers" },
-  { label: "Sunflowers", href: "/collections/flowers" },
-  { label: "Gypsophila / Baby's Breath", href: "/collections/flowers" },
-  { label: "Flower Boxes", href: "/collections/flowers" },
-  { label: "Hat Boxes", href: "/collections/flowers" },
-  { label: "Premium & Luxury Flowers", href: "/collections/flowers" },
+  { label: "Lilies", href: "/lilies-nairobi" },
+  { label: "Sunflowers", href: "/sunflowers-nairobi" },
+  { label: "Gypsophila / Baby's Breath", href: "/gypsophila-nairobi" },
+  { label: "Flower Boxes", href: "/flower-boxes-nairobi" },
+  { label: "Hat Boxes", href: "/hat-boxes-nairobi" },
+  { label: "Premium & Luxury Flowers", href: "/premium-luxury-flowers-nairobi" },
 ];
 
 export const GIFTS_NAV: NavLeaf[] = [
@@ -47,12 +47,12 @@ export const OCCASIONS_NAV: NavLeaf[] = [
   { label: "Anniversary", href: "/anniversary-flowers-nairobi" },
   { label: "Get Well Soon", href: "/get-well-soon-flowers-nairobi" },
   { label: "Congratulations", href: "/graduation-bouquets-nairobi" },
-  { label: "Thank You", href: "/collections/flowers" },
+  { label: "Thank You", href: "/thank-you-flowers-nairobi" },
   { label: "Apology", href: "/apology-flowers-nairobi" },
-  { label: "New Baby", href: "/collections/flowers" },
+  { label: "New Baby", href: "/new-baby-flowers-nairobi" },
   { label: "Just Because", href: "/mixed-bouquets-nairobi" },
   { label: "Valentine's Day", href: "/red-roses-nairobi" },
-  { label: "Mother's Day", href: "/collections/flowers" },
+  { label: "Mother's Day", href: "/mothers-day-flowers-nairobi" },
   { label: "International Women's Day", href: "/occasions" },
   { label: "Sympathy", href: "/funeral-flowers-nairobi" },
 ];
@@ -104,11 +104,16 @@ export const MAIN_NAV: NavItem[] = [
     children: HAMPERS_NAV,
   },
   { label: "Same-Day Delivery", href: "/same-day-flower-delivery-nairobi" },
-  { label: "Contact", href: "/contact" },
 ];
 
+/** Left hero category card — gift audiences + shop filters (overlaps some MAIN NAV). */
 export const HERO_GIFT_AUDIENCES: NavLeaf[] = [
   { label: "Women's Gifts", href: "/occasions" },
   { label: "Girlfriend Gifts", href: "/anniversary-flowers-nairobi" },
   { label: "Men's Gifts", href: "/gifts" },
+  { label: "Flowers", href: "/flowers" },
+  { label: "Gift Hampers", href: "/gift-hampers-nairobi" },
+  { label: "Teddy Bears", href: "/teddy-bears-nairobi" },
+  { label: "Graduation", href: "/graduation" },
+  { label: "Same-Day Delivery", href: "/same-day-flower-delivery-nairobi" },
 ];

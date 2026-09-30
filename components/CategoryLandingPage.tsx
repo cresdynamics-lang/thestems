@@ -34,9 +34,16 @@ async function loadFeatured(config: CategoryLandingConfig): Promise<Product[]> {
   const ranked = [...merged].sort(
     (a, b) => scoreProduct(b, keywords) - scoreProduct(a, keywords)
   );
+
+  // Prefer products whose tags/title match landing keywords so admin checkboxes drive grids
+  const matched = keywords.length
+    ? ranked.filter((p) => scoreProduct(p, keywords) > 0)
+    : ranked;
+  const pool = matched.length > 0 ? matched : ranked;
+
   const seen = new Set<string>();
   const unique: Product[] = [];
-  for (const p of ranked) {
+  for (const p of pool) {
     if (seen.has(p.id)) continue;
     seen.add(p.id);
     unique.push(p);

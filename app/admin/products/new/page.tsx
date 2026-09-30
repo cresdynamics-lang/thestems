@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
 import { getSubcategoriesForCategory } from "@/lib/subcategories";
+import ProductFilterCheckboxes from "@/components/admin/ProductFilterCheckboxes";
 
 const schema = yup.object({
   slug: yup.string().required("Slug is required").matches(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens"),
@@ -43,7 +44,8 @@ export default function NewProductPage() {
   const [isDescribing, setIsDescribing] = useState(false);
   const [seoHint, setSeoHint] = useState<string | null>(null);
   const [includedItems, setIncludedItems] = useState<Array<{ name: string; qty: number; note?: string }>>([]);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+  const [selectedFilterTags, setSelectedFilterTags] = useState<string[]>([]);
+  const [teddySize, setTeddySize] = useState<string>("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const seoAppliedRef = useRef(false);
@@ -62,24 +64,19 @@ export default function NewProductPage() {
   const category = watch("category");
   const subcategory = watch("subcategory");
 
-  // Reset subcategory when category changes (only show for flowers and teddy)
   const handleCategoryChange = (newCategory: string) => {
     setValue("category", newCategory as any);
-    // Clear subcategory when switching categories
     setValue("subcategory", null);
-    setSelectedSubcategories([]);
-    // Clear color when switching away from teddy
+    setTeddySize("");
     if (newCategory !== "teddy") {
       setValue("teddy_color", null);
       setSelectedColors([]);
     }
   };
 
-  const handleSubcategoryToggle = (subcat: string) => {
-    setSelectedSubcategories(prev => 
-      prev.includes(subcat) 
-        ? prev.filter(s => s !== subcat)
-        : [...prev, subcat]
+  const handleFilterTagToggle = (tag: string) => {
+    setSelectedFilterTags((prev) =>
+      prev.includes(tag) ? prev.filter((s) => s !== tag) : [...prev, tag]
     );
   };
 
@@ -160,8 +157,8 @@ export default function NewProductPage() {
           )
           .filter(Boolean) as string[];
         const unique = [...new Set(matched)].slice(0, 4);
-        if (unique.length > 0 && (force || selectedSubcategories.length === 0)) {
-          setSelectedSubcategories(unique);
+        if (unique.length > 0 && (force || selectedFilterTags.length === 0)) {
+          setSelectedFilterTags(unique);
           setValue("subcategory", unique[0], { shouldDirty: true });
         }
       }
@@ -330,26 +327,16 @@ export default function NewProductPage() {
       }
 
       try {
-        // Handle subcategories: single for teddy bears, multiple for flowers
-        let subcategoryValue: string | null = null;
-        let tagsArray: string[] = [];
-        
-        if (category === "teddy") {
-          // Teddy bears: single selection only
-          subcategoryValue = selectedSubcategories.length > 0 ? selectedSubcategories[0] : null;
-          tagsArray = subcategoryValue ? [subcategoryValue] : [];
-        } else if (category === "flowers") {
-          // Flowers: multiple selection allowed
-          tagsArray = selectedSubcategories.length > 0 ? selectedSubcategories : [];
-          subcategoryValue = tagsArray.length > 0 ? tagsArray[0] : null; // Keep first for backward compatibility
-        }
+        let tagsArray: string[] = [...selectedFilterTags];
+        let subcategoryValue: string | null =
+          selectedFilterTags.length > 0 ? selectedFilterTags[0] : null;
 
-        // Handle colors: store first color for backward compatibility, all colors in tags
         let teddyColorValue: string | null = null;
         if (category === "teddy") {
+          subcategoryValue = teddySize || null;
+          if (teddySize) tagsArray = [...tagsArray, teddySize];
           teddyColorValue = selectedColors.length > 0 ? selectedColors[0] : null;
-          // Add color tags to tags array
-          const colorTags = selectedColors.map(c => `color:${c}`);
+          const colorTags = selectedColors.map((c) => `color:${c}`);
           tagsArray = [...tagsArray, ...colorTags];
         }
 
@@ -528,64 +515,40 @@ export default function NewProductPage() {
             </div>
           </div>
 
-          {/* Subcategory Field - appears after category is selected (only for flowers and teddy bears) */}
-          {category && (category === "flowers" || category === "teddy") && (
+          {category === "teddy" && (
             <div>
-              {category === "teddy" ? (
-                // Dropdown for teddy bears (single selection)
-                <div>
-                  <label htmlFor="teddy_size_select" className="block text-sm font-medium text-brand-gray-900 mb-2">
-                    Size <span className="text-brand-red">*</span>
-                  </label>
-                  <select
-                    id="teddy_size_select"
-                    value={selectedSubcategories[0] || ""}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setSelectedSubcategories(value ? [value] : []);
-                      setValue("subcategory", value || null);
-                    }}
-                    className="input-field"
-                  >
-                    <option value="">Select size</option>
-                    {getSubcategoriesForCategory("teddy").map((subcat) => (
-                      <option key={subcat} value={subcat}>
-                        {subcat}
-                      </option>
-                    ))}
-                  </select>
-                  {category === "teddy" && selectedSubcategories.length === 0 && (
-                    <p className="mt-1 text-sm text-brand-red">Size is required for teddy bears</p>
-                  )}
-                </div>
-              ) : (
-                // Checkboxes for flowers (multiple selection)
-                <div>
-                  <label className="block text-sm font-medium text-brand-gray-900 mb-2">
-                    Subcategory
-                    <span className="text-brand-gray-500 text-xs ml-2">(Select multiple if product fits multiple categories)</span>
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-brand-gray-300 rounded-lg bg-white max-h-48 overflow-y-auto">
-                    {getSubcategoriesForCategory("flowers").map((subcat) => (
-                      <label key={subcat} className="flex items-center space-x-2 cursor-pointer hover:bg-brand-gray-50 p-2 rounded">
-                        <input
-                          type="checkbox"
-                          checked={selectedSubcategories.includes(subcat)}
-                          onChange={() => handleSubcategoryToggle(subcat)}
-                          className="w-4 h-4 text-brand-green border-brand-gray-300 rounded focus:ring-brand-green"
-                        />
-                        <span className="text-sm text-brand-gray-900">{subcat}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {selectedSubcategories.length > 0 && (
-                    <p className="mt-2 text-xs text-brand-gray-600">
-                      Selected: {selectedSubcategories.join(", ")}
-                    </p>
-                  )}
-                </div>
+              <label htmlFor="teddy_size_select" className="block text-sm font-medium text-brand-gray-900 mb-2">
+                Size <span className="text-brand-red">*</span>
+              </label>
+              <select
+                id="teddy_size_select"
+                value={teddySize}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setTeddySize(value);
+                  setValue("subcategory", value || null);
+                }}
+                className="input-field"
+              >
+                <option value="">Select size</option>
+                {getSubcategoriesForCategory("teddy").map((subcat) => (
+                  <option key={subcat} value={subcat}>
+                    {subcat}
+                  </option>
+                ))}
+              </select>
+              {!teddySize && (
+                <p className="mt-1 text-sm text-brand-red">Size is required for teddy bears</p>
               )}
             </div>
+          )}
+
+          {category && (
+            <ProductFilterCheckboxes
+              selected={selectedFilterTags}
+              onToggle={handleFilterTagToggle}
+              showFlowerTypes={category === "flowers" || category === "hampers"}
+            />
           )}
 
 
