@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+import { HOMEPAGE_SEO_LINKS } from "@/lib/seoLinkMatrix";
+import { GBP_DESTINATION_URLS } from "@/lib/gbpDestinationUrls";
+
 const DEFAULT_LINKS = [
   { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
   { href: "/florist-nairobi", label: "Florist Nairobi" },
@@ -12,6 +15,9 @@ const DEFAULT_LINKS = [
   { href: "/flower-delivery-upper-hill-nairobi", label: "Upper Hill delivery" },
   { href: "/contact", label: "Contact & order" },
 ];
+
+/** Re-export for consumers that want the canonical homepage / GBP maps */
+export { HOMEPAGE_SEO_LINKS, GBP_DESTINATION_URLS };
 
 interface SeoInternalLinksProps {
   title?: string;

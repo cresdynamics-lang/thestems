@@ -3,11 +3,13 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
+import SeoInternalLinks from "@/components/SeoInternalLinks";
 import HomepageHero from "@/components/home/HomepageHero";
 import HomepageProductSections from "@/components/home/HomepageProductSections";
 import HomeBlogSection, { HomeBlogSectionSkeleton } from "@/components/home/HomeBlogSection";
 import { SITE_URL } from "@/lib/seo";
 import { HOME_SEO_KEYWORDS } from "@/lib/seo-keywords";
+import { HOMEPAGE_SEO_LINKS } from "@/lib/seoLinkMatrix";
 
 const baseUrl = SITE_URL;
 
@@ -15,16 +17,18 @@ const baseUrl = SITE_URL;
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Florist Nairobi CBD | Red Roses, Gift Hampers & Same-Day Delivery | The Stems Flowers",
+  title:
+    "Flower Delivery Nairobi | Florist & Same-Day Flowers, Gifts | The Stems Flowers",
   description:
-    "Fresh flowers, gift hampers, wines and teddy bears delivered across Nairobi same day. Visit The Stems at Delta Hotel, University Way or order online with M-Pesa for fast delivery.",
+    "Flower delivery Nairobi with same-day service. Fresh flowers, roses, graduation bouquets, gift hampers and teddy bears from The Stems Flowers — Nairobi florist at Delta Hotel, University Way. Order online with M-Pesa.",
   keywords: HOME_SEO_KEYWORDS,
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: "Express Love & Celebrate Moments | Anniversary Flowers, Birthday Gifts & Surprise Hampers Nairobi | The Stems Flowers",
-    description: "Celebrate every moment that matters: anniversary flowers, birthday surprises, apology bouquets & thoughtful gift hampers in Nairobi. Same-day delivery across CBD, Westlands, Karen, Lavington.",
+    title: "Flower Delivery Nairobi | Fresh Flowers, Gifts & Same-Day Delivery | The Stems",
+    description:
+      "Order fresh flowers, roses, gift hampers and teddy bears from The Stems Flowers. Same-day flower delivery across Nairobi CBD, Westlands, Kilimani, Karen and Lavington.",
     url: baseUrl,
     siteName: "The Stems Flowers",
     images: [
@@ -32,7 +36,7 @@ export const metadata: Metadata = {
         url: "/images/logo/thestemslogo.jpeg",
         width: 1200,
         height: 630,
-        alt: "The Stems Flowers - Express Love & Celebrate Every Moment in Nairobi",
+        alt: "The Stems Flowers — Flower delivery Nairobi, same-day florist",
       },
     ],
     locale: "en_KE",
@@ -40,8 +44,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Express Love & Celebrate Moments | Anniversary Flowers, Birthday Gifts & Surprise Hampers Nairobi",
-    description: "Celebrate every moment that matters: anniversary flowers, birthday surprises, apology bouquets & thoughtful gift hampers in Nairobi. Same-day delivery across Nairobi.",
+    title: "Flower Delivery Nairobi | Florist & Same-Day Gifts | The Stems",
+    description:
+      "Fresh flowers, roses, gift hampers and teddy bears with same-day flower delivery across Nairobi from The Stems Flowers.",
     images: ["/images/logo/thestemslogo.jpeg"],
   },
 };
@@ -102,7 +107,7 @@ const homepageFaqJsonLd = {
       name: "Do you offer same-day flower delivery in Nairobi?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes — order by 4PM for same-day delivery across Nairobi including Westlands, Karen, Kilimani, Lavington, South B and Runda.",
+        text: "Yes — order by 4PM for same-day delivery across Nairobi including Westlands, Karen, Kilimani, Lavington, Kileleshwa, Upper Hill, Runda and Gigiri.",
       },
     },
     {
@@ -140,6 +145,30 @@ export default function HomePage() {
       <JsonLd data={homepageFaqJsonLd} />
       <div>
         <HomepageHero />
+
+        {/* SEO H1 + supporting copy — brand tagline stays in hero */}
+        <section className="bg-white border-b border-brand-gray-200">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+            <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-brand-gray-900 mb-3 max-w-4xl">
+              Flower Delivery Nairobi – Fresh Flowers, Gifts &amp; Same-Day Delivery
+            </h1>
+            <p className="text-brand-gray-700 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed mb-2">
+              Order fresh flowers, roses, graduation bouquets, gift hampers, teddy bears, fruit
+              baskets and premium gifts from The Stems Flowers, a Nairobi florist offering reliable
+              same-day flower and gift delivery.
+            </p>
+            <p className="text-brand-gray-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+              Visit our flower shop at Delta Hotel, University Way in Nairobi CBD, or order online
+              for delivery across Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill and
+              nearby estates. Pay with M-Pesa or card.
+            </p>
+            <SeoInternalLinks
+              title="Popular searches & services"
+              links={HOMEPAGE_SEO_LINKS}
+            />
+          </div>
+        </section>
+
         <HomepageProductSections />
 
         {/* Explore Collections Section */}
@@ -350,8 +379,8 @@ export default function HomePage() {
                   </summary>
                   <p className="mt-3 text-brand-gray-700 text-sm md:text-base">
                     Yes — The Stems Flowers delivers fresh flowers, roses and gift hampers across Nairobi the same day. Order by
-                    4PM for same-day delivery to Westlands, Karen, Kilimani, Lavington, South B, Runda and all Nairobi
-                    neighbourhoods.
+                    4PM for same-day delivery to Westlands, Karen, Kilimani, Lavington, Kileleshwa, Upper Hill, Runda, Gigiri
+                    and nearby neighbourhoods.
                   </p>
                 </details>
                 <details className="group py-4">
@@ -392,19 +421,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SEO intro — above footer */}
-        <section className="bg-brand-blush border-t border-brand-gray-200">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-            <h1 className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-brand-gray-900 mb-3">
-              Florist in Nairobi CBD — Fresh Flowers, Roses & Gift Hampers Delivered
-            </h1>
-            <p className="text-brand-gray-700 text-sm sm:text-base md:text-lg max-w-3xl">
-              The Stems Flowers is a Nairobi CBD florist at Delta Hotel, University Way. We deliver red roses, pink roses,
-              mixed flower bouquets, gift hampers and teddy bears across all Nairobi areas with same-day delivery and secure
-              M-Pesa payment.
-            </p>
-          </div>
-        </section>
       </div>
     </>
   );

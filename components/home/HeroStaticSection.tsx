@@ -23,7 +23,7 @@ export default function HeroStaticSection({ slide }: { slide: HeroSlideConfig })
           <div className="relative z-10 flex flex-col justify-center py-8 sm:py-10 lg:py-14 order-2 lg:order-1">
             <HeroGiftAudience />
             <p className="font-[family-name:var(--font-dancing)] text-2xl sm:text-3xl text-brand-rose-deep mb-2 sm:mb-3">
-              Every moment deserves to bloom
+              Every Moment Deserves to Bloom
             </p>
             <div className="mb-4 flex items-center gap-3">
               <span className="h-px w-10 bg-brand-rose-deep/50" aria-hidden />

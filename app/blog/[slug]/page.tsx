@@ -6,7 +6,9 @@ import { format } from "date-fns";
 import { getBlogPost, getBlogPosts } from "@/lib/blogData";
 import { markdownToHtml } from "@/lib/markdown";
 import JsonLd from "@/components/JsonLd";
+import SeoInternalLinks from "@/components/SeoInternalLinks";
 import { whatsappUrl } from "@/lib/contact";
+import { resolveBlogTopicChain } from "@/lib/seoLinkMatrix";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
@@ -76,6 +78,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+
+  const topicChain = resolveBlogTopicChain({
+    slug: post.slug,
+    title: post.title,
+    category: post.category,
+    tags: post.tags,
+    focusKeyword: post.focusKeyword,
+  });
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -186,28 +196,30 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               Ready to send flowers or a gift today?
             </h2>
             <p className="text-brand-gray-700 text-sm md:text-base mb-4">
-              Order quickly on WhatsApp or browse our most searched collections.
+              Order on WhatsApp or continue through this gift path from the article.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-2">
               <a
-                href={whatsappUrl("Hello! I read your blog and would like to order.")}
+                href={whatsappUrl(topicChain.whatsappPrompt)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full sm:w-auto justify-center items-center rounded-md bg-brand-green px-4 py-3 text-sm font-medium text-white hover:bg-brand-green/90"
               >
                 Order on WhatsApp
               </a>
-              <Link href="/collections/flowers" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
-                Shop Flowers
-              </Link>
-              <Link href="/collections/gift-hampers" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
-                Shop Gift Hampers
-              </Link>
-              <Link href="/collections/wines" className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100">
-                Shop Wines
-              </Link>
+              {topicChain.chain.slice(0, 3).map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="inline-flex w-full sm:w-auto justify-center items-center rounded-md border border-brand-gray-300 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-100"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
+
+          <SeoInternalLinks title={topicChain.title} links={topicChain.chain} />
 
           {/* Tags */}
           {post.tags.length > 0 && (

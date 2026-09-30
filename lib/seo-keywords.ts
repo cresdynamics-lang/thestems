@@ -1,16 +1,16 @@
 /** Shared SEO keywords — keep meta tags concise (Google ignores long keyword lists). */
 export const HOME_SEO_KEYWORDS = [
-  "florist Nairobi CBD",
+  "florist Nairobi",
   "flower delivery Nairobi",
   "same-day flower delivery Nairobi",
+  "flower shop Nairobi",
+  "flowers and gifts Nairobi",
   "gift hampers Nairobi",
   "roses Nairobi",
+  "graduation bouquets Nairobi",
   "birthday flowers Nairobi",
-  "anniversary flowers Nairobi",
-  "apology flowers Nairobi",
   "teddy bears Nairobi",
-  "order flowers online Nairobi",
-  "best florist Nairobi",
+  "florist Nairobi CBD",
   "M-Pesa flowers Nairobi",
 ];
 
