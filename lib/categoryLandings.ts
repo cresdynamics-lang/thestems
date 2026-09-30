@@ -1,0 +1,340 @@
+import type { Product } from "@/lib/db";
+
+export type LandingFaq = { question: string; answer: string };
+
+export type CategoryLandingConfig = {
+  slug: string;
+  /** SEO title (browser / Google) */
+  metaTitle: string;
+  metaDescription: string;
+  h1: string;
+  /** Opening paragraphs — unique per page */
+  intro: string[];
+  /** Optional H2 sections */
+  sections?: { heading: string; body: string }[];
+  faqs: LandingFaq[];
+  /** Which product categories to pull */
+  productCategories: Array<Product["category"]>;
+  productLimit?: number;
+  /** Prefer products whose title/tags match these (case-insensitive) */
+  preferKeywords?: string[];
+  ctaPrimary: { href: string; label: string };
+  ctaSecondary?: { href: string; label: string };
+  relatedLinks: { href: string; label: string }[];
+  breadcrumbLabel: string;
+};
+
+export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
+  "graduation-bouquets-nairobi": {
+    slug: "graduation-bouquets-nairobi",
+    metaTitle: "Graduation Bouquets Nairobi | PP2, Grade 3, 6 & 9 | Same-Day | The Stems",
+    metaDescription:
+      "Order graduation bouquets in Nairobi for PP2, Grade 3, Grade 6 and Grade 9. Same-day flower delivery, teddy bears and graduation gift hampers from The Stems Flowers CBD.",
+    h1: "Graduation Bouquets Nairobi – Same-Day Delivery",
+    intro: [
+      "Celebrate every school milestone with fresh graduation bouquets in Nairobi. The Stems Flowers prepares colourful arrangements for PP2, Grade 3, Grade 6 and Grade 9 ceremonies, plus university and college graduations across the city.",
+      "Order before 4PM for same-day delivery to Nairobi CBD, Westlands, Kilimani, Karen, Lavington and nearby estates. Pair flowers with a graduation teddy or snack hamper for a complete surprise.",
+    ],
+    sections: [
+      {
+        heading: "Graduation gifts for every stage",
+        body: "From PP2 and primary school graduations to Grade 6, Grade 9 and campus ceremonies, we arrange bright mixed bouquets, roses and gift hampers that photograph well and arrive on time.",
+      },
+      {
+        heading: "How to order",
+        body: "Choose a bouquet online, add a teddy or hamper if you like, then pay with M-Pesa or card. Share the venue and ceremony time on WhatsApp so we can schedule delivery.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you deliver graduation flowers same day in Nairobi?",
+        answer:
+          "Yes. Orders placed by 4PM are eligible for same-day delivery across Nairobi, subject to traffic and exact venue.",
+      },
+      {
+        question: "Can I order for PP2 or Grade 6 graduation?",
+        answer:
+          "Absolutely. Tell us the school stage and colour preference when ordering — we tailor bouquets for PP2, Grade 3, Grade 6 and Grade 9 events.",
+      },
+      {
+        question: "Can I add a teddy or snack hamper?",
+        answer:
+          "Yes. Many families combine a graduation bouquet with a teddy bear or snack gift hamper for a fuller celebration gift.",
+      },
+    ],
+    productCategories: ["flowers", "teddy", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["graduation", "congratulat", "mixed", "rose"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop graduation flowers" },
+    ctaSecondary: { href: "/collections/gift-hampers", label: "Graduation gift hampers" },
+    relatedLinks: [
+      { href: "/graduation", label: "Graduation gifts hub" },
+      { href: "/birthday-flowers-nairobi", label: "Birthday flowers Nairobi" },
+      { href: "/collections/teddy-bears", label: "Teddy bears" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+      { href: "/contact", label: "Contact & WhatsApp" },
+    ],
+    breadcrumbLabel: "Graduation Bouquets Nairobi",
+  },
+
+  "get-well-soon-flowers-nairobi": {
+    slug: "get-well-soon-flowers-nairobi",
+    metaTitle: "Get Well Soon Flowers Nairobi | Soft Bouquets & Fruit | The Stems",
+    metaDescription:
+      "Send get well soon flowers in Nairobi — gentle bouquets, fruit baskets and gift hampers with same-day delivery from The Stems Flowers.",
+    h1: "Get Well Soon Flowers Nairobi",
+    intro: [
+      "Brighten a recovery with thoughtful get well soon flowers in Nairobi. Soft pastel bouquets, cheerful mixed arrangements and flower-and-fruit combinations help you show care without overwhelming hospital or home rooms.",
+      "The Stems Flowers offers same-day delivery across Nairobi. Add a short get-well note at checkout or on WhatsApp when you confirm the address.",
+    ],
+    sections: [
+      {
+        heading: "Gentle gifts that travel well",
+        body: "We recommend medium bouquets, soft roses and fruit baskets for hospital visits — easy to place on a bedside table and suitable for most wards (always check hospital flower rules).",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can you deliver get well flowers to a hospital in Nairobi?",
+        answer:
+          "Yes, where the facility allows flowers. Share the ward and visiting hours so we can plan delivery.",
+      },
+      {
+        question: "What pairs well with get well flowers?",
+        answer:
+          "Fruit baskets, light gift hampers and a simple card are popular add-ons for get well soon gifts.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["get well", "soft", "pastel", "mixed", "fruit"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop get well flowers" },
+    ctaSecondary: { href: "/fruit-baskets-nairobi", label: "Fruit baskets Nairobi" },
+    relatedLinks: [
+      { href: "/occasions", label: "All occasions" },
+      { href: "/fruit-baskets-nairobi", label: "Fruit baskets" },
+      { href: "/collections/gift-hampers", label: "Gift hampers" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    breadcrumbLabel: "Get Well Soon Flowers",
+  },
+
+  "fruit-baskets-nairobi": {
+    slug: "fruit-baskets-nairobi",
+    metaTitle: "Fruit Baskets Nairobi | Get Well & Corporate Delivery | The Stems",
+    metaDescription:
+      "Order fruit baskets in Nairobi for get well soon, corporate gifts and celebrations. Fresh arrangements with same-day delivery from The Stems Flowers.",
+    h1: "Fruit Baskets Nairobi – Fresh & Same-Day",
+    intro: [
+      "Fresh fruit baskets in Nairobi for get well wishes, corporate clients and family celebrations. Pair fruit with flowers for a complete care package delivered the same day.",
+      "From our CBD florist we deliver across Nairobi. Message us on WhatsApp for custom corporate fruit baskets or hospital delivery notes.",
+    ],
+    sections: [
+      {
+        heading: "Popular fruit gift styles",
+        body: "Get well fruit baskets, premium mixed fruit arrangements, corporate client gifts and fruit-plus-flower combos are our most requested options.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you deliver fruit baskets same day in Nairobi?",
+        answer: "Yes for orders placed by 4PM, depending on availability and delivery area.",
+      },
+      {
+        question: "Can fruit baskets include flowers?",
+        answer: "Yes — many customers choose fruit with a small bouquet for get well or thank-you gifts.",
+      },
+    ],
+    productCategories: ["hampers", "flowers"],
+    productLimit: 8,
+    preferKeywords: ["fruit", "hamper", "basket", "get well"],
+    ctaPrimary: { href: "/collections/gift-hampers", label: "Shop gift hampers" },
+    ctaSecondary: { href: "/get-well-soon-flowers-nairobi", label: "Get well flowers" },
+    relatedLinks: [
+      { href: "/get-well-soon-flowers-nairobi", label: "Get well soon flowers" },
+      { href: "/corporate-gift-hampers-nairobi", label: "Corporate hampers" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers Nairobi" },
+      { href: "/gifts", label: "All gifts" },
+    ],
+    breadcrumbLabel: "Fruit Baskets Nairobi",
+  },
+
+  "funeral-flowers-nairobi": {
+    slug: "funeral-flowers-nairobi",
+    metaTitle: "Funeral Flowers Nairobi | Wreaths & Sympathy Bouquets | The Stems",
+    metaDescription:
+      "Order funeral flowers and sympathy bouquets in Nairobi. Wreaths, condolence arrangements and same-day delivery from The Stems Flowers.",
+    h1: "Funeral & Sympathy Flowers Nairobi",
+    intro: [
+      "Honour a loved one with dignified funeral flowers in Nairobi. We prepare sympathy bouquets, wreaths and condolence arrangements with care, delivered discreetly to homes, churches and funeral homes.",
+      "Share the service time and venue on WhatsApp so we can schedule delivery respectfully. Same-day options are available for urgent requests.",
+    ],
+    sections: [
+      {
+        heading: "Sympathy options",
+        body: "White and soft-toned bouquets, round and cross wreaths, and simple standing tributes — tell us your preference and budget and we will guide you.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can funeral flowers be delivered same day?",
+        answer:
+          "Where possible, yes. Contact us early with the venue and time so we can confirm.",
+      },
+      {
+        question: "Do you make wreaths?",
+        answer:
+          "Yes. Ask for funeral, cross, heart or round wreaths when you message us — we prepare them to order.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["white", "sympathy", "funeral", "wreath", "condolence"],
+    ctaPrimary: { href: "/collections/flowers", label: "View flower arrangements" },
+    ctaSecondary: { href: "/contact", label: "WhatsApp for funeral flowers" },
+    relatedLinks: [
+      { href: "/occasions", label: "Occasions" },
+      { href: "/collections/flowers", label: "All flowers" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+      { href: "/contact", label: "Contact" },
+    ],
+    breadcrumbLabel: "Funeral Flowers Nairobi",
+  },
+
+  "mixed-bouquets-nairobi": {
+    slug: "mixed-bouquets-nairobi",
+    metaTitle: "Mixed Flower Bouquets Nairobi | Colourful Same-Day Delivery | The Stems",
+    metaDescription:
+      "Shop mixed flower bouquets in Nairobi — colourful seasonal arrangements with same-day delivery from The Stems Flowers CBD.",
+    h1: "Mixed Flower Bouquets Nairobi",
+    intro: [
+      "Colourful mixed flower bouquets for birthdays, thank-yous and everyday surprises in Nairobi. Our florists combine roses, seasonal blooms and filler flowers for full, photo-ready arrangements.",
+      "Same-day delivery across Nairobi for orders by 4PM. Browse the collection or message WhatsApp for a custom colour mix.",
+    ],
+    faqs: [
+      {
+        question: "What is in a mixed bouquet?",
+        answer:
+          "A seasonal mix of focal flowers (often roses) with complementary blooms and greenery. Exact stems vary with market availability.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["mixed", "bouquet", "colour", "color"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop mixed bouquets" },
+    relatedLinks: [
+      { href: "/flowers", label: "Flowers hub" },
+      { href: "/red-roses-nairobi", label: "Red roses Nairobi" },
+      { href: "/birthday-flowers-nairobi", label: "Birthday flowers" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    breadcrumbLabel: "Mixed Bouquets Nairobi",
+  },
+
+  "gift-hampers-nairobi": {
+    slug: "gift-hampers-nairobi",
+    metaTitle: "Gift Hampers Nairobi | Luxury, Chocolate & Corporate | The Stems",
+    metaDescription:
+      "Order gift hampers in Nairobi — luxury, chocolate, flower and corporate hampers with same-day delivery from The Stems Flowers.",
+    h1: "Gift Hampers Nairobi – Luxury & Same-Day",
+    intro: [
+      "Luxury gift hampers in Nairobi for birthdays, corporate clients, anniversaries and thank-yous. Choose chocolate-led hampers, flower hampers, self-care sets or fully custom baskets.",
+      "The Stems Flowers delivers same day across Nairobi. Pay with M-Pesa or card and add a personal note for the recipient.",
+    ],
+    sections: [
+      {
+        heading: "Hamper styles",
+        body: "Luxury celebration baskets, chocolate hampers, flower-and-wine combos, corporate client gifts and custom builds for special briefs.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can I customise a gift hamper?",
+        answer:
+          "Yes. Message us on WhatsApp with your budget and preferences — chocolates, wine, teddy, flowers or corporate branding.",
+      },
+    ],
+    productCategories: ["hampers", "chocolates", "wines"],
+    productLimit: 8,
+    preferKeywords: ["hamper", "gift", "luxury", "chocolate"],
+    ctaPrimary: { href: "/collections/gift-hampers", label: "Shop gift hampers" },
+    ctaSecondary: { href: "/corporate-gift-hampers-nairobi", label: "Corporate hampers" },
+    relatedLinks: [
+      { href: "/collections/gift-hampers", label: "All hampers" },
+      { href: "/corporate-gift-hampers-nairobi", label: "Corporate gifts" },
+      { href: "/flower-wine-hamper-nairobi", label: "Flower & wine hampers" },
+      { href: "/gifts", label: "All gifts" },
+    ],
+    breadcrumbLabel: "Gift Hampers Nairobi",
+  },
+
+  "teddy-bears-nairobi": {
+    slug: "teddy-bears-nairobi",
+    metaTitle: "Teddy Bears Nairobi | 25cm to Giant | Flowers Combo | The Stems",
+    metaDescription:
+      "Buy teddy bears in Nairobi — 25cm, 50cm, 100cm and giant sizes. Pair with flowers or chocolates. Same-day delivery from The Stems.",
+    h1: "Teddy Bears Nairobi – Soft Gifts, Same-Day",
+    intro: [
+      "Soft teddy bears in Nairobi for birthdays, graduations, kids gifts and romantic surprises. Choose from compact 25cm bears to giant cuddle sizes, or pair a teddy with flowers and chocolates.",
+      "Same-day delivery available across Nairobi from The Stems Flowers CBD florist.",
+    ],
+    faqs: [
+      {
+        question: "What teddy sizes do you stock?",
+        answer:
+          "Common sizes include 25cm, 50cm and 100cm, plus larger giant bears when available. Check the teddy collection for current stock.",
+      },
+    ],
+    productCategories: ["teddy", "flowers"],
+    productLimit: 8,
+    preferKeywords: ["teddy", "bear", "soft"],
+    ctaPrimary: { href: "/collections/teddy-bears", label: "Shop teddy bears" },
+    ctaSecondary: { href: "/collections/flowers", label: "Add flowers" },
+    relatedLinks: [
+      { href: "/collections/teddy-bears", label: "Teddy collection" },
+      { href: "/birthday-flowers-nairobi", label: "Birthday flowers" },
+      { href: "/graduation-bouquets-nairobi", label: "Graduation bouquets" },
+      { href: "/gifts", label: "All gifts" },
+    ],
+    breadcrumbLabel: "Teddy Bears Nairobi",
+  },
+
+  "chocolates-nairobi": {
+    slug: "chocolates-nairobi",
+    metaTitle: "Chocolates Nairobi | Ferrero & Flower Combos | The Stems",
+    metaDescription:
+      "Order chocolates in Nairobi — Ferrero Rocher, chocolate hampers and flower-and-chocolate gifts with same-day delivery from The Stems.",
+    h1: "Chocolates & Sweet Gifts Nairobi",
+    intro: [
+      "Premium chocolates in Nairobi for romantic dates, birthdays and thank-yous. Ferrero Rocher boxes, chocolate hampers and classic flower-plus-chocolate combos are ready for same-day delivery.",
+      "Shop online or WhatsApp us to build a custom sweet gift with roses or a teddy.",
+    ],
+    faqs: [
+      {
+        question: "Do you deliver Ferrero Rocher in Nairobi?",
+        answer:
+          "Yes when in stock. Pair Ferrero with flowers or a teddy for a complete gift.",
+      },
+    ],
+    productCategories: ["chocolates", "flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["chocolate", "ferrero", "sweet"],
+    ctaPrimary: { href: "/collections/chocolates", label: "Shop chocolates" },
+    ctaSecondary: { href: "/collections/flowers", label: "Add flowers" },
+    relatedLinks: [
+      { href: "/collections/chocolates", label: "Chocolates collection" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/gifts", label: "All gifts" },
+    ],
+    breadcrumbLabel: "Chocolates Nairobi",
+  },
+};
+
+export function getCategoryLanding(slug: string): CategoryLandingConfig | undefined {
+  return CATEGORY_LANDINGS[slug];
+}
+
+export function allCategoryLandingSlugs(): string[] {
+  return Object.keys(CATEGORY_LANDINGS);
+}
