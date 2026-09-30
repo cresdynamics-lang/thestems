@@ -16,8 +16,51 @@ export type SeoTopicChain = {
 
 export const SEO_TOPIC_CHAINS: SeoTopicChain[] = [
   {
+    id: "gifts-women",
+    match: /gifts?.for.?women|girlfriend|wives?|wife/i,
+    title: "Shop gifts for women & girlfriends",
+    chain: [
+      { href: "/gifts", label: "All gifts" },
+      { href: "/occasions", label: "Occasions" },
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/pink-roses-nairobi", label: "Pink roses" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/teddy-bears-nairobi", label: "Teddy bears" },
+    ],
+    whatsappPrompt:
+      "Hello! I read your gifts for women & girlfriends guide and need help choosing in Nairobi.",
+  },
+  {
+    id: "gifts-men",
+    match: /gifts?.for.?men|wine.?hamper/i,
+    title: "Shop gifts for men",
+    chain: [
+      { href: "/gifts", label: "All gifts" },
+      { href: "/collections/wines", label: "Wine gifts" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/chocolates-nairobi", label: "Chocolates" },
+      { href: "/corporate-gift-hampers-nairobi", label: "Corporate hampers" },
+    ],
+    whatsappPrompt:
+      "Hello! I'd like to order a gift for a man in Nairobi — wine hamper or flowers.",
+  },
+  {
+    id: "location-delivery",
+    match: /westlands|karen|kileleshwa|flower.?delivery.*(nairobi|westlands|karen)/i,
+    title: "Order flower delivery near you",
+    chain: [
+      { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+      { href: "/flower-delivery-westlands-nairobi", label: "Westlands delivery" },
+      { href: "/flower-delivery-karen-nairobi", label: "Karen delivery" },
+      { href: "/flower-delivery-kileleshwa-nairobi", label: "Kileleshwa delivery" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    whatsappPrompt:
+      "Hello! I'd like flower delivery in Westlands, Karen, Kileleshwa or Nairobi today.",
+  },
+  {
     id: "graduation",
-    match: /graduation|pp2|grade\s*[369]/i,
+    match: /graduation|pp2|grade\s*[369]|kids.?gifts|gifts?.for.?kids|children/i,
     title: "Shop graduation gifts",
     chain: [
       { href: "/graduation", label: "Graduation hub" },

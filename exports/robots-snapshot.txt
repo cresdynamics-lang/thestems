@@ -1,0 +1,19 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /_next/image
+
+User-Agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /staff/
+Disallow: /cart
+Disallow: /checkout
+
+Host: https://thestemsflowers.co.ke
+Sitemap: https://thestemsflowers.co.ke/sitemap.xml

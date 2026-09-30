@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
 import { SITE_URL } from "@/lib/seo";
+import { INTENTIONAL_BLOG_POSTS } from "@/lib/intentionalBlogPosts";
+import { MAIN_NAV } from "@/lib/navTaxonomy";
+import { GBP_DESTINATION_URLS } from "@/lib/gbpDestinationUrls";
 
-export const revalidate = 3600;
+export const revalidate = 1800;
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
@@ -19,6 +22,20 @@ function staticPage(
   };
 }
 
+function collectNavPaths(): string[] {
+  const paths = new Set<string>();
+  for (const item of MAIN_NAV) {
+    paths.add(item.href);
+    for (const child of item.children ?? []) {
+      paths.add(child.href);
+    }
+  }
+  for (const d of GBP_DESTINATION_URLS) {
+    paths.add(d.href);
+  }
+  return [...paths];
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [{ data: products }, { data: posts }] = await Promise.all([
     (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
@@ -32,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { data: { slug: string; updated_at?: string }[] | null },
   ];
 
-  const staticPages: SitemapEntry[] = [
+  const corePages: SitemapEntry[] = [
     staticPage("/", 1.0, "daily"),
     staticPage("/collections", 0.9, "daily"),
     staticPage("/collections/flowers", 0.95, "daily"),
@@ -46,24 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticPage("/flowers", 0.95, "weekly"),
     staticPage("/graduation", 0.95, "weekly"),
     staticPage("/weddings-events", 0.9, "weekly"),
-    staticPage("/graduation-bouquets-nairobi", 0.95, "weekly"),
-    staticPage("/get-well-soon-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/fruit-baskets-nairobi", 0.9, "weekly"),
-    staticPage("/funeral-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/mixed-bouquets-nairobi", 0.9, "weekly"),
-    staticPage("/gift-hampers-nairobi", 0.95, "weekly"),
-    staticPage("/teddy-bears-nairobi", 0.9, "weekly"),
-    staticPage("/chocolates-nairobi", 0.85, "weekly"),
-    staticPage("/lilies-nairobi", 0.85, "weekly"),
-    staticPage("/sunflowers-nairobi", 0.85, "weekly"),
-    staticPage("/gypsophila-nairobi", 0.85, "weekly"),
-    staticPage("/flower-boxes-nairobi", 0.85, "weekly"),
-    staticPage("/hat-boxes-nairobi", 0.85, "weekly"),
-    staticPage("/premium-luxury-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/thank-you-flowers-nairobi", 0.85, "weekly"),
-    staticPage("/new-baby-flowers-nairobi", 0.85, "weekly"),
-    staticPage("/mothers-day-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/blog", 0.8, "weekly"),
+    staticPage("/blog", 0.85, "daily"),
     staticPage("/about", 0.7, "monthly"),
     staticPage("/services", 0.75, "monthly"),
     staticPage("/contact", 0.7, "monthly"),
@@ -72,46 +72,53 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticPage("/flower-delivery-nairobi", 0.95, "weekly"),
     staticPage("/flower-shop-nairobi", 0.9, "weekly"),
     staticPage("/flowers-and-gifts-nairobi", 0.9, "weekly"),
-    staticPage("/roses-nairobi", 0.9, "weekly"),
-    staticPage("/corporate-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/flowers-across-kenya", 0.85, "weekly"),
-    staticPage("/flower-delivery-westlands-nairobi", 0.9, "weekly"),
+    staticPage("/same-day-flower-delivery-nairobi", 0.95, "weekly"),
+    staticPage("/flower-delivery-westlands-nairobi", 0.95, "weekly"),
+    staticPage("/flower-delivery-karen-nairobi", 0.95, "weekly"),
+    staticPage("/flower-delivery-kileleshwa-nairobi", 0.95, "weekly"),
     staticPage("/flower-delivery-kilimani-nairobi", 0.9, "weekly"),
-    staticPage("/flower-delivery-karen-nairobi", 0.9, "weekly"),
     staticPage("/flower-delivery-nairobi-cbd", 0.9, "weekly"),
     staticPage("/flower-delivery-lavington-nairobi", 0.9, "weekly"),
-    staticPage("/flower-delivery-kileleshwa-nairobi", 0.9, "weekly"),
     staticPage("/flower-delivery-runda-nairobi", 0.85, "weekly"),
     staticPage("/flower-delivery-gigiri-nairobi", 0.85, "weekly"),
     staticPage("/flower-delivery-upper-hill-nairobi", 0.9, "weekly"),
-    staticPage("/same-day-flower-delivery-nairobi", 0.9, "weekly"),
-    staticPage("/birthday-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/anniversary-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/apology-flowers-nairobi", 0.85, "weekly"),
-    staticPage("/wedding-flowers-nairobi", 0.9, "weekly"),
-    staticPage("/wedding-car-decor-nairobi", 0.85, "weekly"),
-    staticPage("/corporate-gift-hampers-nairobi", 0.9, "weekly"),
-    staticPage("/red-roses-nairobi", 0.9, "weekly"),
-    staticPage("/pink-roses-nairobi", 0.9, "weekly"),
-    staticPage("/white-roses-nairobi", 0.9, "weekly"),
-    staticPage("/flower-wine-hamper-nairobi", 0.9, "weekly"),
-    staticPage("/send-gifts-to-kenya", 0.85, "weekly"),
     staticPage("/terms-of-service", 0.3, "yearly"),
     staticPage("/refund-policy", 0.3, "yearly"),
+    staticPage("/privacy-policy", 0.3, "yearly"),
   ];
+
+  const navExtra: SitemapEntry[] = collectNavPaths()
+    .filter((p) => p.startsWith("/") && p !== "/")
+    .map((p) => staticPage(p, 0.88, "weekly"));
+
+  const seen = new Set<string>();
+  const staticPages: SitemapEntry[] = [];
+  for (const entry of [...corePages, ...navExtra]) {
+    if (seen.has(entry.url)) continue;
+    seen.add(entry.url);
+    staticPages.push(entry);
+  }
 
   const productUrls: SitemapEntry[] = (products ?? []).map((p) => ({
     url: `${SITE_URL}/product/${p.slug}`,
     lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
-    changeFrequency: "weekly",
+    changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
-  const blogUrls: SitemapEntry[] = (posts ?? []).map((p) => ({
-    url: `${SITE_URL}/blog/${p.slug}`,
-    lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
-    changeFrequency: "weekly",
-    priority: 0.75,
+  const blogSlugDates = new Map<string, Date>();
+  for (const p of INTENTIONAL_BLOG_POSTS) {
+    blogSlugDates.set(p.slug, new Date(p.publishedAt));
+  }
+  for (const p of posts ?? []) {
+    blogSlugDates.set(p.slug, p.updated_at ? new Date(p.updated_at) : new Date());
+  }
+
+  const blogUrls: SitemapEntry[] = [...blogSlugDates.entries()].map(([slug, lastModified]) => ({
+    url: `${SITE_URL}/blog/${slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   }));
 
   return [...staticPages, ...productUrls, ...blogUrls];
