@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
     `;
 
     // Send email using Resend
-    const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+    const resend = new Resend(process.env.RESEND_API_KEY || "");
     const recipientEmail = process.env.ADMIN_EMAIL || "thestemsflowers.ke@gmail.com";
     const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 

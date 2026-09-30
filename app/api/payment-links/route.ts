@@ -319,7 +319,7 @@ async function sendPaymentLinkEmail(data: {
     </html>
   `;
 
-  const resend = new Resend(process.env.RESEND_API_KEY || "re_jE9T351o_6gDh55gy8PHW4LWZJENwXFKR");
+  const resend = new Resend(process.env.RESEND_API_KEY || "");
   const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
   const emailResult = await resend.emails.send({

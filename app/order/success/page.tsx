@@ -15,12 +15,13 @@ import axios from "axios";
 import { useCartStore } from "@/lib/store/cart";
 import { Analytics } from "@/lib/analytics";
 
-const WHATSAPP_REDIRECT_DELAY_MS = 5000;
+const WHATSAPP_REDIRECT_DELAY_MS = 2000;
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("id") || searchParams.get("orderId");
   const isPaymentPending = searchParams.get("pending") === "true";
+  const alreadyPaidParam = searchParams.get("paid") === "1";
   const pesapalTrackingId = searchParams.get("pesapal_tracking_id");
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -107,14 +108,20 @@ function OrderSuccessContent() {
         const data = response.data as Order;
         setOrder(data);
 
-        if (data.status === "paid") {
-          triggerWhatsAppRedirect(data);
+        if (data.status === "paid" || alreadyPaidParam) {
+          if (data.status === "paid") {
+            triggerWhatsAppRedirect(data);
+          } else if (alreadyPaidParam) {
+            // GET callback marked paid — refetch once or poll briefly
+            setIsPolling(true);
+          }
           return;
         }
 
         const shouldPoll =
           data.status === "pending" &&
           (isPaymentPending ||
+            alreadyPaidParam ||
             pesapalTrackingId ||
             data.mpesa_checkout_request_id ||
             data.pesapal_order_tracking_id);
@@ -130,10 +137,13 @@ function OrderSuccessContent() {
     }
 
     fetchOrder();
-  }, [orderId, isPaymentPending, pesapalTrackingId, triggerWhatsAppRedirect]);
+  }, [orderId, isPaymentPending, alreadyPaidParam, pesapalTrackingId, triggerWhatsAppRedirect]);
 
+  // Faster poll when returning from Pesapal (1.5s)
   useEffect(() => {
     if (!orderId || !isPolling) return;
+
+    const intervalMs = alreadyPaidParam || isPaymentPending ? 1500 : 3000;
 
     const pollInterval = window.setInterval(async () => {
       try {
@@ -149,7 +159,7 @@ function OrderSuccessContent() {
       } catch (error) {
         console.error("Error polling order status:", error);
       }
-    }, 3000);
+    }, intervalMs);
 
     const timeout = window.setTimeout(() => {
       setIsPolling(false);
@@ -161,7 +171,7 @@ function OrderSuccessContent() {
       window.clearInterval(pollInterval);
       window.clearTimeout(timeout);
     };
-  }, [orderId, isPolling, triggerWhatsAppRedirect]);
+  }, [orderId, isPolling, alreadyPaidParam, isPaymentPending, triggerWhatsAppRedirect]);
 
   if (isLoading) {
     return (
