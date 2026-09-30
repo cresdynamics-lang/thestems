@@ -64,16 +64,21 @@ export default async function AreaLandingPage({ config }: AreaLandingPageProps) 
   const areaLinks = config.nearbyAreas.map((area) => {
     const slugMap: Record<string, string> = {
       CBD: "/flower-delivery-nairobi-cbd",
+      "Nairobi CBD": "/flower-delivery-nairobi-cbd",
       Westlands: "/flower-delivery-westlands-nairobi",
       Kilimani: "/flower-delivery-kilimani-nairobi",
       Karen: "/flower-delivery-karen-nairobi",
       Parklands: "/flower-delivery-westlands-nairobi",
-      Lavington: "/flower-delivery-kilimani-nairobi",
-      Kileleshwa: "/flower-delivery-kilimani-nairobi",
+      Lavington: "/flower-delivery-lavington-nairobi",
+      Kileleshwa: "/flower-delivery-kileleshwa-nairobi",
       Langata: "/flower-delivery-karen-nairobi",
       "Ngong Road": "/flower-delivery-karen-nairobi",
       "South B": "/same-day-flower-delivery-nairobi",
-      "Upper Hill": "/same-day-flower-delivery-nairobi",
+      "South C": "/same-day-flower-delivery-nairobi",
+      "Upper Hill": "/flower-delivery-upper-hill-nairobi",
+      Runda: "/flower-delivery-runda-nairobi",
+      Gigiri: "/flower-delivery-gigiri-nairobi",
+      Muthaiga: "/flower-delivery-runda-nairobi",
       "Nairobi West": "/flower-delivery-westlands-nairobi",
     };
     return {

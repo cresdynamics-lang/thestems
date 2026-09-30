@@ -201,6 +201,28 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
+                    href="/flower-delivery-nairobi"
+                    className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                      Flower Delivery Nairobi
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/florist-nairobi"
+                    className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                      Florist Nairobi
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/flower-delivery-westlands-nairobi"
                     className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
@@ -212,23 +234,12 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/flower-delivery-kilimani-nairobi"
+                    href="/flower-delivery-lavington-nairobi"
                     className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
                     <span className="flex items-center gap-2">
                       <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                      Kilimani Delivery
-                    </span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/flower-delivery-karen-nairobi"
-                    className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                      Karen Delivery
+                      Lavington Delivery
                     </span>
                   </Link>
                 </li>

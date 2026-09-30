@@ -1,13 +1,15 @@
 import Link from "next/link";
 
 const DEFAULT_LINKS = [
-  { href: "/collections/flowers", label: "Flower delivery Nairobi" },
-  { href: "/collections/gift-hampers", label: "Gift hampers Nairobi" },
+  { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+  { href: "/florist-nairobi", label: "Florist Nairobi" },
+  { href: "/flowers-and-gifts-nairobi", label: "Flowers and gifts" },
+  { href: "/gift-hampers-nairobi", label: "Gift hampers Nairobi" },
+  { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
   { href: "/flower-delivery-westlands-nairobi", label: "Westlands delivery" },
   { href: "/flower-delivery-kilimani-nairobi", label: "Kilimani delivery" },
-  { href: "/flower-delivery-karen-nairobi", label: "Karen delivery" },
-  { href: "/flower-delivery-nairobi-cbd", label: "Nairobi CBD delivery" },
-  { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+  { href: "/flower-delivery-lavington-nairobi", label: "Lavington delivery" },
+  { href: "/flower-delivery-upper-hill-nairobi", label: "Upper Hill delivery" },
   { href: "/contact", label: "Contact & order" },
 ];
 

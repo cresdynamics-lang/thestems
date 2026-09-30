@@ -104,16 +104,16 @@ export function buildServicesItemListJsonLd() {
     description:
       "Same-day flower delivery, gift hampers, wines, chocolates and teddy bears across Nairobi from The Stems Flowers.",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Flower Delivery Nairobi", url: absoluteUrl("/collections/flowers") },
-      { "@type": "ListItem", position: 2, name: "Gift Hampers Nairobi", url: absoluteUrl("/collections/gift-hampers") },
-      { "@type": "ListItem", position: 3, name: "Same-Day Delivery", url: absoluteUrl("/same-day-flower-delivery-nairobi") },
-      { "@type": "ListItem", position: 4, name: "Birthday Flowers", url: absoluteUrl("/birthday-flowers-nairobi") },
-      { "@type": "ListItem", position: 5, name: "Anniversary Flowers", url: absoluteUrl("/anniversary-flowers-nairobi") },
-      { "@type": "ListItem", position: 6, name: "Wedding Flowers", url: absoluteUrl("/wedding-flowers-nairobi") },
-      { "@type": "ListItem", position: 7, name: "Corporate Gift Hampers", url: absoluteUrl("/corporate-gift-hampers-nairobi") },
-      { "@type": "ListItem", position: 8, name: "Florist Nairobi CBD", url: absoluteUrl("/florist-nairobi-cbd") },
-      { "@type": "ListItem", position: 9, name: "Flower Delivery Westlands", url: absoluteUrl("/flower-delivery-westlands-nairobi") },
-      { "@type": "ListItem", position: 10, name: "Flower Delivery Kilimani", url: absoluteUrl("/flower-delivery-kilimani-nairobi") },
+      { "@type": "ListItem", position: 1, name: "Flower Delivery Nairobi", url: absoluteUrl("/flower-delivery-nairobi") },
+      { "@type": "ListItem", position: 2, name: "Florist Nairobi", url: absoluteUrl("/florist-nairobi") },
+      { "@type": "ListItem", position: 3, name: "Gift Hampers Nairobi", url: absoluteUrl("/gift-hampers-nairobi") },
+      { "@type": "ListItem", position: 4, name: "Same-Day Delivery", url: absoluteUrl("/same-day-flower-delivery-nairobi") },
+      { "@type": "ListItem", position: 5, name: "Birthday Flowers", url: absoluteUrl("/birthday-flowers-nairobi") },
+      { "@type": "ListItem", position: 6, name: "Anniversary Flowers", url: absoluteUrl("/anniversary-flowers-nairobi") },
+      { "@type": "ListItem", position: 7, name: "Wedding Flowers", url: absoluteUrl("/wedding-flowers-nairobi") },
+      { "@type": "ListItem", position: 8, name: "Corporate Flowers Nairobi", url: absoluteUrl("/corporate-flowers-nairobi") },
+      { "@type": "ListItem", position: 9, name: "Florist Nairobi CBD", url: absoluteUrl("/florist-nairobi-cbd") },
+      { "@type": "ListItem", position: 10, name: "Flower Delivery Westlands", url: absoluteUrl("/flower-delivery-westlands-nairobi") },
     ],
   };
 }

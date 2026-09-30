@@ -329,6 +329,276 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
     ],
     breadcrumbLabel: "Chocolates Nairobi",
   },
+
+  "flower-delivery-nairobi": {
+    slug: "flower-delivery-nairobi",
+    metaTitle: "Flower Delivery Nairobi | Same-Day Roses & Bouquets | The Stems",
+    metaDescription:
+      "Flower delivery Nairobi with same-day service. Fresh roses, mixed bouquets and gift hampers from The Stems Flowers CBD. Order online, pay M-Pesa.",
+    h1: "Flower Delivery Nairobi – Fresh Flowers, Same Day",
+    intro: [
+      "Looking for reliable flower delivery in Nairobi? The Stems Flowers prepares fresh roses, mixed bouquets and gift hampers at our CBD florist (Delta Hotel, University Way) and delivers across the city the same day for orders placed by 4PM.",
+      "Whether you need birthday flowers, anniversary roses, graduation bouquets or a last-minute apology arrangement, we make ordering simple online or on WhatsApp — with M-Pesa and card payment.",
+    ],
+    sections: [
+      {
+        heading: "Where we deliver in Nairobi",
+        body: "We deliver to Nairobi CBD, Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill, Runda, Gigiri and nearby estates. Check our area pages for local delivery details.",
+      },
+      {
+        heading: "What you can send",
+        body: "Red and mixed roses, colourful bouquets, flower boxes, teddy-and-flower combos, chocolate gifts and luxury hampers — prepared fresh for every delivery.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How fast is flower delivery in Nairobi?",
+        answer:
+          "Same-day delivery is available for orders placed by 4PM, depending on your area and traffic. CBD and nearby zones are typically fastest.",
+      },
+      {
+        question: "How do I pay for flower delivery?",
+        answer:
+          "Pay securely online with M-Pesa or card via Pesapal, or confirm your order on WhatsApp.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["rose", "bouquet", "delivery"],
+    ctaPrimary: { href: "/collections/flowers", label: "Order flowers now" },
+    ctaSecondary: { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery info" },
+    relatedLinks: [
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day flower delivery" },
+      { href: "/florist-nairobi", label: "Florist Nairobi" },
+      { href: "/flower-shop-nairobi", label: "Flower shop Nairobi" },
+      { href: "/flowers-and-gifts-nairobi", label: "Flowers and gifts" },
+      { href: "/flower-delivery-westlands-nairobi", label: "Westlands delivery" },
+      { href: "/flower-delivery-kilimani-nairobi", label: "Kilimani delivery" },
+    ],
+    breadcrumbLabel: "Flower Delivery Nairobi",
+  },
+
+  "florist-nairobi": {
+    slug: "florist-nairobi",
+    metaTitle: "Florist Nairobi | The Stems Flowers CBD | Same-Day Delivery",
+    metaDescription:
+      "Trusted florist in Nairobi at Delta Hotel, University Way. Fresh flowers, roses, hampers and teddy bears. Walk in or order same-day delivery citywide.",
+    h1: "Florist Nairobi – The Stems Flowers",
+    intro: [
+      "The Stems Flowers is a Nairobi florist based at Delta Hotel, University Way in the CBD. We craft fresh bouquets daily for walk-in customers and online orders, with same-day delivery across Nairobi.",
+      "From romantic red roses to graduation bouquets, gift hampers and teddy bears, our florists help you choose the right gift — then deliver it looking fresh.",
+    ],
+    sections: [
+      {
+        heading: "Visit our Nairobi CBD flower shop",
+        body: "Open Monday–Saturday for walk-ins. Prefer to order online? Browse flowers and gifts on this site and checkout with M-Pesa, or message us on WhatsApp for custom arrangements.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Where is your florist located in Nairobi?",
+        answer:
+          "Delta Hotel, University Way, Nairobi CBD. We also deliver citywide from this studio.",
+      },
+      {
+        question: "Do you offer same-day florist delivery?",
+        answer:
+          "Yes. Order by 4PM for same-day delivery across most Nairobi areas.",
+      },
+    ],
+    productCategories: ["flowers", "hampers", "teddy"],
+    productLimit: 8,
+    preferKeywords: ["rose", "bouquet", "florist"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop as a florist customer" },
+    ctaSecondary: { href: "/florist-nairobi-cbd", label: "CBD florist details" },
+    relatedLinks: [
+      { href: "/florist-nairobi-cbd", label: "Florist Nairobi CBD" },
+      { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+      { href: "/flower-shop-nairobi", label: "Flower shop Nairobi" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+      { href: "/contact", label: "Contact / visit us" },
+    ],
+    breadcrumbLabel: "Florist Nairobi",
+  },
+
+  "flower-shop-nairobi": {
+    slug: "flower-shop-nairobi",
+    metaTitle: "Flower Shop Nairobi | Walk-In & Online Orders | The Stems",
+    metaDescription:
+      "Flower shop in Nairobi CBD — fresh bouquets, roses and gift hampers. Walk in at Delta Hotel, University Way or order online for same-day delivery.",
+    h1: "Flower Shop Nairobi – Walk In or Order Online",
+    intro: [
+      "Need a flower shop in Nairobi you can trust? The Stems Flowers is a full-service flower shop in the CBD with ready bouquets, custom arrangements, gift hampers and teddy bears.",
+      "Walk in at Delta Hotel, University Way, or shop online for delivery across Nairobi the same day.",
+    ],
+    faqs: [
+      {
+        question: "Can I walk into your flower shop?",
+        answer:
+          "Yes. Visit us at Delta Hotel, University Way, Nairobi CBD, Monday–Saturday during shop hours.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["bouquet", "rose", "shop"],
+    ctaPrimary: { href: "/collections/flowers", label: "Shop flowers online" },
+    ctaSecondary: { href: "/contact", label: "Get directions & hours" },
+    relatedLinks: [
+      { href: "/florist-nairobi", label: "Florist Nairobi" },
+      { href: "/flower-delivery-nairobi", label: "Flower delivery" },
+      { href: "/flowers-and-gifts-nairobi", label: "Flowers and gifts" },
+      { href: "/gifts", label: "Gift shop" },
+    ],
+    breadcrumbLabel: "Flower Shop Nairobi",
+  },
+
+  "flowers-and-gifts-nairobi": {
+    slug: "flowers-and-gifts-nairobi",
+    metaTitle: "Flowers and Gifts Nairobi | Bouquets, Hampers & Teddy Bears | The Stems",
+    metaDescription:
+      "Flowers and gifts in Nairobi — bouquets, roses, gift hampers, chocolates and teddy bears with same-day delivery from The Stems Flowers.",
+    h1: "Flowers and Gifts Nairobi",
+    intro: [
+      "One place for flowers and gifts in Nairobi: fresh bouquets, red roses, luxury gift hampers, chocolates, wines and teddy bears — curated for birthdays, anniversaries, graduations and corporate thank-yous.",
+      "Order online for same-day delivery or visit our CBD flower shop. Pay with M-Pesa or card.",
+    ],
+    sections: [
+      {
+        heading: "Build the perfect gift",
+        body: "Combine flowers with a teddy, Ferrero chocolates or a hamper. Our team can also customise corporate gifts for clients and employees.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you sell more than flowers?",
+        answer:
+          "Yes — gift hampers, teddy bears, chocolates, wines and greeting cards, with or without flowers.",
+      },
+    ],
+    productCategories: ["flowers", "hampers", "teddy", "chocolates"],
+    productLimit: 8,
+    preferKeywords: ["gift", "hamper", "rose", "teddy"],
+    ctaPrimary: { href: "/gifts", label: "Browse all gifts" },
+    ctaSecondary: { href: "/collections/flowers", label: "Browse flowers" },
+    relatedLinks: [
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/teddy-bears-nairobi", label: "Teddy bears" },
+      { href: "/chocolates-nairobi", label: "Chocolates" },
+      { href: "/flower-delivery-nairobi", label: "Flower delivery" },
+      { href: "/occasions", label: "Shop by occasion" },
+    ],
+    breadcrumbLabel: "Flowers and Gifts Nairobi",
+  },
+
+  "roses-nairobi": {
+    slug: "roses-nairobi",
+    metaTitle: "Roses Nairobi | Red, Pink & White Rose Delivery | The Stems",
+    metaDescription:
+      "Order roses in Nairobi — red, pink and white rose bouquets with same-day delivery from The Stems Flowers CBD florist.",
+    h1: "Roses Nairobi – Red, Pink & White Bouquets",
+    intro: [
+      "Fresh rose bouquets in Nairobi for romance, apologies, anniversaries and celebrations. Choose classic red roses, soft pink or elegant white — prepared daily at our CBD florist.",
+      "Same-day rose delivery across Nairobi for orders by 4PM. Pair roses with chocolates or a teddy for a fuller gift.",
+    ],
+    faqs: [
+      {
+        question: "Do you deliver red roses same day in Nairobi?",
+        answer:
+          "Yes when in stock. Order by 4PM for same-day delivery to most Nairobi areas.",
+      },
+    ],
+    productCategories: ["flowers"],
+    productLimit: 8,
+    preferKeywords: ["rose", "red", "pink", "white"],
+    ctaPrimary: { href: "/red-roses-nairobi", label: "Red roses Nairobi" },
+    ctaSecondary: { href: "/collections/flowers", label: "All flower bouquets" },
+    relatedLinks: [
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/pink-roses-nairobi", label: "Pink roses" },
+      { href: "/white-roses-nairobi", label: "White roses" },
+      { href: "/anniversary-flowers-nairobi", label: "Anniversary flowers" },
+      { href: "/flower-delivery-nairobi", label: "Flower delivery" },
+    ],
+    breadcrumbLabel: "Roses Nairobi",
+  },
+
+  "corporate-flowers-nairobi": {
+    slug: "corporate-flowers-nairobi",
+    metaTitle: "Corporate Flowers Nairobi | Office & Client Gifts | The Stems",
+    metaDescription:
+      "Corporate flowers and gift hampers in Nairobi for offices, clients and employee appreciation. Same-day delivery from The Stems Flowers.",
+    h1: "Corporate Flowers & Gifts Nairobi",
+    intro: [
+      "Impress clients and thank teams with corporate flowers and gift hampers in Nairobi. We deliver office bouquets, boardroom arrangements and branded-feel gift baskets across the CBD, Upper Hill, Westlands and beyond.",
+      "Share your guest list or delivery schedule on WhatsApp — we handle multi-drop corporate orders with care.",
+    ],
+    sections: [
+      {
+        heading: "Corporate gift ideas",
+        body: "Client thank-you bouquets, employee appreciation hampers, event centrepieces and welcome flowers for offices and hotels.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Can you deliver to multiple offices in one day?",
+        answer:
+          "Yes for scheduled corporate drops. Contact us with addresses and preferred time windows.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["corporate", "office", "hamper", "gift"],
+    ctaPrimary: { href: "/corporate-gift-hampers-nairobi", label: "Corporate gift hampers" },
+    ctaSecondary: { href: "/collections/flowers", label: "Office flower bouquets" },
+    relatedLinks: [
+      { href: "/corporate-gift-hampers-nairobi", label: "Corporate hampers" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/flower-delivery-nairobi-cbd", label: "CBD delivery" },
+      { href: "/flower-delivery-upper-hill-nairobi", label: "Upper Hill delivery" },
+    ],
+    breadcrumbLabel: "Corporate Flowers Nairobi",
+  },
+
+  "flowers-across-kenya": {
+    slug: "flowers-across-kenya",
+    metaTitle: "Flower Delivery Kenya | Send Flowers to Nairobi & Beyond | The Stems",
+    metaDescription:
+      "Send flowers in Kenya via The Stems Flowers. Primary same-day service covers Nairobi. Enquire on WhatsApp for delivery to other towns we serve.",
+    h1: "Flower Delivery Across Kenya",
+    intro: [
+      "The Stems Flowers specialises in same-day flower and gift delivery across Nairobi. Friends and family abroad (and across Kenya) often order with us to surprise someone in the city.",
+      "For towns outside Nairobi, message us on WhatsApp with the destination — we confirm if we can deliver or arrange a partner handoff before you pay. We only take orders for places we can reliably serve.",
+    ],
+    sections: [
+      {
+        heading: "Nairobi is our core coverage",
+        body: "CBD, Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill, Runda, Gigiri and nearby estates enjoy the fastest same-day options.",
+      },
+      {
+        heading: "Ordering from outside Kenya",
+        body: "Use our send-gifts-to-Kenya guide or WhatsApp with the recipient’s Nairobi address — we handle local delivery while you pay online.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you deliver flowers everywhere in Kenya?",
+        answer:
+          "Our reliable same-day network is Nairobi-focused. Contact us for other towns — we confirm coverage before accepting payment.",
+      },
+    ],
+    productCategories: ["flowers", "hampers"],
+    productLimit: 8,
+    preferKeywords: ["flower", "gift", "delivery"],
+    ctaPrimary: { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+    ctaSecondary: { href: "/send-gifts-to-kenya", label: "Send gifts to Kenya" },
+    relatedLinks: [
+      { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day Nairobi" },
+      { href: "/send-gifts-to-kenya", label: "Send gifts to Kenya" },
+      { href: "/contact", label: "Enquire for other towns" },
+    ],
+    breadcrumbLabel: "Flowers Across Kenya",
+  },
 };
 
 export function getCategoryLanding(slug: string): CategoryLandingConfig | undefined {
