@@ -5,10 +5,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
-import { formatCurrency } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import AddOns from "@/components/AddOns";
+import PriceDisplay from "@/components/PriceDisplay";
+import { CurrencySwitcher } from "@/components/PriceDisplay";
 
 export default function CartSidebar() {
   const { cartOpen, setCartOpen } = useUIStore();
@@ -43,7 +44,9 @@ export default function CartSidebar() {
                 <Dialog.Title className="font-heading font-semibold text-lg">
                   Shopping Cart
                 </Dialog.Title>
-                <button
+                <div className="flex items-center gap-2">
+                  <CurrencySwitcher />
+                  <button
                   type="button"
                   onClick={() => setCartOpen(false)}
                   className="p-2 hover:bg-brand-gray-100 rounded-lg transition-colors"
@@ -51,6 +54,7 @@ export default function CartSidebar() {
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto px-6 py-4">
@@ -87,9 +91,9 @@ export default function CartSidebar() {
                                 {Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}
                               </p>
                             )}
-                            <p className="text-brand-green font-medium text-sm mb-2">
-                              {formatCurrency(item.price)}
-                            </p>
+                            <div className="mb-2">
+                              <PriceDisplay amountCents={item.price} size="sm" />
+                            </div>
                             <div className="flex items-center gap-2 mb-2">
                               <button
                                 type="button"
@@ -137,7 +141,7 @@ export default function CartSidebar() {
                 <div className="border-t border-brand-gray-200 px-6 py-4 space-y-4">
                   <div className="flex items-center justify-between text-lg font-semibold">
                     <span>Total:</span>
-                    <span className="text-brand-green">{formatCurrency(total)}</span>
+                    <PriceDisplay amountCents={total} size="md" className="!text-brand-green" />
                   </div>
                   <Link
                     href="/cart"

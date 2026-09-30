@@ -12,6 +12,10 @@ import axios from "axios";
 import { CreditCardIcon, DevicePhoneMobileIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Analytics } from "@/lib/analytics";
 import { buildCheckoutOrderMeta } from "@/lib/orderDisplay";
+import { buildCurrencyOrderPayload } from "@/lib/orderCurrency";
+import { useCurrencyStore } from "@/lib/store/currency";
+import PriceDisplay from "@/components/PriceDisplay";
+import { formatMajor } from "@/lib/currency";
 
 function getCheckoutErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {
@@ -61,6 +65,13 @@ interface OrderData {
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
+  const currency = useCurrencyStore((s) => s.currency);
+  const rates = useCurrencyStore((s) => s.rates);
+  const ratesFetchedAt = useCurrencyStore((s) => s.ratesFetchedAt);
+  const ratesSource = useCurrencyStore((s) => s.ratesSource);
+  const preferenceSource = useCurrencyStore((s) => s.preferenceSource);
+  const geoCountry = useCurrencyStore((s) => s.geoCountry);
+  const geoDetectedAt = useCurrencyStore((s) => s.geoDetectedAt);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"till" | "paybill" | "pesapal" | null>(null);
   const [stkPhone, setStkPhone] = useState("");
@@ -190,6 +201,31 @@ export default function CheckoutPage() {
   const tipValue = tipAmount !== null ? (tipAmount === 0 ? 0 : Math.round(subtotal * (tipAmount / 100))) : 0;
   const total = subtotal + deliveryFeeInCents + tipValue;
 
+  const buildOrderCurrencyBundle = (paymentNote: string) =>
+    buildCurrencyOrderPayload({
+      items: (orderData?.items || items).map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image,
+        slug: item.slug,
+        options: item.options,
+      })),
+      subtotalKesCents: subtotal,
+      deliveryKesCents: deliveryFeeInCents,
+      tipKesCents: tipValue,
+      totalKesCents: total,
+      currency,
+      rates,
+      ratesFetchedAt,
+      ratesSource,
+      preferenceSource,
+      geoCountry,
+      geoDetectedAt,
+      paymentNote,
+    });
+
   const handlePayment = async () => {
     console.log("💳 Checkout: Starting payment:", {
       paymentMethod,
@@ -209,16 +245,14 @@ export default function CheckoutPage() {
         const customerName =
           firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer";
 
+        const currencyBundle = buildOrderCurrencyBundle(
+          `Payment via ${
+            paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"
+          }. Charged total: ${formatCurrency(total)}.`
+        );
+
         const orderResponse = await axios.post("/api/orders", {
-          items: (orderData?.items || items).map((item) => ({
-            productId: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            image: item.image,
-            slug: item.slug,
-            options: item.options,
-          })),
+          items: currencyBundle.items,
           total: total,
           customer_name: customerName,
           phone: formatPhone(phoneNumber || phone),
@@ -226,7 +260,8 @@ export default function CheckoutPage() {
           ...buildCheckoutOrderMeta(orderData, { address, city }),
           delivery_date: new Date().toISOString(),
           payment_method: paymentMethod === "till" ? "mpesa_till" : "mpesa_paybill",
-          notes: `Payment via ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}. Total: ${formatCurrency(total)}`,
+          notes: currencyBundle.notes,
+          currency_meta: currencyBundle.currency_meta,
         });
 
         const orderId = orderResponse.data?.id;
@@ -239,22 +274,24 @@ export default function CheckoutPage() {
         // Notify admin by email (Till/Paybill order – payment to be completed via M-Pesa)
         const paymentLabel = paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill";
         const emailSubject = `📦 New Order #${orderId.slice(0, 8)} – ${paymentLabel}`;
-        const emailItems = (orderData?.items || items)
-          .map((item: any) => `• ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}`)
+        const emailItems = currencyBundle.lines
+          .map(
+            (line) =>
+              `• ${line.name} x${line.quantity} - ${formatCurrency(line.line_total_kes_cents)} (≈ ${formatMajor(line.line_total_display, currency)})${line.productUrl ? `\n  ${line.productUrl}` : ""}`
+          )
           .join("\n");
-        const emailMessage = `New order (${paymentLabel}). Customer to pay via M-Pesa.\n\nOrder ID: ${orderId}\nCustomer: ${firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer"}\nPhone: ${formatPhone(phoneNumber || phone)}\nAddress: ${address || "To be confirmed"}\n\nItems:\n${emailItems}\n\nTotal: ${formatCurrency(total)}\n\nConfirm via WhatsApp when payment is received.`;
+        const emailMessage = `New order (${paymentLabel}). Customer to pay via M-Pesa.\n\nOrder ID: ${orderId}\nCustomer: ${firstName && lastName ? `${firstName} ${lastName}`.trim() : "Customer"}\nPhone: ${formatPhone(phoneNumber || phone)}\nAddress: ${address || "To be confirmed"}\nDisplay currency: ${currency}\n\nItems:\n${emailItems}\n\nSubtotal: ${formatCurrency(subtotal)}\nDelivery: ${formatCurrency(deliveryFeeInCents)}\nTip: ${formatCurrency(tipValue)}\nTOTAL (KES charged): ${formatCurrency(total)}\nTOTAL (${currency} display): ${formatMajor(currencyBundle.snapshot.display.total, currency)}\n\nConfirm via WhatsApp when payment is received.\n\n${currencyBundle.notes}`;
         axios.post("/api/email", { type: "order", subject: emailSubject, message: emailMessage }).catch((err) => console.error("Order email error:", err));
 
         // Generate WhatsApp message with order details
         let orderMessage = `*NEW ORDER #${orderId}*\n\n`;
         orderMessage += `*Items:*\n`;
-        (orderData?.items || items).forEach((item, index) => {
-          orderMessage += `${index + 1}. ${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}\n`;
-          if (item.options) {
-            orderMessage += `   Options: ${Object.entries(item.options).map(([k, v]) => `${k}: ${v}`).join(", ")}\n`;
-          }
+        currencyBundle.lines.forEach((line, index) => {
+          orderMessage += `${index + 1}. ${line.name} x${line.quantity} - ${formatCurrency(line.line_total_kes_cents)} (≈ ${formatMajor(line.line_total_display, currency)})\n`;
+          if (line.productUrl) orderMessage += `   ${line.productUrl}\n`;
         });
-        orderMessage += `\n*Total: ${formatCurrency(total)}*\n`;
+        orderMessage += `\n*Total (KES): ${formatCurrency(total)}*\n`;
+        orderMessage += `*Display (${currency}): ${formatMajor(currencyBundle.snapshot.display.total, currency)}*\n`;
         orderMessage += `*Payment Method: ${paymentMethod === "till" ? "M-Pesa Till Number" : "M-Pesa Paybill"}*\n\n`;
         orderMessage += `Please confirm this order and complete payment.`;
 
@@ -299,16 +336,12 @@ export default function CheckoutPage() {
           (firstName && lastName ? `${firstName} ${lastName}`.trim() : orderData?.customer?.name) ||
           "Customer";
 
+        const currencyBundle = buildOrderCurrencyBundle(
+          `Payment via Pesapal (card / M-Pesa STK). Charged total: ${formatCurrency(total)}.`
+        );
+
         const orderResponse = await axios.post("/api/orders", {
-          items: (orderData?.items || items).map((item) => ({
-            productId: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            image: item.image,
-            slug: item.slug,
-            options: item.options,
-          })),
+          items: currencyBundle.items,
           total: total,
           customer_name: customerName,
           phone: msisdn,
@@ -316,7 +349,8 @@ export default function CheckoutPage() {
           ...buildCheckoutOrderMeta(orderData, { address, city }),
           delivery_date: new Date().toISOString(),
           payment_method: "card",
-          notes: `Payment via Pesapal (card / M-Pesa STK). Total: ${formatCurrency(total)}`,
+          notes: currencyBundle.notes,
+          currency_meta: currencyBundle.currency_meta,
         });
 
         const orderId = orderResponse.data?.id as string | undefined;
@@ -452,33 +486,43 @@ export default function CheckoutPage() {
                           <p className="text-sm font-medium text-brand-gray-900 truncate">{item.name}</p>
                           <p className="text-xs text-brand-gray-600">Qty: {item.quantity}</p>
                         </div>
-                        <p className="text-sm font-semibold">{formatCurrency(item.price * item.quantity)}</p>
+                        <PriceDisplay amountCents={item.price * item.quantity} size="sm" />
                       </div>
                     ))}
                   </div>
 
 
                   <div className="space-y-2 border-t border-brand-gray-200 pt-4">
-                    <div className="flex justify-between text-sm">
+                    <div className="flex justify-between text-sm items-center gap-2">
                       <span className="text-brand-gray-600">Subtotal {(orderData?.items || items).length} items</span>
-                      <span className="font-medium">{formatCurrency(subtotal)}</span>
+                      <PriceDisplay amountCents={subtotal} size="sm" />
                     </div>
                     {deliveryFeeInCents > 0 && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm items-center gap-2">
                         <span className="text-brand-gray-600">Delivery Fee ({orderData?.delivery?.location || "Nairobi"})</span>
-                        <span className="font-medium">{formatCurrency(deliveryFeeInCents)}</span>
+                        <PriceDisplay amountCents={deliveryFeeInCents} size="sm" />
                       </div>
                     )}
                     {tipValue > 0 && (
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-sm items-center gap-2">
                         <span className="text-brand-gray-600">Tip</span>
-                        <span className="font-medium">{formatCurrency(tipValue)}</span>
+                        <PriceDisplay amountCents={tipValue} size="sm" />
                       </div>
                     )}
-                    <div className="flex justify-between items-center text-lg font-bold border-t border-brand-gray-200 pt-4 mt-4">
+                    <div className="flex justify-between items-center text-lg font-bold border-t border-brand-gray-200 pt-4 mt-4 gap-2">
                       <span>Total</span>
-                      <span>{formatCurrency(total)}</span>
+                      <PriceDisplay amountCents={total} size="md" />
                     </div>
+                    {currency !== "KES" && (
+                      <p className="text-xs text-brand-gray-500 pt-1">
+                        You will be charged <strong>{formatCurrency(total)}</strong> in Kenyan Shillings at payment
+                        (≈ {formatMajor(
+                          (total / 100) * (rates[currency] || 1),
+                          currency
+                        )}{" "}
+                        display).
+                      </p>
+                    )}
                   </div>
                 </>
               )}

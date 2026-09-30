@@ -16,7 +16,8 @@ import {
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import Logo from "./Logo";
-import { formatCurrency } from "@/lib/utils";
+import { CurrencySwitcher } from "@/components/PriceDisplay";
+import PriceDisplay from "@/components/PriceDisplay";
 import type { Product } from "@/lib/db";
 import { MAIN_NAV, type NavItem } from "@/lib/navTaxonomy";
 
@@ -205,6 +206,7 @@ export default function Header() {
             </div>
 
             <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
+              <CurrencySwitcher className="hidden sm:block" />
               <button
                 type="button"
                 onClick={handleSearchClick}
@@ -302,7 +304,7 @@ export default function Header() {
                               {product.title}
                             </h3>
                             <p className="font-price text-sm font-bold tabular-nums text-brand-rose-deep mt-0.5">
-                              {formatCurrency(product.price)}
+                              <PriceDisplay amountCents={product.price} size="sm" />
                             </p>
                           </div>
                         </button>

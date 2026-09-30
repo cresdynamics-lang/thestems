@@ -4,7 +4,7 @@ import { useCartStore } from "@/lib/store/cart";
 import CheckoutForm from "@/components/CheckoutForm";
 import Image from "next/image";
 import Link from "next/link";
-import { formatCurrency } from "@/lib/utils";
+import PriceDisplay from "@/components/PriceDisplay";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 export default function CartPage() {
@@ -103,9 +103,7 @@ export default function CartPage() {
 
                       {/* Price */}
                       <div className="flex-shrink-0 text-right">
-                        <p className="font-medium text-base sm:text-lg text-brand-gray-900">
-                          {formatCurrency(item.price * item.quantity)}
-                        </p>
+                        <PriceDisplay amountCents={item.price * item.quantity} size="md" />
                       </div>
                     </div>
                   </div>

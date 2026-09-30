@@ -22,10 +22,15 @@ async function sendPendingOrderNotifications(order: any) {
   const shortId = order.id.slice(0, 8);
   const isOnlinePayment = order.payment_method === "pesapal" || order.payment_method === "card";
   const itemsRows = (order.items || [])
-    .map(
-      (item: any) =>
-        `<tr><td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">${item.quantity || 1}x ${item.name || "Item"}</td><td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:right;">${formatCurrency((item.price || 0) * (item.quantity || 1))}</td></tr>`
-    )
+    .map((item: any) => {
+      const productUrl =
+        item.options?.product_url ||
+        (item.slug ? `https://thestemsflowers.co.ke/product/${item.slug}` : "");
+      const displayBit = item.options?.line_display
+        ? ` <span style="color:#6b7280;font-size:12px;">(≈ ${item.options.display_currency || ""} ${Number(item.options.line_display).toFixed(2)})</span>`
+        : "";
+      return `<tr><td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">${item.quantity || 1}x ${item.name || "Item"}${productUrl ? `<br/><a href="${productUrl}" style="color:#16a34a;font-size:12px;">${productUrl}</a>` : ""}${displayBit}</td><td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:right;">${formatCurrency((item.price || 0) * (item.quantity || 1))}</td></tr>`;
+    })
     .join("");
 
   const adminHtml = `
@@ -130,6 +135,11 @@ export async function POST(request: NextRequest) {
       deliveryAddress: body.delivery_address
     });
 
+    const currencyMetaNote =
+      body.currency_meta && !String(body.notes || "").includes("CURRENCY & ORDER BREAKDOWN")
+        ? `\n\nCurrency meta JSON: ${JSON.stringify(body.currency_meta)}`
+        : "";
+
     const order = await createOrder({
       items: body.items,
       total_amount: body.total || body.total_amount,
@@ -147,7 +157,7 @@ export async function POST(request: NextRequest) {
       delivery_date: body.delivery_date,
       payment_method: body.payment_method || "whatsapp",
       status: "pending",
-      notes: body.notes || null,
+      notes: `${body.notes || ""}${currencyMetaNote}`.trim() || null,
     } as Parameters<typeof createOrder>[0]);
 
     if (!order) {

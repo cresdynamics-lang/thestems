@@ -3,13 +3,13 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { formatCurrency } from "@/lib/utils";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingCartIcon as ShoppingCartIconSolid } from "@heroicons/react/24/solid";
 import { Analytics } from "@/lib/analytics";
 import { getCleanProductTitle, getProductImageAlt } from "@/lib/productDisplay";
 import { generateProductWhatsAppLink } from "@/lib/whatsapp";
 import { registerAtcCard } from "@/lib/atcSpotlight";
+import PriceDisplay from "@/components/PriceDisplay";
 
 interface ProductCardProps {
   id: string;
@@ -249,12 +249,10 @@ export default function ProductCard({
         />
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <p className="font-price text-[15px] font-bold tabular-nums tracking-tight text-brand-rose-deep sm:text-[17px] md:text-[19px]">
-              {formatCurrency(price)}
-            </p>
+            <PriceDisplay amountCents={price} size="md" />
             {onSale && (
               <p className="font-price text-[11px] font-medium tabular-nums tracking-wide text-brand-gray-400 line-through sm:text-xs">
-                {formatCurrency(compareAtPrice!)}
+                <PriceDisplay amountCents={compareAtPrice!} interactive={false} size="sm" className="!text-brand-gray-400 !font-medium" />
               </p>
             )}
           </div>

@@ -5,8 +5,8 @@ import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductRecommendations from "@/components/product/ProductRecommendations";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import PriceDisplay from "@/components/PriceDisplay";
 import { getProductBySlug } from "@/lib/db";
-import { formatCurrency } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { SITE_URL, absoluteUrl, buildProductJsonLd, toAbsoluteImageUrl } from "@/lib/seo";
 import {
@@ -131,8 +131,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </h1>
 
               <div className="mb-6">
-                <p className="font-mono font-semibold text-brand-green text-3xl mb-2">
-                  {formatCurrency(product.price)}
+                <PriceDisplay amountCents={product.price} size="lg" />
+                <p className="mt-1 text-xs text-brand-gray-500">
+                  Tap the price to switch KES / USD / GBP / EUR. Checkout is charged in KES.
                 </p>
               </div>
 

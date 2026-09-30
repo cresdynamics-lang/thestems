@@ -93,12 +93,27 @@ export function OrderItemsList({
                 {item.options && Object.keys(item.options).length > 0 && (
                   <p className="text-xs text-[var(--staff-muted)] mt-0.5">
                     {Object.entries(item.options)
+                      .filter(([k]) => !["unit_display", "line_display"].includes(k))
                       .map(([k, v]) => `${k}: ${v}`)
                       .join(", ")}
                   </p>
                 )}
+                {item.options?.product_url && (
+                  <a
+                    href={item.options.product_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs underline break-all"
+                    style={{ color: "var(--staff-accent)" }}
+                  >
+                    {item.options.product_url}
+                  </a>
+                )}
                 <p className="text-xs text-[var(--staff-muted)] mt-0.5">
                   Qty {item.quantity} · {formatCurrency(item.price)} each
+                  {item.options?.line_display
+                    ? ` · display ${item.options.display_currency || ""} ${Number(item.options.line_display).toFixed(2)}`
+                    : ""}
                 </p>
               </div>
             </div>

@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Analytics } from "@/lib/analytics";
 import { PencilIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import PriceDisplay from "@/components/PriceDisplay";
 
 const schema = yup.object({
   name: yup.string().required("Your name is required"),
@@ -494,13 +495,13 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
       <div className="border-t border-brand-gray-200 pt-4">
         <div className="flex justify-between items-center mb-4">
           <span className="text-base font-medium text-brand-gray-900">Subtotal</span>
-          <span className="text-base font-semibold text-brand-gray-900">{formatCurrency(subtotal)}</span>
+          <PriceDisplay amountCents={subtotal} size="md" />
         </div>
         {selectedLocation && (
           <div className="flex justify-between items-center mb-4 text-sm text-brand-gray-600">
             <span>Delivery Fee ({selectedLocation})</span>
             <span className="font-medium">
-              {deliveryFeeInCents === 0 ? "Free" : formatCurrency(deliveryFeeInCents)}
+              {deliveryFeeInCents === 0 ? "Free" : <PriceDisplay amountCents={deliveryFeeInCents} size="sm" />}
             </span>
           </div>
         )}
@@ -547,7 +548,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
               {tipPercentage && (
                 <div className="mt-2 flex justify-between items-center text-sm">
                   <span className="text-brand-gray-600">Tip ({tipPercentage}%)</span>
-                  <span className="font-medium text-brand-gray-900">{formatCurrency(tipAmount)}</span>
+                  <PriceDisplay amountCents={tipAmount} size="sm" />
                 </div>
               )}
             </div>
@@ -557,7 +558,7 @@ export default function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         {/* Total */}
         <div className="flex justify-between items-center pt-2 border-t border-brand-gray-200">
           <span className="text-lg font-semibold text-brand-gray-900">Total</span>
-          <span className="text-lg font-bold text-brand-gray-900">{formatCurrency(total)}</span>
+          <PriceDisplay amountCents={total} size="md" />
         </div>
       </div>
 
