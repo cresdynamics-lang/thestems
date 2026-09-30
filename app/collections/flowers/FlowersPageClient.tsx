@@ -66,7 +66,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
   // Group products by subcategory - support multiple subcategories via tags
   const productsBySubcategory = useMemo(() => {
     const grouped: Record<string, Product[]> = {};
-    const allowed = new Set(validSubcategories);
+    const allowed = new Set<string>(validSubcategories as string[]);
 
     allDisplayItems.forEach((product) => {
       const subcatsFromTags = (product.tags || []).filter((tag) => allowed.has(tag));
@@ -91,7 +91,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
   const filteredProducts = useMemo(() => {
     if (!selectedSubcategory) {
       const productsWithSubcats = Object.values(productsBySubcategory).flat();
-      const allowed = new Set(validSubcategories);
+      const allowed = new Set<string>(validSubcategories as string[]);
       const productsWithoutSubcats = allDisplayItems.filter((product) => {
         const hasImage = product.images && product.images.length > 0 && product.images[0];
         const hasSubcat =
