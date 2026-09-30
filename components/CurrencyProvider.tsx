@@ -1,22 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import {
-  detectCurrencyFromBrowser,
-  useCurrencyStore,
-} from "@/lib/store/currency";
-import type { CurrencyRates, DisplayCurrency } from "@/lib/currency";
+import { useCurrencyStore } from "@/lib/store/currency";
+import type { CurrencyRates } from "@/lib/currency";
 
 /**
- * Loads live FX rates + geolocation currency default once per session.
- * Manual currency choice always wins over geo/locale.
+ * Loads live FX rates for optional display conversion.
+ * Default shop currency stays KES — no geo/locale auto-switch.
+ * Users can still change currency manually via PriceDisplay / CurrencySwitcher (desktop).
  */
 export default function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const setRates = useCurrencyStore((s) => s.setRates);
   const setGeo = useCurrencyStore((s) => s.setGeo);
-  const applyDetectedCurrency = useCurrencyStore((s) => s.applyDetectedCurrency);
-  const manualOverride = useCurrencyStore((s) => s.manualOverride);
-  const hydrated = useCurrencyStore((s) => s.hydrated);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,53 +27,24 @@ export default function CurrencyProvider({ children }: { children: React.ReactNo
       }
     }
 
-    async function loadGeo() {
-      if (manualOverride) return;
+    async function loadGeoCountryOnly() {
       try {
         const res = await fetch("/api/currency/geo", { cache: "no-store" });
-        if (!res.ok) {
-          const { currency, source } = detectCurrencyFromBrowser();
-          if (!cancelled) applyDetectedCurrency(currency, source);
-          return;
-        }
-        const data = (await res.json()) as {
-          country: string | null;
-          currency: DisplayCurrency;
-          source: string;
-        };
-        if (cancelled) return;
-        if (data.country) setGeo(data.country);
-        if (data.country) {
-          applyDetectedCurrency(data.currency, "geolocation");
-        } else {
-          const { currency, source } = detectCurrencyFromBrowser();
-          applyDetectedCurrency(currency, source);
-        }
+        if (!res.ok) return;
+        const data = (await res.json()) as { country: string | null };
+        if (!cancelled && data.country) setGeo(data.country);
       } catch {
-        const { currency, source } = detectCurrencyFromBrowser();
-        if (!cancelled) applyDetectedCurrency(currency, source);
+        // ignore
       }
     }
 
     loadRates();
-    if (hydrated) {
-      loadGeo();
-    } else {
-      // Wait briefly for persist rehydrate so we don't overwrite a saved manual choice
-      const t = setTimeout(() => {
-        const state = useCurrencyStore.getState();
-        if (!state.manualOverride) loadGeo();
-      }, 80);
-      return () => {
-        cancelled = true;
-        clearTimeout(t);
-      };
-    }
+    loadGeoCountryOnly();
 
     return () => {
       cancelled = true;
     };
-  }, [hydrated, manualOverride, setRates, setGeo, applyDetectedCurrency]);
+  }, [setRates, setGeo]);
 
   return <>{children}</>;
 }

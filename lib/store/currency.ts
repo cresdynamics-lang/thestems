@@ -77,6 +77,10 @@ export const useCurrencyStore = create<CurrencyStore>()(
         geoDetectedAt: s.geoDetectedAt,
       }),
       onRehydrateStorage: () => (state) => {
+        if (state && !state.manualOverride) {
+          state.currency = "KES";
+          state.preferenceSource = "default";
+        }
         state?.setHydrated(true);
       },
     }

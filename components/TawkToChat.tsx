@@ -41,11 +41,11 @@ export default function TawkToChat() {
 
     window.Tawk_API = window.Tawk_API || {};
     window.Tawk_LoadStart = new Date();
-    // bl = bottom-left (WhatsApp button stays bottom-right)
+    // bl = bottom-left; raise widget so IG/FB floats sit above it
     window.Tawk_API.customStyle = {
       visibility: {
-        desktop: { position: "bl", xOffset: 24, yOffset: 24 },
-        mobile: { position: "bl", xOffset: 16, yOffset: 16 },
+        desktop: { position: "bl", xOffset: 20, yOffset: 20 },
+        mobile: { position: "bl", xOffset: 12, yOffset: 16 },
       },
     };
 

@@ -3,13 +3,11 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
-import SeoInternalLinks from "@/components/SeoInternalLinks";
 import HomepageHero from "@/components/home/HomepageHero";
 import HomepageProductSections from "@/components/home/HomepageProductSections";
 import HomeBlogSection, { HomeBlogSectionSkeleton } from "@/components/home/HomeBlogSection";
 import { SITE_URL } from "@/lib/seo";
 import { HOME_SEO_KEYWORDS } from "@/lib/seo-keywords";
-import { HOMEPAGE_SEO_LINKS } from "@/lib/seoLinkMatrix";
 import { whatsappUrl } from "@/lib/contact";
 
 const baseUrl = SITE_URL;
@@ -146,53 +144,6 @@ export default function HomePage() {
       <JsonLd data={homepageFaqJsonLd} />
       <div>
         <HomepageHero />
-
-        {/* SEO H1 + supporting copy — brand tagline stays in hero */}
-        <section className="bg-white border-b border-brand-gray-200">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-            <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-brand-gray-900 mb-3 max-w-4xl">
-              Flower Delivery Nairobi – Fresh Flowers, Gifts &amp; Same-Day Delivery
-            </h1>
-            <p className="text-brand-gray-700 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed mb-2">
-              Order fresh flowers, roses, graduation bouquets, gift hampers, teddy bears, fruit
-              baskets and premium gifts from The Stems Flowers, a Nairobi florist offering reliable
-              same-day flower and gift delivery.
-            </p>
-            <p className="text-brand-gray-600 text-sm sm:text-base max-w-3xl leading-relaxed mb-5">
-              Visit our flower shop at Delta Hotel, University Way in Nairobi CBD, or order online
-              for delivery across Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill and
-              nearby estates. Pay with M-Pesa or card.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-2">
-              <a
-                href={whatsappUrl(
-                  "Hello! I'd like same-day flower delivery in Nairobi."
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md bg-brand-green px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-green/90"
-              >
-                Order on WhatsApp
-              </a>
-              <Link
-                href="/collections/flowers"
-                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
-              >
-                Shop flowers
-              </Link>
-              <Link
-                href="/same-day-flower-delivery-nairobi"
-                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
-              >
-                Same-day delivery
-              </Link>
-            </div>
-            <SeoInternalLinks
-              title="Popular searches & services"
-              links={HOMEPAGE_SEO_LINKS}
-            />
-          </div>
-        </section>
 
         <HomepageProductSections />
 
@@ -378,6 +329,49 @@ export default function HomePage() {
         <Suspense fallback={<HomeBlogSectionSkeleton />}>
           <HomeBlogSection />
         </Suspense>
+
+        {/* SEO H1 + supporting copy — lower on page; products sit right under hero */}
+        <section className="bg-white border-t border-b border-brand-gray-200">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+            <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-brand-gray-900 mb-3 max-w-4xl">
+              Flower Delivery Nairobi – Fresh Flowers, Gifts &amp; Same-Day Delivery
+            </h1>
+            <p className="text-brand-gray-700 text-sm sm:text-base md:text-lg max-w-3xl leading-relaxed mb-2">
+              Order fresh flowers, roses, graduation bouquets, gift hampers, teddy bears, fruit
+              baskets and premium gifts from The Stems Flowers, a Nairobi florist offering reliable
+              same-day flower and gift delivery.
+            </p>
+            <p className="text-brand-gray-600 text-sm sm:text-base max-w-3xl leading-relaxed mb-5">
+              Visit our flower shop at Delta Hotel, University Way in Nairobi CBD, or order online
+              for delivery across Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill and
+              nearby estates. Pay with M-Pesa or card.
+            </p>
+            <div className="flex flex-wrap gap-3 mb-2">
+              <a
+                href={whatsappUrl(
+                  "Hello! I'd like same-day flower delivery in Nairobi."
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md bg-brand-green px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-green/90"
+              >
+                Order on WhatsApp
+              </a>
+              <Link
+                href="/collections/flowers"
+                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
+              >
+                Shop flowers
+              </Link>
+              <Link
+                href="/same-day-flower-delivery-nairobi"
+                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
+              >
+                Same-day delivery
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* Homepage FAQ Section */}
         <section className="py-12 md:py-16 lg:py-20 bg-brand-blush border-t border-brand-gray-200">

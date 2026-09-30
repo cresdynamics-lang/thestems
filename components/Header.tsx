@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, type ReactNode } from "react";
 import { Dialog, Transition, Disclosure } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -12,21 +12,58 @@ import {
   ShoppingCartIcon,
   MagnifyingGlassIcon,
   ChevronDownIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import Logo from "./Logo";
 import { CurrencySwitcher } from "@/components/PriceDisplay";
 import PriceDisplay from "@/components/PriceDisplay";
+import NavLeafGrid from "@/components/NavLeafGrid";
 import type { Product } from "@/lib/db";
-import { MAIN_NAV, type NavItem } from "@/lib/navTaxonomy";
+import { MAIN_NAV, HERO_GIFT_AUDIENCES, type NavItem } from "@/lib/navTaxonomy";
 
 const CartSidebar = dynamic(() => import("./CartSidebar"), { ssr: false });
+
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Colour matching substrings of the typed query inside product titles. */
+function HighlightMatch({ text, query }: { text: string; query: string }): ReactNode {
+  const q = query.trim();
+  if (!q) return text;
+  const tokens = [...new Set(q.split(/\s+/).filter((t) => t.length > 0))];
+  if (!tokens.length) return text;
+  const re = new RegExp(`(${tokens.map(escapeRegExp).join("|")})`, "gi");
+  const parts = text.split(re);
+  return parts.map((part, i) => {
+    const isMatch = tokens.some((t) => t.toLowerCase() === part.toLowerCase());
+    if (isMatch) {
+      return (
+        <mark
+          key={i}
+          className="rounded-sm bg-brand-rose-deep/20 px-0.5 font-semibold text-brand-rose-deep not-italic"
+        >
+          {part}
+        </mark>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
 
 function DesktopNavItem({ item }: { item: NavItem }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasChildren = Boolean(item.children?.length);
+  const childCount = item.children?.length ?? 0;
+  const cols =
+    childCount > 9
+      ? "grid-cols-3"
+      : childCount > 4
+        ? "grid-cols-2 sm:grid-cols-3"
+        : "grid-cols-2";
 
   const clearClose = () => {
     if (closeTimer.current) {
@@ -80,20 +117,21 @@ function DesktopNavItem({ item }: { item: NavItem }) {
           onMouseEnter={clearClose}
           onMouseLeave={scheduleClose}
         >
-          <div className="w-64 max-h-[70vh] overflow-y-auto rounded-lg border border-brand-gray-200 bg-white py-2 shadow-lg">
-            <ul className="flex flex-col">
-              {item.children!.map((child) => (
-                <li key={child.label}>
-                  <Link
-                    href={child.href}
-                    className="block px-4 py-2.5 text-sm text-brand-gray-800 hover:bg-brand-blush hover:text-brand-rose-deep transition-colors"
-                    onClick={() => setOpen(false)}
-                  >
-                    {child.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="w-[min(92vw,36rem)] max-h-[75vh] overflow-y-auto rounded-xl border border-brand-gray-200 bg-white shadow-xl">
+            <NavLeafGrid
+              leaves={item.children!}
+              columnsClass={cols}
+              onNavigate={() => setOpen(false)}
+            />
+            <div className="border-t border-brand-gray-100 px-3 py-2">
+              <Link
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="text-xs font-semibold text-brand-rose-deep hover:underline"
+              >
+                View all {item.label} →
+              </Link>
+            </div>
           </div>
         </div>
       ) : null}
@@ -111,7 +149,7 @@ export default function Header() {
   const [isSearching, setIsSearching] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { cartOpen, setCartOpen } = useUIStore();
-  const { getItemCount } = useCartStore();
+  const { getItemCount, addItem } = useCartStore();
   const itemCount = getItemCount();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
@@ -158,7 +196,7 @@ export default function Header() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       performSearch(searchQuery);
-    }, 160);
+    }, 100);
     return () => clearTimeout(timeoutId);
   }, [searchQuery, performSearch]);
 
@@ -185,6 +223,19 @@ export default function Header() {
     setSearchCount(0);
   };
 
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
+    e.stopPropagation();
+    e.preventDefault();
+    addItem({
+      id: product.id,
+      name: product.title,
+      price: product.price,
+      image: product.images?.[0] || "/images/logo/thestemslogo.jpeg",
+      slug: product.slug,
+    });
+    setCartOpen(true);
+  };
+
   const closeMobile = () => setMobileMenuOpen(false);
 
   return (
@@ -198,7 +249,6 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Desktop MAIN NAV — vertical dropdown columns */}
             <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-2 xl:gap-x-3 lg:flex-1 lg:px-2">
               {MAIN_NAV.map((item) => (
                 <DesktopNavItem key={item.label} item={item} />
@@ -206,7 +256,8 @@ export default function Header() {
             </div>
 
             <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
-              <CurrencySwitcher className="hidden sm:block" />
+              {/* Currency switcher desktop only — not on hamburger / small screens */}
+              <CurrencySwitcher className="hidden lg:block" />
               <button
                 type="button"
                 onClick={handleSearchClick}
@@ -281,33 +332,46 @@ export default function Header() {
                   {searchResults.length > 0 ? (
                     <div className="py-1">
                       {searchResults.map((product) => (
-                        <button
+                        <div
                           key={product.id}
-                          type="button"
-                          onClick={() => handleResultClick(product)}
-                          className="w-full px-4 py-2.5 hover:bg-brand-gray-50 transition-colors text-left flex items-center gap-3 group"
+                          className="flex items-center gap-2 px-3 py-2 hover:bg-brand-gray-50 transition-colors group"
                           data-search-result
                         >
-                          {product.images && product.images.length > 0 && (
-                            <div className="relative w-12 h-12 flex-shrink-0 rounded-md overflow-hidden bg-brand-gray-100">
-                              <Image
-                                src={product.images[0]}
-                                alt={product.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform"
-                                sizes="48px"
-                              />
+                          <button
+                            type="button"
+                            onClick={() => handleResultClick(product)}
+                            className="flex flex-1 min-w-0 items-center gap-3 text-left"
+                          >
+                            {product.images && product.images.length > 0 && (
+                              <div className="relative w-12 h-12 flex-shrink-0 rounded-md overflow-hidden bg-brand-gray-100">
+                                <Image
+                                  src={product.images[0]}
+                                  alt={product.title}
+                                  fill
+                                  className="object-cover group-hover:scale-105 transition-transform"
+                                  sizes="48px"
+                                />
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-product text-[15px] font-semibold tracking-tight text-brand-gray-900 truncate">
+                                <HighlightMatch text={product.title} query={searchQuery} />
+                              </h3>
+                              <p className="font-price text-sm font-bold tabular-nums text-brand-rose-deep mt-0.5">
+                                <PriceDisplay amountCents={product.price} size="sm" />
+                              </p>
                             </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-product text-[15px] font-semibold tracking-tight text-brand-gray-900 group-hover:text-brand-red transition-colors truncate">
-                              {product.title}
-                            </h3>
-                            <p className="font-price text-sm font-bold tabular-nums text-brand-rose-deep mt-0.5">
-                              <PriceDisplay amountCents={product.price} size="sm" />
-                            </p>
-                          </div>
-                        </button>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => handleQuickAdd(e, product)}
+                            className="shrink-0 inline-flex items-center gap-1 rounded-full bg-brand-rose-deep px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-rose-deep/90"
+                            aria-label={`Add ${product.title} to cart`}
+                          >
+                            <PlusIcon className="h-3.5 w-3.5" aria-hidden />
+                            Add
+                          </button>
+                        </div>
                       ))}
                     </div>
                   ) : !isSearching ? (
@@ -321,7 +385,6 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile — accordion, vertical single-column lists */}
         <Transition show={mobileMenuOpen}>
           <Dialog onClose={closeMobile} className="lg:hidden">
             <Transition.Child
@@ -355,6 +418,28 @@ export default function Header() {
                   </button>
                 </div>
 
+                {/* Product categories — mobile counterpart of hero card */}
+                <div className="mb-5 rounded-xl bg-brand-rose-deep text-white overflow-hidden">
+                  <div className="px-4 py-3 border-b border-dashed border-amber-300/70">
+                    <p className="font-heading text-sm font-bold tracking-wide">
+                      Product Categories
+                    </p>
+                  </div>
+                  <ul className="grid grid-cols-2 gap-0">
+                    {HERO_GIFT_AUDIENCES.map((item) => (
+                      <li key={item.label} className="border-b border-r border-dashed border-amber-300/40">
+                        <Link
+                          href={item.href}
+                          onClick={closeMobile}
+                          className="block px-3 py-2.5 text-[13px] font-medium text-white/95 hover:bg-white/15"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
                 <nav className="flex flex-col" aria-label="Mobile">
                   {MAIN_NAV.map((item) =>
                     item.children?.length ? (
@@ -379,19 +464,11 @@ export default function Header() {
                               </Disclosure.Button>
                             </div>
                             <Disclosure.Panel>
-                              <ul className="flex flex-col pb-2 pl-3 border-l-2 border-brand-rose-deep/25 ml-3 mb-2">
-                                {item.children!.map((child) => (
-                                  <li key={child.label}>
-                                    <Link
-                                      href={child.href}
-                                      onClick={closeMobile}
-                                      className="block px-3 py-2.5 text-sm text-brand-gray-700 hover:text-brand-rose-deep"
-                                    >
-                                      {child.label}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
+                              <NavLeafGrid
+                                leaves={item.children!}
+                                onNavigate={closeMobile}
+                                columnsClass="grid-cols-2"
+                              />
                             </Disclosure.Panel>
                           </>
                         )}

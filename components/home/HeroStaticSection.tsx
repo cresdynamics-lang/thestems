@@ -20,8 +20,8 @@ export default function HeroStaticSection({ slide }: { slide: HeroSlideConfig })
       />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid min-h-[420px] grid-cols-1 items-stretch gap-5 lg:min-h-[520px] lg:grid-cols-[240px_minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-6 xl:min-h-[560px] xl:gap-8 py-6 sm:py-8 lg:py-10">
-          {/* Left filter card — product categories */}
-          <div className="order-3 lg:order-1 flex lg:items-stretch justify-center lg:justify-start lg:pt-2">
+          {/* Product categories — desktop only; mobile lives in hamburger */}
+          <div className="hidden lg:order-1 lg:flex lg:items-stretch lg:justify-start lg:pt-2">
             <HeroGiftAudience />
           </div>
 

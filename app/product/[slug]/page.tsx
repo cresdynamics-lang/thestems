@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ImageGallery from "@/components/ImageGallery";
 import ProductDetailClient from "./ProductDetailClient";
 import ProductRecommendations from "@/components/product/ProductRecommendations";
+import ProductAddOnsCarousel from "@/components/product/ProductAddOnsCarousel";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import PriceDisplay from "@/components/PriceDisplay";
 import { getProductBySlug } from "@/lib/db";
@@ -186,6 +187,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
       </div>
+
+      <ProductAddOnsCarousel excludeProductId={product.id} />
 
       <Suspense fallback={null}>
         <ProductRecommendations product={product} />
