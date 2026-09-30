@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { whatsappUrl } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "White Roses Nairobi — Wedding & Sympathy White Rose Bouquets | The Stems Flowers",
@@ -42,6 +43,16 @@ export default function WhiteRosesNairobiPage() {
           >
             Shop White Rose Bouquets in Nairobi
           </Link>
+          <a
+            href={whatsappUrl(
+              "Hello! I'd like to order white roses in Nairobi."
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline text-sm md:text-base"
+          >
+            WhatsApp The Stems Flowers Nairobi
+          </a>
           <Link
             href="/wedding-car-decor-nairobi"
             className="btn-outline text-sm md:text-base"
@@ -53,4 +64,3 @@ export default function WhiteRosesNairobiPage() {
     </div>
   );
 }
-

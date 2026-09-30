@@ -428,14 +428,19 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
       "Flower shop in Nairobi CBD — fresh bouquets, roses and gift hampers. Walk in at Delta Hotel, University Way or order online for same-day delivery.",
     h1: "Flower Shop Nairobi – Walk In or Order Online",
     intro: [
-      "Need a flower shop in Nairobi you can trust? The Stems Flowers is a full-service flower shop in the CBD with ready bouquets, custom arrangements, gift hampers and teddy bears.",
-      "Walk in at Delta Hotel, University Way, or shop online for delivery across Nairobi the same day.",
+      "Need a flower shop in Nairobi you can trust for walk-ins? The Stems Flowers is a full-service shop in the CBD with ready bouquets on the floor, custom arrangements built while you wait, gift hampers and teddy bears.",
+      "Prefer not to visit? Shop online for delivery across Nairobi the same day — or walk in at Delta Hotel, University Way when you want to see and smell the flowers before you buy.",
     ],
     faqs: [
       {
         question: "Can I walk into your flower shop?",
         answer:
-          "Yes. Visit us at Delta Hotel, University Way, Nairobi CBD, Monday–Saturday during shop hours.",
+          "Yes. Visit us at Delta Hotel, University Way, Nairobi CBD, Monday–Saturday during shop hours. Bring colour preferences or a budget and we’ll build a bouquet for you.",
+      },
+      {
+        question: "Is your flower shop the same as online ordering?",
+        answer:
+          "Yes — same studio. Walk in for ready bouquets, or order online / WhatsApp for delivery without visiting.",
       },
     ],
     productCategories: ["flowers", "hampers"],

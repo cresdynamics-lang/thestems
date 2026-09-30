@@ -108,6 +108,52 @@ export const CARD_PRODUCTS = [
   },
 ];
 
+export const TEDDY_PRODUCTS = [
+  {
+    image: "/images/products/teddies/Teddybear1.jpg",
+    title: "Soft Teddy Bear 50cm",
+    description: "Cuddly 50cm teddy bear — perfect with flowers for birthdays and graduations",
+    price: 350000,
+    slug: "soft-teddy-bear-50cm",
+    tags: ["teddy", "birthday", "graduation"],
+  },
+  {
+    image: "/images/products/teddies/TeddyBears1.jpg",
+    title: "Classic Brown Teddy Bear",
+    description: "Classic brown teddy for romantic and just-because gifts in Nairobi",
+    price: 450000,
+    slug: "classic-brown-teddy-bear",
+    tags: ["teddy", "romantic"],
+  },
+  {
+    image: "/images/products/teddies/TeddyBears3.jpg",
+    title: "Giant Teddy Bear",
+    description: "Large teddy bear for big surprises — birthdays, proposals and graduations",
+    price: 850000,
+    slug: "giant-teddy-bear",
+    tags: ["teddy", "giant", "graduation", "birthday"],
+  },
+];
+
+export const HAMPER_PRODUCTS = [
+  {
+    image: "/images/products/hampers/GiftAmper3.jpg",
+    title: "Luxury Gift Hamper Nairobi",
+    description: "Premium gift hamper with treats — birthdays, thank-yous and corporate gifts",
+    price: 850000,
+    slug: "luxury-gift-hamper-nairobi",
+    tags: ["hamper", "luxury", "gift", "corporate", "fruit"],
+  },
+  {
+    image: "/images/products/hampers/GiftAmper6.jpg",
+    title: "Celebration Gift Hamper",
+    description: "Celebration hamper for graduations, get-well wishes and family surprises",
+    price: 950000,
+    slug: "celebration-gift-hamper",
+    tags: ["hamper", "graduation", "get well", "fruit", "chocolate"],
+  },
+];
+
 // Convert predefined products to Product format
 export function getPredefinedProducts(category: string): Product[] {
   const now = new Date().toISOString();
@@ -123,7 +169,7 @@ export function getPredefinedProducts(category: string): Product[] {
         short_description: fp.description,
         description: fp.description,
         category: "flowers" as const,
-        tags: [] as string[],
+        tags: ["rose", "bouquet", "mixed", "delivery", "romantic", "birthday"] as string[],
         created_at: now,
         updated_at: now,
       })
@@ -140,7 +186,7 @@ export function getPredefinedProducts(category: string): Product[] {
       short_description: wp.description,
       description: wp.description,
       category: "wines" as const,
-      tags: [] as string[],
+      tags: ["wine", "hamper", "gift"] as string[],
       created_at: now,
       updated_at: now,
     }));
@@ -156,7 +202,7 @@ export function getPredefinedProducts(category: string): Product[] {
       short_description: cp.description,
       description: cp.description,
       category: "chocolates" as const,
-      tags: [] as string[],
+      tags: ["chocolate", "ferrero", "sweet", "gift"] as string[],
       created_at: now,
       updated_at: now,
     }));
@@ -173,6 +219,38 @@ export function getPredefinedProducts(category: string): Product[] {
       description: cp.description,
       category: "cards" as const,
       tags: [] as string[],
+      created_at: now,
+      updated_at: now,
+    }));
+  }
+
+  if (category === "teddy") {
+    return TEDDY_PRODUCTS.map((tp) => ({
+      id: `teddy-${tp.slug}`,
+      title: tp.title,
+      price: tp.price,
+      images: [tp.image],
+      slug: tp.slug,
+      short_description: tp.description,
+      description: tp.description,
+      category: "teddy" as const,
+      tags: tp.tags,
+      created_at: now,
+      updated_at: now,
+    }));
+  }
+
+  if (category === "hampers") {
+    return HAMPER_PRODUCTS.map((hp) => ({
+      id: `hamper-${hp.slug}`,
+      title: hp.title,
+      price: hp.price,
+      images: [hp.image],
+      slug: hp.slug,
+      short_description: hp.description,
+      description: hp.description,
+      category: "hampers" as const,
+      tags: hp.tags,
       created_at: now,
       updated_at: now,
     }));

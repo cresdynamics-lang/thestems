@@ -10,6 +10,7 @@ import HomeBlogSection, { HomeBlogSectionSkeleton } from "@/components/home/Home
 import { SITE_URL } from "@/lib/seo";
 import { HOME_SEO_KEYWORDS } from "@/lib/seo-keywords";
 import { HOMEPAGE_SEO_LINKS } from "@/lib/seoLinkMatrix";
+import { whatsappUrl } from "@/lib/contact";
 
 const baseUrl = SITE_URL;
 
@@ -157,11 +158,35 @@ export default function HomePage() {
               baskets and premium gifts from The Stems Flowers, a Nairobi florist offering reliable
               same-day flower and gift delivery.
             </p>
-            <p className="text-brand-gray-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+            <p className="text-brand-gray-600 text-sm sm:text-base max-w-3xl leading-relaxed mb-5">
               Visit our flower shop at Delta Hotel, University Way in Nairobi CBD, or order online
               for delivery across Westlands, Kilimani, Karen, Lavington, Kileleshwa, Upper Hill and
               nearby estates. Pay with M-Pesa or card.
             </p>
+            <div className="flex flex-wrap gap-3 mb-2">
+              <a
+                href={whatsappUrl(
+                  "Hello! I'd like same-day flower delivery in Nairobi."
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md bg-brand-green px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-green/90"
+              >
+                Order on WhatsApp
+              </a>
+              <Link
+                href="/collections/flowers"
+                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
+              >
+                Shop flowers
+              </Link>
+              <Link
+                href="/same-day-flower-delivery-nairobi"
+                className="inline-flex items-center justify-center rounded-md border border-brand-gray-300 px-4 py-2.5 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
+              >
+                Same-day delivery
+              </Link>
+            </div>
             <SeoInternalLinks
               title="Popular searches & services"
               links={HOMEPAGE_SEO_LINKS}

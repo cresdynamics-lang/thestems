@@ -76,9 +76,9 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
       "Same-day flower delivery in Lavington Nairobi. Fresh roses, bouquets and gift hampers from The Stems Flowers CBD florist.",
     h1: "Flower Delivery Lavington Nairobi — Same Day",
     intro:
-      "Send fresh flowers and gift hampers to Lavington with The Stems Flowers. We prepare bouquets at our Nairobi CBD studio and deliver to Lavington homes, offices and event venues.",
+      "Send fresh flowers and gift hampers to Lavington with The Stems Flowers. We prepare bouquets at our Nairobi CBD studio and deliver to Lavington homes, offices, apartments near Lavington Green and event venues across the estate.",
     details:
-      "Lavington customers often choose rose bouquets, anniversary arrangements and luxury gift hampers. Order by 4PM for same-day delivery. Pay with M-Pesa online or WhatsApp us for custom colour requests.",
+      "Lavington customers often choose rose bouquets, anniversary arrangements and luxury gift hampers. Share gate or apartment details at checkout. Order by 4PM for same-day delivery. Pay with M-Pesa online or WhatsApp us for custom colour and stem-count requests.",
     nearbyAreas: ["Kilimani", "Kileleshwa", "Westlands", "Karen"],
   },
   {
@@ -90,9 +90,9 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
       "Flower delivery Kileleshwa — roses, mixed bouquets and gift hampers with same-day service from The Stems Flowers Nairobi.",
     h1: "Flower Delivery Kileleshwa — Fresh Bouquets Delivered",
     intro:
-      "The Stems Flowers delivers to Kileleshwa apartments, offices and residences. Perfect for birthdays, apologies, thank-yous and romantic surprises.",
+      "The Stems Flowers delivers to Kileleshwa apartments, offices and residences near Yaya and surrounding streets. Perfect for birthdays, apologies, thank-yous and romantic surprises when you need reliable same-day timing.",
     details:
-      "Popular Kileleshwa gifts include red roses, soft mixed bouquets and teddy-and-flower combos. Same-day delivery when you order before 4PM. Secure M-Pesa checkout online.",
+      "Popular Kileleshwa gifts include red roses, soft mixed bouquets and teddy-and-flower combos. Same-day delivery when you order before 4PM. Secure M-Pesa checkout online, or message WhatsApp with the building name and preferred time window.",
     nearbyAreas: ["Kilimani", "Lavington", "Westlands", "CBD"],
   },
   {
@@ -104,9 +104,9 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
       "Premium flower and gift delivery to Runda Nairobi. Same-day roses, bouquets and luxury hampers from The Stems Flowers.",
     h1: "Flower Delivery Runda — Premium Same-Day Gifts",
     intro:
-      "Deliver elegant flowers and luxury gift hampers to Runda with The Stems Flowers. Ideal for celebrations, corporate hosting and thoughtful family gifts.",
+      "Deliver elegant flowers and luxury gift hampers to Runda with The Stems Flowers. Ideal for celebrations, corporate hosting, family milestones and thoughtful gifts to gated homes across the estate.",
     details:
-      "Runda deliveries often include premium rose arrangements, wine-and-chocolate hampers and large celebration bouquets. Share gate instructions on WhatsApp so our rider arrives smoothly.",
+      "Runda deliveries often include premium rose arrangements, wine-and-chocolate hampers and large celebration bouquets. Share gate instructions and a contact number on WhatsApp so our rider arrives smoothly. Same-day options for orders placed by 4PM.",
     nearbyAreas: ["Gigiri", "Muthaiga", "Westlands", "CBD"],
   },
   {
@@ -118,9 +118,9 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
       "Flower delivery Gigiri Nairobi — bouquets, roses and gift hampers for homes and offices. Same-day options from The Stems Flowers.",
     h1: "Flower Delivery Gigiri Nairobi",
     intro:
-      "Send flowers to Gigiri with The Stems Flowers. Fresh bouquets and gift hampers for residential compounds, offices and celebrations near the UN area.",
+      "Send flowers to Gigiri with The Stems Flowers. Fresh bouquets and gift hampers for residential compounds, offices and celebrations near the UN area — including last-minute thank-yous and host gifts.",
     details:
-      "We coordinate delivery windows for gated communities. Choose roses, mixed bouquets or corporate thank-you hampers. Order by 4PM for same-day where possible.",
+      "We coordinate delivery windows for gated communities and security desks. Choose roses, mixed bouquets or corporate thank-you hampers. Order by 4PM for same-day where possible, and include clear access notes for our rider.",
     nearbyAreas: ["Runda", "Westlands", "Muthaiga", "CBD"],
   },
   {
@@ -132,9 +132,9 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
       "Flower delivery Upper Hill Nairobi for offices, hospitals and events. Same-day bouquets and corporate gifts from The Stems Flowers.",
     h1: "Flower Delivery Upper Hill — Offices & Celebrations",
     intro:
-      "The Stems Flowers delivers to Upper Hill offices, hotels and nearby venues. Perfect for corporate gifts, client thank-yous and celebration bouquets.",
+      "The Stems Flowers delivers to Upper Hill offices, hotels, hospitals and nearby venues. Perfect for corporate gifts, client thank-yous, get-well arrangements and celebration bouquets in Nairobi’s business district.",
     details:
-      "Upper Hill orders often include professional mixed bouquets, get-well arrangements and corporate gift hampers. Same-day delivery for orders before 4PM with M-Pesa payment online.",
+      "Upper Hill orders often include professional mixed bouquets, get-well arrangements and corporate gift hampers. Same-day delivery for orders before 4PM with M-Pesa payment online. Share floor, suite or reception instructions so delivery is smooth.",
     nearbyAreas: ["Nairobi CBD", "Kilimani", "Westlands", "South C"],
   },
 ];
