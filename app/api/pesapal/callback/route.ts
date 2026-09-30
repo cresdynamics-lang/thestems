@@ -77,7 +77,8 @@ async function processPesapalPayment(params: {
   let paymentMethod = "";
 
   if (paymentStatus) {
-    const statusCode = paymentStatus.status_code;
+    // Pesapal: payment_status_code 1 = COMPLETED (also check description)
+    const statusCode = paymentStatus.payment_status_code;
     const statusDesc = paymentStatus.payment_status_description?.toUpperCase();
 
     if (statusCode === 1 || statusDesc === "COMPLETED") {
