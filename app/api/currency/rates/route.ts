@@ -54,8 +54,3 @@ export async function GET() {
 export async function POST() {
   return GET();
 }
-
-/** Soft type guard for clients */
-export function isDisplayCurrency(v: string): v is DisplayCurrency {
-  return (DISPLAY_CURRENCIES as string[]).includes(v);
-}
