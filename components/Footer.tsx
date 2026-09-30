@@ -67,6 +67,14 @@ export default function Footer() {
             <h3 className="font-heading font-bold text-sm mb-3 text-white">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
+                <Link href="/" className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group">
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Home
+                  </span>
+                  </Link>
+                </li>
+                <li>
                 <Link href="/collections/flowers" className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group">
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
@@ -76,12 +84,23 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/collections/teddy-bears"
+                    href="/gifts"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Teddy Bears
+                    Gifts
+                  </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/occasions"
+                  className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
+                  >
+                  <span className="flex items-center gap-2">
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
+                    Occasions
                   </span>
                   </Link>
                 </li>
@@ -98,12 +117,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/blog"
+                  href="/same-day-flower-delivery-nairobi"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                 >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Blog
+                    Same-Day Delivery
                   </span>
                   </Link>
                 </li>
@@ -149,29 +168,29 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/services#wedding"
+                    href="/wedding-flowers-nairobi"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Wedding Flowers
+                    Weddings &amp; Events
                   </span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/services#graduation"
+                    href="/collections/flowers"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
                   <span className="flex items-center gap-2">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-brand-red transition-all duration-300"></span>
-                    Graduation Celebrations
+                    Graduation
                   </span>
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/services#corporate"
+                    href="/corporate-gift-hampers-nairobi"
                   className="text-brand-gray-300 hover:text-brand-red transition-all duration-300 inline-block hover:translate-x-1 group"
                   >
                   <span className="flex items-center gap-2">

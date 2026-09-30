@@ -1,16 +1,11 @@
 import Link from "next/link";
+import { HERO_GIFT_AUDIENCES } from "@/lib/navTaxonomy";
 
-const AUDIENCES = [
-  { label: "Women's Gifts", href: "/collections/flowers?tags=romantic" },
-  { label: "Girlfriend Gifts", href: "/collections/flowers?tags=anniversary" },
-  { label: "Men's Gifts", href: "/collections/gift-hampers" },
-] as const;
-
-/** Gift-audience links stacked vertically in the hero. */
+/** Gift-audience links stacked vertically — mapped to Occasions / Gifts hubs. */
 export default function HeroGiftAudience() {
   return (
     <div className="mb-4 sm:mb-5 flex flex-col items-start gap-2 max-w-xs">
-      {AUDIENCES.map((item) => (
+      {HERO_GIFT_AUDIENCES.map((item) => (
         <Link
           key={item.label}
           href={item.href}

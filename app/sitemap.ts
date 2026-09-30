@@ -41,6 +41,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticPage("/collections/wines", 0.85, "weekly"),
     staticPage("/collections/chocolates", 0.85, "weekly"),
     staticPage("/collections/cards", 0.75, "weekly"),
+    staticPage("/gifts", 0.9, "weekly"),
+    staticPage("/occasions", 0.9, "weekly"),
     staticPage("/blog", 0.8, "weekly"),
     staticPage("/about", 0.7, "monthly"),
     staticPage("/services", 0.75, "monthly"),

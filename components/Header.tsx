@@ -5,34 +5,100 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Dialog, Transition, Disclosure } from "@headlessui/react";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  ShoppingCartIcon,
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 import { useCartStore } from "@/lib/store/cart";
 import { useUIStore } from "@/lib/store/ui";
 import Logo from "./Logo";
 import { formatCurrency } from "@/lib/utils";
 import type { Product } from "@/lib/db";
+import { MAIN_NAV, type NavItem } from "@/lib/navTaxonomy";
 
 const CartSidebar = dynamic(() => import("./CartSidebar"), { ssr: false });
 
-/** Top nav — occasions & collections (Contact lives in footer only) */
-const navigation: { name: string; href: string }[] = [
-  { name: "Wedding", href: "/wedding-flowers-nairobi" },
-  { name: "Teddy Bears", href: "/collections/teddy-bears" },
-  { name: "Flowers", href: "/collections/flowers" },
-  { name: "Gift Hampers", href: "/collections/gift-hampers" },
-  { name: "Graduation", href: "/services#graduation" },
-  { name: "Anniversary", href: "/anniversary-flowers-nairobi" },
-  { name: "Birthday", href: "/birthday-flowers-nairobi" },
-  { name: "Kids Gifts", href: "/collections/teddy-bears" },
-  { name: "Gift Cards", href: "/collections/cards" },
-];
+function DesktopNavItem({ item }: { item: NavItem }) {
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasChildren = Boolean(item.children?.length);
 
-type SearchPayload = {
-  results: Product[];
-  count: number;
-  query: string;
-};
+  const clearClose = () => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const scheduleClose = () => {
+    clearClose();
+    closeTimer.current = setTimeout(() => setOpen(false), 140);
+  };
+
+  useEffect(() => () => clearClose(), []);
+
+  if (!hasChildren) {
+    return (
+      <Link
+        href={item.href}
+        className="text-brand-gray-900 hover:text-brand-rose-deep transition-colors font-medium text-[11px] xl:text-[13px] whitespace-nowrap py-2"
+      >
+        {item.label}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => {
+        clearClose();
+        setOpen(true);
+      }}
+      onMouseLeave={scheduleClose}
+    >
+      <Link
+        href={item.href}
+        className="inline-flex items-center gap-0.5 text-brand-gray-900 hover:text-brand-rose-deep transition-colors font-medium text-[11px] xl:text-[13px] whitespace-nowrap py-2"
+        aria-expanded={open}
+        aria-haspopup="true"
+      >
+        {item.label}
+        <ChevronDownIcon
+          className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        />
+      </Link>
+      {open ? (
+        <div
+          className="absolute left-0 top-full z-50 pt-1"
+          onMouseEnter={clearClose}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="w-64 max-h-[70vh] overflow-y-auto rounded-lg border border-brand-gray-200 bg-white py-2 shadow-lg">
+            <ul className="flex flex-col">
+              {item.children!.map((child) => (
+                <li key={child.label}>
+                  <Link
+                    href={child.href}
+                    className="block px-4 py-2.5 text-sm text-brand-gray-800 hover:bg-brand-blush hover:text-brand-rose-deep transition-colors"
+                    onClick={() => setOpen(false)}
+                  >
+                    {child.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 export default function Header() {
   const router = useRouter();
@@ -66,13 +132,14 @@ export default function Header() {
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
       if (response.ok) {
         const data = await response.json();
-        // Support both legacy array and { results, count } payloads
         if (Array.isArray(data)) {
           setSearchResults(data);
           setSearchCount(data.length);
         } else {
           setSearchResults(data.results || []);
-          setSearchCount(typeof data.count === "number" ? data.count : (data.results || []).length);
+          setSearchCount(
+            typeof data.count === "number" ? data.count : (data.results || []).length
+          );
         }
       } else {
         setSearchResults([]);
@@ -91,7 +158,6 @@ export default function Header() {
     const timeoutId = setTimeout(() => {
       performSearch(searchQuery);
     }, 160);
-
     return () => clearTimeout(timeoutId);
   }, [searchQuery, performSearch]);
 
@@ -118,10 +184,12 @@ export default function Header() {
     setSearchCount(0);
   };
 
+  const closeMobile = () => setMobileMenuOpen(false);
+
   return (
     <>
       <header className="bg-white border-b border-brand-gray-200 sticky top-0 z-50">
-        <nav className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8" aria-label="Top">
+        <nav className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8" aria-label="Main">
           <div className="flex h-16 md:h-20 items-center justify-between gap-2">
             <div className="flex items-center shrink-0">
               <Link href="/" className="flex items-center">
@@ -129,15 +197,10 @@ export default function Header() {
               </Link>
             </div>
 
-            <div className="hidden lg:flex lg:items-center lg:flex-wrap lg:justify-center lg:gap-x-3 xl:gap-x-4 lg:gap-y-1 max-w-[58%] xl:max-w-none">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-brand-gray-900 hover:text-brand-red transition-colors font-medium text-[11px] xl:text-sm whitespace-nowrap"
-                >
-                  {item.name}
-                </Link>
+            {/* Desktop MAIN NAV — vertical dropdown columns */}
+            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-2 xl:gap-x-3 lg:flex-1 lg:px-2">
+              {MAIN_NAV.map((item) => (
+                <DesktopNavItem key={item.label} item={item} />
               ))}
             </div>
 
@@ -256,8 +319,9 @@ export default function Header() {
           )}
         </nav>
 
+        {/* Mobile — accordion, vertical single-column lists */}
         <Transition show={mobileMenuOpen}>
-          <Dialog onClose={() => setMobileMenuOpen(false)} className="lg:hidden">
+          <Dialog onClose={closeMobile} className="lg:hidden">
             <Transition.Child
               enter="transition-opacity duration-300 ease-out"
               enterFrom="opacity-0"
@@ -277,58 +341,71 @@ export default function Header() {
               leaveTo="translate-x-full"
             >
               <Dialog.Panel className="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl p-6 overflow-y-auto">
-                <div className="flex items-center justify-between mb-8 pb-6 border-b border-brand-gray-200">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-brand-gray-200">
                   <Logo className="h-10 w-auto" />
                   <button
                     type="button"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={closeMobile}
                     className="p-2 rounded-full hover:bg-brand-gray-100 transition-colors"
                     aria-label="Close menu"
                   >
                     <XMarkIcon className="h-6 w-6 text-brand-gray-600" />
                   </button>
                 </div>
-                <nav className="flex flex-col space-y-1">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-3 rounded-lg text-brand-gray-900 hover:text-brand-red hover:bg-brand-gray-50 transition-all font-medium"
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+
+                <nav className="flex flex-col" aria-label="Mobile">
+                  {MAIN_NAV.map((item) =>
+                    item.children?.length ? (
+                      <Disclosure key={item.label} as="div" className="border-b border-brand-gray-100">
+                        {({ open }) => (
+                          <>
+                            <div className="flex items-stretch">
+                              <Link
+                                href={item.href}
+                                onClick={closeMobile}
+                                className="flex-1 px-3 py-3.5 text-brand-gray-900 font-semibold text-[15px] hover:text-brand-rose-deep"
+                              >
+                                {item.label}
+                              </Link>
+                              <Disclosure.Button
+                                className="px-3 py-3.5 text-brand-gray-600 hover:text-brand-rose-deep"
+                                aria-label={`Toggle ${item.label} submenu`}
+                              >
+                                <ChevronDownIcon
+                                  className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`}
+                                />
+                              </Disclosure.Button>
+                            </div>
+                            <Disclosure.Panel>
+                              <ul className="flex flex-col pb-2 pl-3 border-l-2 border-brand-rose-deep/25 ml-3 mb-2">
+                                {item.children!.map((child) => (
+                                  <li key={child.label}>
+                                    <Link
+                                      href={child.href}
+                                      onClick={closeMobile}
+                                      className="block px-3 py-2.5 text-sm text-brand-gray-700 hover:text-brand-rose-deep"
+                                    >
+                                      {child.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </Disclosure.Panel>
+                          </>
+                        )}
+                      </Disclosure>
+                    ) : (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        onClick={closeMobile}
+                        className="border-b border-brand-gray-100 px-3 py-3.5 text-brand-gray-900 font-semibold text-[15px] hover:text-brand-rose-deep"
+                      >
+                        {item.label}
+                      </Link>
+                    )
+                  )}
                 </nav>
-                <div className="mt-8 pt-6 border-t border-brand-gray-200 space-y-3">
-                  <p className="px-4 text-xs uppercase tracking-wider text-brand-gray-500 font-semibold">
-                    Add-ons
-                  </p>
-                  <Link
-                    href="/collections/cards"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="mx-4 flex items-center justify-between rounded-xl border border-brand-gray-200 bg-brand-blush/40 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:border-brand-rose-deep/40"
-                  >
-                    Gift Cards
-                    <span className="text-brand-rose-deep text-xs">Shop →</span>
-                  </Link>
-                  <Link
-                    href="/collections/wines"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="mx-4 flex items-center justify-between rounded-xl border border-brand-gray-200 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
-                  >
-                    Wines
-                    <span className="text-brand-gray-400 text-xs">Add-on →</span>
-                  </Link>
-                  <Link
-                    href="/collections/chocolates"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="mx-4 flex items-center justify-between rounded-xl border border-brand-gray-200 px-4 py-3 text-sm font-medium text-brand-gray-900 hover:bg-brand-gray-50"
-                  >
-                    Chocolates
-                    <span className="text-brand-gray-400 text-xs">Add-on →</span>
-                  </Link>
-                </div>
               </Dialog.Panel>
             </Transition.Child>
           </Dialog>
