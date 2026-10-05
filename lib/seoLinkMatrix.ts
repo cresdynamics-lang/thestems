@@ -16,6 +16,61 @@ export type SeoTopicChain = {
 
 export const SEO_TOPIC_CHAINS: SeoTopicChain[] = [
   {
+    id: "diaspora",
+    match: /send.?flowers.?to.?kenya|from.?abroad|diaspora|uk|usa|dubai|australia/i,
+    title: "Send flowers to Kenya",
+    chain: [
+      { href: "/send-gifts-to-kenya", label: "Send gifts to Kenya" },
+      { href: "/flower-delivery-nairobi", label: "Flower delivery Nairobi" },
+      { href: "/collections/flowers", label: "Shop flowers" },
+      { href: "/blog/flower-prices-nairobi", label: "Flower prices" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    whatsappPrompt:
+      "Hello! I'm abroad and would like to send flowers to someone in Nairobi / Kenya.",
+  },
+  {
+    id: "flower-prices",
+    match: /flower.?prices|how.?much.?do.?flowers|bouquet.?price|cost.?of.?roses/i,
+    title: "Shop by budget",
+    chain: [
+      { href: "/collections/flowers", label: "Flowers from KES 3,000" },
+      { href: "/roses-nairobi", label: "Roses Nairobi" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/blog/flower-delivery-nairobi", label: "Delivery guide" },
+      { href: "/blog/what-flowers-to-send-occasion-kenya", label: "Occasion guide" },
+    ],
+    whatsappPrompt:
+      "Hello! I'd like a bouquet recommendation within my budget in Nairobi.",
+  },
+  {
+    id: "seasonal-peak",
+    match: /valentine|mother.?s.?day|christmas.?flower/i,
+    title: "Shop seasonal flowers",
+    chain: [
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/mothers-day-flowers-nairobi", label: "Mother's Day flowers" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/blog/flower-prices-nairobi", label: "Price guide" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    whatsappPrompt:
+      "Hello! I'd like to pre-order Valentine's / Mother's Day / Christmas flowers in Nairobi.",
+  },
+  {
+    id: "flower-care",
+    match: /last.?longer|keep.?flowers.?fresh|care.?for.?a.?bouquet|make.?roses.?last/i,
+    title: "Order fresh flowers",
+    chain: [
+      { href: "/collections/flowers", label: "Shop fresh flowers" },
+      { href: "/roses-nairobi", label: "Roses Nairobi" },
+      { href: "/blog/flower-delivery-nairobi", label: "Delivery guide" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    whatsappPrompt:
+      "Hello! I'd like to order a fresh bouquet in Nairobi today.",
+  },
+  {
     id: "gifts-women",
     match: /gifts?.for.?women|girlfriend|wives?|wife/i,
     title: "Shop gifts for women & girlfriends",

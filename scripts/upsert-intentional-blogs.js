@@ -1,10 +1,29 @@
 #!/usr/bin/env node
 /**
- * Upsert intentional SEO blogs into Postgres.
+ * Upsert SEO pillar + intentional blogs into Postgres.
  * Usage: DATABASE_URL=postgres://... node scripts/upsert-intentional-blogs.js
  */
 const { Client } = require("pg");
-const posts = require("./intentional-blogs-data.js");
+
+function loadPosts() {
+  const posts = [];
+  try {
+    posts.push(...require("./seo-pillar-blogs-data.js"));
+  } catch (e) {
+    console.warn("seo-pillar-blogs-data.js missing:", e.message);
+  }
+  try {
+    posts.push(...require("./intentional-blogs-data.js"));
+  } catch (e) {
+    console.warn("intentional-blogs-data.js missing:", e.message);
+  }
+  // Prefer first occurrence of a slug (pillars first)
+  const map = new Map();
+  for (const p of posts) {
+    if (p?.slug && !map.has(p.slug)) map.set(p.slug, p);
+  }
+  return [...map.values()];
+}
 
 async function main() {
   const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
@@ -12,8 +31,9 @@ async function main() {
     console.error("Set DATABASE_URL");
     process.exit(1);
   }
-  if (!Array.isArray(posts) || !posts.length) {
-    console.error("No posts loaded from intentional-blogs-data.js");
+  const posts = loadPosts();
+  if (!posts.length) {
+    console.error("No posts loaded");
     process.exit(1);
   }
 
@@ -51,7 +71,9 @@ async function main() {
           p.excerpt,
           p.content,
           p.author || "The Stems Team",
-          p.publishedAt ? new Date(p.publishedAt).toISOString() : new Date().toISOString(),
+          p.publishedAt
+            ? new Date(p.publishedAt).toISOString()
+            : new Date().toISOString(),
           p.image,
           p.category,
           p.tags || [],
@@ -62,11 +84,11 @@ async function main() {
           p.focusKeyword || null,
         ]
       );
-      console.log("upserted", p.slug);
+      console.log("upserted", p.slug, "len", (p.content || "").length);
     }
 
     const { rows } = await client.query(
-      `SELECT slug, length(content) AS len, left(meta_title, 60) AS meta, focus_keyword
+      `SELECT slug, length(content) AS len, left(meta_title, 55) AS meta
        FROM blog_posts
        WHERE slug = ANY($1::text[])
        ORDER BY slug`,

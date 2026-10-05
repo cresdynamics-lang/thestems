@@ -55,6 +55,12 @@ const staticPaths = [
 ];
 
 const intentionalBlogs = [
+  "send-flowers-to-kenya-from-abroad",
+  "flower-delivery-nairobi",
+  "flower-prices-nairobi",
+  "what-flowers-to-send-occasion-kenya",
+  "valentines-mothers-day-christmas-flowers-kenya",
+  "how-to-make-flowers-last-longer",
   "gifts-for-women-and-girlfriends-nairobi",
   "best-gifts-for-men-nairobi",
   "graduation-and-kids-gifts-nairobi",

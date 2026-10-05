@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
 import { SITE_URL } from "@/lib/seo";
 import { INTENTIONAL_BLOG_POSTS } from "@/lib/intentionalBlogPosts";
+import { SEO_PILLAR_BLOG_POSTS } from "@/lib/seoPillarBlogPosts";
 import { MAIN_NAV } from "@/lib/navTaxonomy";
 import { GBP_DESTINATION_URLS } from "@/lib/gbpDestinationUrls";
 
@@ -107,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const blogSlugDates = new Map<string, Date>();
-  for (const p of INTENTIONAL_BLOG_POSTS) {
+  for (const p of [...SEO_PILLAR_BLOG_POSTS, ...INTENTIONAL_BLOG_POSTS]) {
     blogSlugDates.set(p.slug, new Date(p.publishedAt));
   }
   for (const p of posts ?? []) {

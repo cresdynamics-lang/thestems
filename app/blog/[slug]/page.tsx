@@ -94,16 +94,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     description: post.metaDescription || post.excerpt,
     image: `${baseUrl}${post.image}`,
     datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
     keywords: post.focusKeyword || (post.tags || []).join(", "),
     author: {
-      "@type": "Organization",
+      "@type": "Person",
       name: post.author,
       url: baseUrl,
     },
     publisher: {
-      "@type": "Organization",
-      name: "The Stems",
+      "@type": "Florist",
+      name: "The Stems Flowers",
       url: baseUrl,
+      telephone: "+254725707143",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Delta Hotel Building, University Way",
+        addressLocality: "Nairobi",
+        addressCountry: "KE",
+      },
       logo: {
         "@type": "ImageObject",
         url: `${baseUrl}/images/logo/thestemslogo.jpeg`,
@@ -167,27 +175,38 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.title}
           </h1>
 
-          <div className="flex items-center gap-3 text-sm text-brand-gray-600 mb-8">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-brand-gray-600 mb-8">
+            <span className="font-medium text-brand-gray-800">{post.author}</span>
+            <span aria-hidden>·</span>
             <time dateTime={post.publishedAt}>
-              {format(new Date(post.publishedAt), "MMM d, yyyy")}
+              Published {format(new Date(post.publishedAt), "MMM d, yyyy")}
             </time>
+            <span aria-hidden>·</span>
+            <span>Last updated {format(new Date(post.publishedAt), "MMM d, yyyy")}</span>
+            <span aria-hidden>·</span>
+            <span>{post.readTime} min read</span>
           </div>
 
           {/* Article Image */}
           <div className="relative w-full h-64 md:h-96 lg:h-[500px] overflow-hidden rounded-lg bg-brand-gray-100 mb-8 md:mb-12">
             <Image
               src={post.image}
-              alt={post.title}
+              alt={
+                post.focusKeyword
+                  ? `${post.focusKeyword} — ${post.title}`
+                  : post.title
+              }
               fill
               className="object-cover"
               priority
-              quality={90}
+              quality={85}
+              sizes="(max-width: 768px) 100vw, 896px"
             />
           </div>
 
           {/* Article Content */}
           <div
-            className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-brand-gray-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-brand-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-brand-green prose-a:no-underline hover:prose-a:underline prose-strong:text-brand-gray-900 prose-strong:font-semibold prose-ul:text-brand-gray-700 prose-ol:text-brand-gray-700 prose-li:text-brand-gray-700 prose-li:mb-2 prose-ul:list-disc prose-ol:list-decimal prose-ul:ml-6 prose-ol:ml-6"
+            className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-brand-gray-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-brand-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-brand-green prose-a:no-underline hover:prose-a:underline prose-strong:text-brand-gray-900 prose-strong:font-semibold prose-ul:text-brand-gray-700 prose-ol:text-brand-gray-700 prose-li:text-brand-gray-700 prose-li:mb-2 prose-ul:list-disc prose-ol:list-decimal prose-ul:ml-6 prose-ol:ml-6 prose-table:w-full prose-table:text-sm prose-th:bg-brand-gray-100 prose-th:p-2 prose-td:p-2 prose-td:border prose-td:border-brand-gray-200 prose-th:border prose-th:border-brand-gray-200 prose-img:rounded-lg"
             dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
           />
 

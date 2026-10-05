@@ -5,6 +5,7 @@ import {
   warnIfSupabaseNotConfigured,
 } from "./supabaseConfig";
 import { INTENTIONAL_BLOG_POSTS } from "./intentionalBlogPosts";
+import { SEO_PILLAR_BLOG_POSTS } from "./seoPillarBlogPosts";
 
 export interface BlogPost {
   slug: string;
@@ -66,6 +67,7 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
 
 // Static blog posts — informational guides (not transactional landing pages)
 const STATIC_BLOG_POSTS: BlogPost[] = [
+  ...SEO_PILLAR_BLOG_POSTS,
   ...INTENTIONAL_BLOG_POSTS,
   {
     slug: "how-to-keep-red-roses-fresh-nairobi",
