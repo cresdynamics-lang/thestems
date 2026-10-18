@@ -6,6 +6,7 @@ import {
 } from "./supabaseConfig";
 import { INTENTIONAL_BLOG_POSTS } from "./intentionalBlogPosts";
 import { SEO_PILLAR_BLOG_POSTS } from "./seoPillarBlogPosts";
+import { SEARCH_INTENT_BLOG_POSTS } from "./searchIntentBlogPosts";
 
 export interface BlogPost {
   slug: string;
@@ -67,6 +68,7 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
 
 // Static blog posts — informational guides (not transactional landing pages)
 const STATIC_BLOG_POSTS: BlogPost[] = [
+  ...SEARCH_INTENT_BLOG_POSTS,
   ...SEO_PILLAR_BLOG_POSTS,
   ...INTENTIONAL_BLOG_POSTS,
   {

@@ -8,6 +8,11 @@ const { Client } = require("pg");
 function loadPosts() {
   const posts = [];
   try {
+    posts.push(...require("./search-intent-blogs-data.js"));
+  } catch (e) {
+    console.warn("search-intent-blogs-data.js missing:", e.message);
+  }
+  try {
     posts.push(...require("./seo-pillar-blogs-data.js"));
   } catch (e) {
     console.warn("seo-pillar-blogs-data.js missing:", e.message);

@@ -16,6 +16,47 @@ export type SeoTopicChain = {
 
 export const SEO_TOPIC_CHAINS: SeoTopicChain[] = [
   {
+    id: "apology",
+    match: /apology|i'?m sorry|say sorry|sorry flower/i,
+    title: "Shop apology flowers",
+    chain: [
+      { href: "/apology-flowers-nairobi", label: "Apology flowers Nairobi" },
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/pink-roses-nairobi", label: "Pink roses" },
+      { href: "/gift-hampers-nairobi", label: "Gift hampers" },
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+    ],
+    whatsappPrompt:
+      "Hello! I need apology / I'm sorry flowers delivered in Nairobi.",
+  },
+  {
+    id: "last-minute",
+    match: /last.?minute|order.?now|urgent|same.?day.?gift/i,
+    title: "Order same-day flowers now",
+    chain: [
+      { href: "/same-day-flower-delivery-nairobi", label: "Same-day delivery" },
+      { href: "/collections/flowers", label: "Shop flowers" },
+      { href: "/birthday-flowers-nairobi", label: "Birthday flowers" },
+      { href: "/blog/flower-prices-nairobi", label: "Price guide" },
+    ],
+    whatsappPrompt:
+      "Hello! I need a last-minute same-day flower gift in Nairobi today.",
+  },
+  {
+    id: "roses-count",
+    match: /how.?many.?roses|dozen.?roses|stem.?count|12.?roses|24.?roses/i,
+    title: "Shop rose bouquets",
+    chain: [
+      { href: "/roses-nairobi", label: "Roses Nairobi" },
+      { href: "/red-roses-nairobi", label: "Red roses" },
+      { href: "/pink-roses-nairobi", label: "Pink roses" },
+      { href: "/anniversary-flowers-nairobi", label: "Anniversary flowers" },
+      { href: "/blog/flower-prices-nairobi", label: "Price guide" },
+    ],
+    whatsappPrompt:
+      "Hello! I need help choosing how many roses / which rose bouquet to send in Nairobi.",
+  },
+  {
     id: "diaspora",
     match: /send.?flowers.?to.?kenya|from.?abroad|diaspora|uk|usa|dubai|australia/i,
     title: "Send flowers to Kenya",
