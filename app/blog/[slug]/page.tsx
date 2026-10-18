@@ -24,11 +24,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) return {};
 
+  // Layout already appends "| The Stems Flowers Nairobi" via metadata template.
   const rawTitle = (post.metaTitle || post.title).trim();
   const title =
     rawTitle.length <= 55
-      ? `${rawTitle} | The Stems`
-      : `${rawTitle.slice(0, 52).trim()}… | The Stems`;
+      ? rawTitle
+      : `${rawTitle.slice(0, 52).trim()}…`;
   const description = (
     post.metaDescription ||
     post.excerpt ||

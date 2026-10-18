@@ -9,7 +9,7 @@ import { FLOWERS_SEO_KEYWORDS } from "@/lib/seo-keywords";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500 | The Stems",
+  title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500",
   description:
     "Order fresh flowers in Nairobi from KSh 3,500. Shop red roses, mixed bouquets, birthday and anniversary flowers with same-day delivery in Nairobi CBD and fast citywide delivery.",
   keywords: FLOWERS_SEO_KEYWORDS,
