@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 import { whatsappUrl } from "@/lib/contact";
 
 export const metadata: Metadata = {
-  title: "White Roses Nairobi — Wedding & Sympathy White Rose Bouquets | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/white-roses-nairobi` },
+  title: "White Roses Nairobi | Wedding & Sympathy",
   description:
     "White roses delivered in Nairobi for weddings, funerals, sympathy and new beginnings. Fresh white rose bouquets from The Stems Flowers, University Way CBD. M-Pesa accepted.",
 };

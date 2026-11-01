@@ -16,8 +16,7 @@ const baseUrl = SITE_URL;
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title:
-    "Flower Delivery Nairobi | Florist & Same-Day Flowers, Gifts | The Stems Flowers",
+  title: "Florist Nairobi | Same-Day Flowers & Gifts | The Stems",
   description:
     "Flower delivery Nairobi with same-day service. Fresh flowers, roses, graduation bouquets, gift hampers and teddy bears from The Stems Flowers — Nairobi florist at Delta Hotel, University Way. Order online with M-Pesa.",
   keywords: HOME_SEO_KEYWORDS,
@@ -61,32 +60,6 @@ const breadcrumbJsonLd = {
       item: baseUrl,
     },
   ],
-};
-
-const localBusinessHomeJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "The Stems Flowers",
-  url: baseUrl,
-  telephone: "+254725707143",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Delta Hotel, University Way",
-    addressLocality: "Nairobi CBD",
-    addressCountry: "KE",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: -1.2833,
-    longitude: 36.8172,
-  },
-  areaServed: { "@type": "City", name: "Nairobi" },
-  openingHours: "Mo-Sa 08:00-20:00",
-  description:
-    "The Stems Flowers — Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, flower bouquets, gift hampers and teddy bears with same-day delivery across Nairobi. Pay with M-Pesa.",
-  priceRange: "$$",
-  paymentAccepted: "M-Pesa, Cash, Card",
-  hasMap: "https://maps.google.com/?q=Delta+Hotel+University+Way+Nairobi",
 };
 
 const homepageFaqJsonLd = {
@@ -140,7 +113,6 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd} />
-      <JsonLd data={localBusinessHomeJsonLd} />
       <JsonLd data={homepageFaqJsonLd} />
       <div>
         <HomepageHero />

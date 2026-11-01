@@ -7,7 +7,7 @@ import { SHOP_INFO } from "@/lib/constants";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower & Gift Delivery Services Nairobi | Same-Day Anniversary Flowers, Birthday Gifts & Apology Bouquets | The Stems",
+  title: "Flower & Gift Delivery Services Nairobi",
   description:
     "Professional flower and gift delivery services Nairobi: same-day anniversary flowers, birthday surprises, apology bouquets & thoughtful hampers. Express delivery across CBD, Westlands, Karen, Lavington, Kilimani. Order online with guaranteed delivery.",
   keywords: [
@@ -85,9 +85,9 @@ export const metadata: Metadata = {
 
 const services = [
   {
-    title: "Wedding Flowers",
+    title: "Wedding Decor & Event Flowers",
     description:
-      "Complete wedding floral services including bridal bouquets, centerpieces, ceremony arrangements, and reception decorations. Let us bring your dream wedding to life.",
+      "Our strongest area: extensive experience in wedding decor and events, including bridal bouquets, centerpieces, ceremony arrangements and reception decorations, set up on the day.",
     image: "/weddingblog.jpeg",
     features: [
       "Bridal bouquets",

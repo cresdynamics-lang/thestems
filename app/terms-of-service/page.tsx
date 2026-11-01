@@ -4,7 +4,7 @@ const siteName = "The Stems Flowers";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | The Stems Flowers Nairobi",
+  title: "Terms & Conditions",
   description:
     "Terms and conditions for using The Stems Flowers website and purchasing flowers, gift hampers, wines, chocolates and teddy bears in Nairobi, Kenya.",
   alternates: {

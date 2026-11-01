@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/seo";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Chocolate Delivery Nairobi | Ferrero Rocher & Gift Chocolates | The Stems",
+  title: "Chocolate Delivery Nairobi | Ferrero Rocher",
   description:
     `Order chocolates in Nairobi with same-day delivery. Ferrero Rocher gift boxes and chocolate hampers from KSh 1,500. WhatsApp ${WHATSAPP_DISPLAY} to order.`,
   keywords: [

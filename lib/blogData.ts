@@ -15,6 +15,7 @@ export interface BlogPost {
   content: string;
   author: string;
   publishedAt: string;
+  updatedAt?: string;
   image: string;
   category: string;
   tags: string[];
@@ -60,6 +61,7 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
     tags: dbPost.tags || [],
     readTime: dbPost.read_time,
     featured: dbPost.featured,
+    updatedAt: dbPost.updated_at || undefined,
     metaTitle: dbPost.meta_title || undefined,
     metaDescription: dbPost.meta_description || undefined,
     focusKeyword: dbPost.focus_keyword || undefined,
@@ -67,7 +69,7 @@ export function convertBlogPost(dbPost: BlogPostDB): BlogPost {
 }
 
 // Static blog posts — informational guides (not transactional landing pages)
-const STATIC_BLOG_POSTS: BlogPost[] = [
+export const STATIC_BLOG_POSTS: BlogPost[] = [
   ...SEARCH_INTENT_BLOG_POSTS,
   ...SEO_PILLAR_BLOG_POSTS,
   ...INTENTIONAL_BLOG_POSTS,

@@ -9,7 +9,7 @@ export const BRAND_COLORS = {
 } as const;
 
 export const SHOP_INFO = {
-  name: "The Stems",
+  name: "The Stems Flowers",
   phone: "254725707143",
   whatsapp: "254725707143",
   email: "thestemsflowers.ke@gmail.com",

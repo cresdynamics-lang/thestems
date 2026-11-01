@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/seo";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Birthday Flowers Nairobi | Same Day Delivery from KSh 3,500 | The Stems",
+  title: "Birthday Flowers Nairobi | From KSh 3,000",
   description:
     `Order birthday flowers in Nairobi with same-day delivery. Roses, bouquets, teddy and gift combos from KSh 3,500. WhatsApp ${WHATSAPP_DISPLAY} to order.`,
   alternates: {

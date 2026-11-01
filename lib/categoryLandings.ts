@@ -27,7 +27,7 @@ export type CategoryLandingConfig = {
 export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
   "graduation-bouquets-nairobi": {
     slug: "graduation-bouquets-nairobi",
-    metaTitle: "Graduation Bouquets Nairobi | PP2, Grade 3, 6 & 9 | Same-Day | The Stems",
+    metaTitle: "Graduation Bouquets Nairobi | PP2 to Grade 9",
     metaDescription:
       "Order graduation bouquets in Nairobi for PP2, Grade 3, Grade 6 and Grade 9. Same-day flower delivery, teddy bears and graduation gift hampers from The Stems Flowers CBD.",
     h1: "Graduation Bouquets Nairobi – Same-Day Delivery",
@@ -79,7 +79,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "get-well-soon-flowers-nairobi": {
     slug: "get-well-soon-flowers-nairobi",
-    metaTitle: "Get Well Soon Flowers Nairobi | Soft Bouquets & Fruit | The Stems",
+    metaTitle: "Get Well Soon Flowers Nairobi | Same-Day",
     metaDescription:
       "Send get well soon flowers in Nairobi — gentle bouquets, fruit baskets and gift hampers with same-day delivery from The Stems Flowers.",
     h1: "Get Well Soon Flowers Nairobi",
@@ -121,7 +121,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "fruit-baskets-nairobi": {
     slug: "fruit-baskets-nairobi",
-    metaTitle: "Fruit Baskets Nairobi | Get Well & Corporate Delivery | The Stems",
+    metaTitle: "Fruit Baskets Nairobi | Get Well & Corporate",
     metaDescription:
       "Order fruit baskets in Nairobi for get well soon, corporate gifts and celebrations. Fresh arrangements with same-day delivery from The Stems Flowers.",
     h1: "Fruit Baskets Nairobi – Fresh & Same-Day",
@@ -161,7 +161,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "funeral-flowers-nairobi": {
     slug: "funeral-flowers-nairobi",
-    metaTitle: "Funeral Flowers Nairobi | Wreaths & Sympathy Bouquets | The Stems",
+    metaTitle: "Funeral Flowers Nairobi | Wreaths & Sympathy",
     metaDescription:
       "Order funeral flowers and sympathy bouquets in Nairobi. Wreaths, condolence arrangements and same-day delivery from The Stems Flowers.",
     h1: "Funeral & Sympathy Flowers Nairobi",
@@ -203,7 +203,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "mixed-bouquets-nairobi": {
     slug: "mixed-bouquets-nairobi",
-    metaTitle: "Mixed Flower Bouquets Nairobi | Colourful Same-Day Delivery | The Stems",
+    metaTitle: "Mixed Flower Bouquets Nairobi | Same-Day",
     metaDescription:
       "Shop mixed flower bouquets in Nairobi — colourful seasonal arrangements with same-day delivery from The Stems Flowers CBD.",
     h1: "Mixed Flower Bouquets Nairobi",
@@ -233,7 +233,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "gift-hampers-nairobi": {
     slug: "gift-hampers-nairobi",
-    metaTitle: "Gift Hampers Nairobi | Luxury, Chocolate & Corporate | The Stems",
+    metaTitle: "Gift Hampers Nairobi | Luxury & Corporate",
     metaDescription:
       "Order gift hampers in Nairobi — luxury, chocolate, flower and corporate hampers with same-day delivery from The Stems Flowers.",
     h1: "Gift Hampers Nairobi – Luxury & Same-Day",
@@ -270,7 +270,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "teddy-bears-nairobi": {
     slug: "teddy-bears-nairobi",
-    metaTitle: "Teddy Bears Nairobi | 25cm to Giant | Flowers Combo | The Stems",
+    metaTitle: "Teddy Bears Nairobi | 25cm to 200cm",
     metaDescription:
       "Buy teddy bears in Nairobi — 25cm, 50cm, 100cm and giant sizes. Pair with flowers or chocolates. Same-day delivery from The Stems.",
     h1: "Teddy Bears Nairobi – Soft Gifts, Same-Day",
@@ -301,7 +301,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "chocolates-nairobi": {
     slug: "chocolates-nairobi",
-    metaTitle: "Chocolates Nairobi | Ferrero & Flower Combos | The Stems",
+    metaTitle: "Chocolates Nairobi | Ferrero & Flower Combos",
     metaDescription:
       "Order chocolates in Nairobi — Ferrero Rocher, chocolate hampers and flower-and-chocolate gifts with same-day delivery from The Stems.",
     h1: "Chocolates & Sweet Gifts Nairobi",
@@ -332,7 +332,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "flower-delivery-nairobi": {
     slug: "flower-delivery-nairobi",
-    metaTitle: "Flower Delivery Nairobi | Same-Day Roses & Bouquets | The Stems",
+    metaTitle: "Flower Delivery Nairobi | Same-Day by 4PM",
     metaDescription:
       "Flower delivery Nairobi with same-day service. Fresh roses, mixed bouquets and gift hampers from The Stems Flowers CBD. Order online, pay M-Pesa.",
     h1: "Flower Delivery Nairobi – Fresh Flowers, Same Day",
@@ -380,7 +380,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "florist-nairobi": {
     slug: "florist-nairobi",
-    metaTitle: "Florist Nairobi | The Stems Flowers CBD | Same-Day Delivery",
+    metaTitle: "Florist Nairobi | Same-Day Delivery from CBD",
     metaDescription:
       "Trusted florist in Nairobi at Delta Hotel, University Way. Fresh flowers, roses, hampers and teddy bears. Walk in or order same-day delivery citywide.",
     h1: "Florist Nairobi – The Stems Flowers",
@@ -423,7 +423,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "flower-shop-nairobi": {
     slug: "flower-shop-nairobi",
-    metaTitle: "Flower Shop Nairobi | Walk-In & Online Orders | The Stems",
+    metaTitle: "Flower Shop Nairobi | Walk-In & Online Orders",
     metaDescription:
       "Flower shop in Nairobi CBD — fresh bouquets, roses and gift hampers. Walk in at Delta Hotel, University Way or order online for same-day delivery.",
     h1: "Flower Shop Nairobi – Walk In or Order Online",
@@ -459,7 +459,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "flowers-and-gifts-nairobi": {
     slug: "flowers-and-gifts-nairobi",
-    metaTitle: "Flowers and Gifts Nairobi | Bouquets, Hampers & Teddy Bears | The Stems",
+    metaTitle: "Flowers and Gifts Nairobi | Hampers & Teddies",
     metaDescription:
       "Flowers and gifts in Nairobi — bouquets, roses, gift hampers, chocolates and teddy bears with same-day delivery from The Stems Flowers.",
     h1: "Flowers and Gifts Nairobi",
@@ -497,7 +497,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "roses-nairobi": {
     slug: "roses-nairobi",
-    metaTitle: "Roses Nairobi | Red, Pink & White Rose Delivery | The Stems",
+    metaTitle: "Roses Nairobi | Red, Pink & White Delivery",
     metaDescription:
       "Order roses in Nairobi — red, pink and white rose bouquets with same-day delivery from The Stems Flowers CBD florist.",
     h1: "Roses Nairobi – Red, Pink & White Bouquets",
@@ -529,7 +529,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "corporate-flowers-nairobi": {
     slug: "corporate-flowers-nairobi",
-    metaTitle: "Corporate Flowers Nairobi | Office & Client Gifts | The Stems",
+    metaTitle: "Corporate Flowers Nairobi | Office Gifts",
     metaDescription:
       "Corporate flowers and gift hampers in Nairobi for offices, clients and employee appreciation. Same-day delivery from The Stems Flowers.",
     h1: "Corporate Flowers & Gifts Nairobi",
@@ -566,7 +566,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "flowers-across-kenya": {
     slug: "flowers-across-kenya",
-    metaTitle: "Flower Delivery Kenya | Send Flowers to Nairobi & Beyond | The Stems",
+    metaTitle: "Flower Delivery Kenya | Nairobi & Beyond",
     metaDescription:
       "Send flowers in Kenya via The Stems Flowers. Primary same-day service covers Nairobi. Enquire on WhatsApp for delivery to other towns we serve.",
     h1: "Flower Delivery Across Kenya",
@@ -607,7 +607,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "lilies-nairobi": {
     slug: "lilies-nairobi",
-    metaTitle: "Lilies Nairobi | Fresh Lily Bouquets Same-Day | The Stems",
+    metaTitle: "Lilies Nairobi | Fresh Lily Bouquets",
     metaDescription:
       "Order lilies in Nairobi — elegant white and mixed lily bouquets with same-day delivery from The Stems Flowers CBD.",
     h1: "Lilies Nairobi – Elegant Same-Day Bouquets",
@@ -637,7 +637,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "sunflowers-nairobi": {
     slug: "sunflowers-nairobi",
-    metaTitle: "Sunflowers Nairobi | Bright Same-Day Bouquets | The Stems",
+    metaTitle: "Sunflowers Nairobi | Bright Same-Day Bouquets",
     metaDescription:
       "Sunflower bouquets in Nairobi for birthdays, congratulations and cheerful gifts. Same-day delivery from The Stems Flowers.",
     h1: "Sunflowers Nairobi – Bright Bouquets Delivered",
@@ -665,7 +665,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "gypsophila-nairobi": {
     slug: "gypsophila-nairobi",
-    metaTitle: "Gypsophila / Baby's Breath Nairobi | Soft Bouquets | The Stems",
+    metaTitle: "Gypsophila & Baby's Breath Bouquets Nairobi",
     metaDescription:
       "Gypsophila (baby's breath) bouquets and accents in Nairobi. Soft cloud-like arrangements with same-day delivery from The Stems.",
     h1: "Gypsophila Nairobi – Baby's Breath Bouquets",
@@ -693,7 +693,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "flower-boxes-nairobi": {
     slug: "flower-boxes-nairobi",
-    metaTitle: "Flower Boxes Nairobi | Boxed Rose Arrangements | The Stems",
+    metaTitle: "Flower Boxes Nairobi | Boxed Rose Arrangements",
     metaDescription:
       "Luxury flower boxes in Nairobi — boxed roses and premium arrangements with same-day delivery from The Stems Flowers.",
     h1: "Flower Boxes Nairobi – Boxed Bouquets Delivered",
@@ -721,7 +721,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "hat-boxes-nairobi": {
     slug: "hat-boxes-nairobi",
-    metaTitle: "Hat Boxes Nairobi | Round Flower Hat Box Gifts | The Stems",
+    metaTitle: "Hat Boxes Nairobi | Round Flower Hat Box Gifts",
     metaDescription:
       "Flower hat boxes in Nairobi — round luxury rose hat boxes with same-day delivery from The Stems Flowers CBD.",
     h1: "Hat Boxes Nairobi – Luxury Round Flower Gifts",
@@ -750,7 +750,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "premium-luxury-flowers-nairobi": {
     slug: "premium-luxury-flowers-nairobi",
-    metaTitle: "Premium & Luxury Flowers Nairobi | Designer Bouquets | The Stems",
+    metaTitle: "Luxury Flowers Nairobi | Designer Bouquets",
     metaDescription:
       "Premium and luxury flower bouquets in Nairobi for VIP gifts, proposals and corporate hospitality. Same-day options from The Stems.",
     h1: "Premium & Luxury Flowers Nairobi",
@@ -778,7 +778,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "thank-you-flowers-nairobi": {
     slug: "thank-you-flowers-nairobi",
-    metaTitle: "Thank You Flowers Nairobi | Same-Day Gifts | The Stems",
+    metaTitle: "Thank You Flowers Nairobi | Same-Day Gifts",
     metaDescription:
       "Send thank you flowers in Nairobi — bouquets and gift combos with same-day delivery from The Stems Flowers.",
     h1: "Thank You Flowers Nairobi",
@@ -806,7 +806,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "new-baby-flowers-nairobi": {
     slug: "new-baby-flowers-nairobi",
-    metaTitle: "New Baby Flowers Nairobi | Soft Bouquets & Gifts | The Stems",
+    metaTitle: "New Baby Flowers Nairobi | Soft Bouquets & Gifts",
     metaDescription:
       "New baby flowers and gifts in Nairobi — soft bouquets, teddy bears and hampers with same-day delivery.",
     h1: "New Baby Flowers & Gifts Nairobi",
@@ -835,7 +835,7 @@ export const CATEGORY_LANDINGS: Record<string, CategoryLandingConfig> = {
 
   "mothers-day-flowers-nairobi": {
     slug: "mothers-day-flowers-nairobi",
-    metaTitle: "Mother's Day Flowers Nairobi | Bouquets & Gifts | The Stems",
+    metaTitle: "Mother's Day Flowers Nairobi",
     metaDescription:
       "Mother's Day flowers and gift hampers in Nairobi. Soft roses, mixed bouquets and same-day delivery from The Stems.",
     h1: "Mother's Day Flowers Nairobi",

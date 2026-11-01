@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Apology Flowers Nairobi — I'm Sorry Flowers Delivered | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/apology-flowers-nairobi` },
+  title: "Apology Flowers Nairobi | I'm Sorry Bouquets",
   description:
     "Send apology flowers in Nairobi — I'm sorry bouquets delivered same day. Red and mixed rose arrangements from The Stems Flowers, Nairobi CBD. Order with M-Pesa.",
 };

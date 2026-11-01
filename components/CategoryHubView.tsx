@@ -13,6 +13,7 @@ type HubPageProps = {
   skipLabels?: string[];
   shopHref?: string;
   shopLabel?: string;
+  children?: React.ReactNode;
 };
 
 export function hubMetadata(
@@ -35,6 +36,7 @@ export default function CategoryHubView({
   skipLabels = [],
   shopHref,
   shopLabel = "Shop collection",
+  children,
 }: HubPageProps) {
   const items = leaves.filter((l) => !skipLabels.includes(l.label));
   const wa = whatsappUrl(`Hello! I'm browsing ${h1} and need help choosing.`);
@@ -74,6 +76,11 @@ export default function CategoryHubView({
             </li>
           ))}
         </ul>
+        {children ? (
+          <div className="mt-10 space-y-4 text-brand-gray-700 [&_a]:text-brand-green [&_a]:underline [&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-brand-gray-900">
+            {children}
+          </div>
+        ) : null}
       </div>
     </div>
   );

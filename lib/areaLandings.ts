@@ -15,7 +15,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-westlands-nairobi",
     areaName: "Westlands",
     deliveryFee: "from KSh 300",
-    metaTitle: "Flower Delivery Westlands Nairobi | Same Day | The Stems",
+    metaTitle: "Flower Delivery Westlands | Same Day",
     metaDescription:
       "Same-day flower delivery in Westlands, Parklands and Nairobi West. Fresh roses, bouquets and gift hampers from KSh 3,500. Order online or WhatsApp The Stems Flowers.",
     h1: "Flower Delivery Westlands Nairobi — Same Day Roses & Bouquets",
@@ -29,7 +29,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-kilimani-nairobi",
     areaName: "Kilimani",
     deliveryFee: "from KSh 300",
-    metaTitle: "Flower Delivery Kilimani Nairobi | Roses & Hampers | The Stems",
+    metaTitle: "Flower Delivery Kilimani | Roses & Hampers",
     metaDescription:
       "Flower delivery Kilimani and Kileleshwa — roses, bouquets and gift hampers with same-day service. Florist delivery from KSh 3,500 across Nairobi.",
     h1: "Flower Delivery Kilimani & Kileleshwa — Fresh Bouquets Delivered",
@@ -43,7 +43,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-karen-nairobi",
     areaName: "Karen",
     deliveryFee: "from KSh 600",
-    metaTitle: "Flower Delivery Karen Nairobi | Gift Hampers & Roses | The Stems",
+    metaTitle: "Flower Delivery Karen | Roses & Hampers",
     metaDescription:
       "Flower and gift delivery Karen, Langata and Ngong Road. Same-day roses, hampers and teddy bears from Nairobi florist The Stems Flowers.",
     h1: "Flower Delivery Karen & Langata — Premium Gifts Delivered",
@@ -57,7 +57,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-nairobi-cbd",
     areaName: "Nairobi CBD",
     deliveryFee: "from KSh 0 in CBD",
-    metaTitle: "Flower Delivery Nairobi CBD | Florist University Way | The Stems",
+    metaTitle: "Flower Delivery Nairobi CBD | University Way",
     metaDescription:
       "Nairobi CBD flower delivery from Delta Hotel, University Way. Same-day roses, bouquets and hampers. Walk-in or order online with M-Pesa.",
     h1: "Flower Delivery Nairobi CBD — Florist at University Way",
@@ -71,7 +71,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-lavington-nairobi",
     areaName: "Lavington",
     deliveryFee: "from KSh 400",
-    metaTitle: "Flower Delivery Lavington Nairobi | Same Day | The Stems",
+    metaTitle: "Flower Delivery Lavington | Same Day",
     metaDescription:
       "Same-day flower delivery in Lavington Nairobi. Fresh roses, bouquets and gift hampers from The Stems Flowers CBD florist.",
     h1: "Flower Delivery Lavington Nairobi — Same Day",
@@ -84,8 +84,8 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
   {
     slug: "flower-delivery-kileleshwa-nairobi",
     areaName: "Kileleshwa",
-    deliveryFee: "from KSh 350",
-    metaTitle: "Flower Delivery Kileleshwa Nairobi | Roses & Hampers | The Stems",
+    deliveryFee: "from KSh 300",
+    metaTitle: "Flower Delivery Kileleshwa | Roses & Hampers",
     metaDescription:
       "Flower delivery Kileleshwa — roses, mixed bouquets and gift hampers with same-day service from The Stems Flowers Nairobi.",
     h1: "Flower Delivery Kileleshwa — Fresh Bouquets Delivered",
@@ -98,8 +98,8 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
   {
     slug: "flower-delivery-runda-nairobi",
     areaName: "Runda",
-    deliveryFee: "from KSh 700",
-    metaTitle: "Flower Delivery Runda Nairobi | Premium Gifts | The Stems",
+    deliveryFee: "from KSh 500",
+    metaTitle: "Flower Delivery Runda | Premium Gifts",
     metaDescription:
       "Premium flower and gift delivery to Runda Nairobi. Same-day roses, bouquets and luxury hampers from The Stems Flowers.",
     h1: "Flower Delivery Runda — Premium Same-Day Gifts",
@@ -113,7 +113,7 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
     slug: "flower-delivery-gigiri-nairobi",
     areaName: "Gigiri",
     deliveryFee: "from KSh 700",
-    metaTitle: "Flower Delivery Gigiri Nairobi | Same Day Florist | The Stems",
+    metaTitle: "Flower Delivery Gigiri | Same-Day Florist",
     metaDescription:
       "Flower delivery Gigiri Nairobi — bouquets, roses and gift hampers for homes and offices. Same-day options from The Stems Flowers.",
     h1: "Flower Delivery Gigiri Nairobi",
@@ -126,8 +126,8 @@ export const AREA_LANDINGS: AreaLandingConfig[] = [
   {
     slug: "flower-delivery-upper-hill-nairobi",
     areaName: "Upper Hill",
-    deliveryFee: "from KSh 350",
-    metaTitle: "Flower Delivery Upper Hill Nairobi | Office & Gifts | The Stems",
+    deliveryFee: "from KSh 200",
+    metaTitle: "Flower Delivery Upper Hill | Office & Gifts",
     metaDescription:
       "Flower delivery Upper Hill Nairobi for offices, hospitals and events. Same-day bouquets and corporate gifts from The Stems Flowers.",
     h1: "Flower Delivery Upper Hill — Offices & Celebrations",

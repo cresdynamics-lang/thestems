@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Wedding Car Decor Nairobi — Bridal Car Flower Decoration | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/wedding-car-decor-nairobi` },
+  title: "Wedding Car Decor Nairobi | Bridal Car Flowers",
   description:
     "Wedding car decoration with fresh flowers in Nairobi. Elegant bridal car decor from KSh 6,000. Professional setup. The Stems Flowers at Delta Hotel, University Way, Nairobi.",
 };
@@ -40,7 +42,7 @@ export default function WeddingCarDecorNairobiPage() {
 
         <div className="flex flex-wrap gap-4 items-center mb-10">
           <Link
-            href="/product/wedding-car-decor"
+            href="/wedding-car-decor-nairobi"
             className="btn-primary text-sm md:text-base"
           >
             View Wedding Car Decor Product

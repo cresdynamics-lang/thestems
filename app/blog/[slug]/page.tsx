@@ -18,18 +18,30 @@ interface BlogPostPageProps {
 
 export const revalidate = 300;
 
+/** Keep titles whole in the SERP: prefer the part before a colon, else cut at a word. */
+function shortBlogTitle(raw: string, max = 50): string {
+  const clean = raw.trim();
+  if (clean.length <= max) return clean;
+  const head = clean.split(":")[0].trim();
+  if (head.length >= 20 && head.length <= max) return head;
+  return clean.slice(0, max + 1).replace(/\s+\S*$/, "").replace(/[\s,&|–—-]+$/, "");
+}
+
+/** The page template renders the H1, so drop a leading H1 from the body and demote any others. */
+function blogBodyHtml(content: string): string {
+  return markdownToHtml(content.replace(/^\s*#\s+[^\n]*\n/, ""))
+    .replace(/<h1(\s|>)/g, "<h2$1")
+    .replace(/<\/h1>/g, "</h2>");
+}
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPost(slug);
 
   if (!post) return {};
 
-  // Layout already appends "| The Stems Flowers Nairobi" via metadata template.
-  const rawTitle = (post.metaTitle || post.title).trim();
-  const title =
-    rawTitle.length <= 55
-      ? rawTitle
-      : `${rawTitle.slice(0, 52).trim()}…`;
+  // Layout already appends "| The Stems" via metadata template.
+  const title = shortBlogTitle(post.metaTitle || post.title);
   const description = (
     post.metaDescription ||
     post.excerpt ||
@@ -56,6 +68,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       url: `${baseUrl}/blog/${slug}`,
       type: "article",
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt || post.publishedAt,
     },
     twitter: {
       card: "summary_large_image",
@@ -95,7 +108,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     description: post.metaDescription || post.excerpt,
     image: `${baseUrl}${post.image}`,
     datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    dateModified: post.updatedAt || post.publishedAt,
     keywords: post.focusKeyword || (post.tags || []).join(", "),
     author: {
       "@type": "Person",
@@ -183,7 +196,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               Published {format(new Date(post.publishedAt), "MMM d, yyyy")}
             </time>
             <span aria-hidden>·</span>
-            <span>Last updated {format(new Date(post.publishedAt), "MMM d, yyyy")}</span>
+            <span>Last updated {format(new Date(post.updatedAt || post.publishedAt), "MMM d, yyyy")}</span>
             <span aria-hidden>·</span>
             <span>{post.readTime} min read</span>
           </div>
@@ -208,7 +221,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {/* Article Content */}
           <div
             className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-brand-gray-900 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-brand-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-brand-green prose-a:no-underline hover:prose-a:underline prose-strong:text-brand-gray-900 prose-strong:font-semibold prose-ul:text-brand-gray-700 prose-ol:text-brand-gray-700 prose-li:text-brand-gray-700 prose-li:mb-2 prose-ul:list-disc prose-ol:list-decimal prose-ul:ml-6 prose-ol:ml-6 prose-table:w-full prose-table:text-sm prose-th:bg-brand-gray-100 prose-th:p-2 prose-td:p-2 prose-td:border prose-td:border-brand-gray-200 prose-th:border prose-th:border-brand-gray-200 prose-img:rounded-lg"
-            dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+            dangerouslySetInnerHTML={{ __html: blogBodyHtml(post.content) }}
           />
 
           <div className="mt-10 rounded-xl border border-brand-gray-200 bg-white p-5 md:p-6">

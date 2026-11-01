@@ -9,23 +9,23 @@ import { FLOWERS_SEO_KEYWORDS } from "@/lib/seo-keywords";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500",
+  title: "Fresh Flowers & Bouquets Nairobi from KSh 3,000",
   description:
-    "Order fresh flowers in Nairobi from KSh 3,500. Shop red roses, mixed bouquets, birthday and anniversary flowers with same-day delivery in Nairobi CBD and fast citywide delivery.",
+    "Order fresh flowers in Nairobi from KSh 3,000. Shop red roses, mixed bouquets, birthday and anniversary flowers with same-day delivery in Nairobi CBD and fast citywide delivery.",
   keywords: FLOWERS_SEO_KEYWORDS,
   alternates: {
     canonical: `${baseUrl}/collections/flowers`,
   },
   openGraph: {
-    title: "Flower Delivery Nairobi | Fresh Roses & Bouquets from KSh 3,500",
+    title: "Fresh Flowers & Bouquets Nairobi from KSh 3,000",
     description: "Shop fresh roses and bouquets in Nairobi for birthdays, anniversaries and romantic surprises. Same-day flower delivery from The Stems Flowers.",
     url: `${baseUrl}/collections/flowers`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Flower Delivery Nairobi | Fresh Roses & Bouquets",
-    description: "Buy fresh flowers in Nairobi from KSh 3,500 with same-day delivery. Roses, bouquets and celebration flowers by The Stems.",
+    title: "Fresh Flowers & Bouquets Nairobi",
+    description: "Buy fresh flowers in Nairobi from KSh 3,000 with same-day delivery. Roses, bouquets and celebration flowers by The Stems.",
   },
 };
 

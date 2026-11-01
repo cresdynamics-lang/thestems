@@ -7,9 +7,9 @@ import { WINE_PRODUCTS, getPredefinedProducts } from "@/lib/predefinedProducts";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Wine Gifts Nairobi from KSh 2,000 | Same-Day Delivery | The Stems",
+  title: "Wine Gifts Nairobi from KSh 3,500",
   description:
-    "Shop premium wine gifts in Nairobi from KSh 2,000. Robertson, Luc Belaire and Rosso Nobile bottles with same-day delivery in CBD and fast citywide delivery from The Stems.",
+    "Shop premium wine gifts in Nairobi from KSh 3,500. Robertson, Luc Belaire and Rosso Nobile bottles with same-day delivery in CBD and fast citywide delivery from The Stems.",
   keywords: [
     // Valentine's Wine Core Keywords
     "valentine's wine gifts Nairobi",
@@ -79,14 +79,14 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/collections/wines`,
   },
   openGraph: {
-    title: "Wine Gifts Nairobi from KSh 2,000 | Same-Day Delivery",
+    title: "Wine Gifts Nairobi from KSh 3,500 | Same-Day Delivery",
     description: "Buy premium wines in Nairobi with same-day delivery. Robertson, Luc Belaire and Rosso Nobile available from The Stems.",
     url: `${baseUrl}/collections/wines`,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wine Gifts Nairobi from KSh 2,000 | The Stems",
+    title: "Wine Gifts Nairobi from KSh 3,500 | The Stems",
     description: "Order wine gifts online in Nairobi with same-day delivery. Premium bottles for celebrations and gifting.",
   },
 };

@@ -34,7 +34,7 @@ export function getDisplayProductTitle(title: string, category?: string): string
   const clean = getCleanProductTitle(title);
   const lower = clean.toLowerCase();
   const hasType =
-    /\b(bouquet|hamper|bear|wine|chocolate|card|roses?|arrangement|basket)\b/i.test(clean);
+    /\b(bouquet|hamper|bear|teddy|wine|chocolate|card|roses?|arrangement|basket)\b/i.test(clean);
   if (hasType || !category) return clean;
   const label = CATEGORY_LABELS[category];
   return label && !lower.includes(label.toLowerCase()) ? `${clean} ${label}` : clean;

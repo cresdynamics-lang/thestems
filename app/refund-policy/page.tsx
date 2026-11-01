@@ -4,7 +4,7 @@ const siteName = "The Stems Flowers";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Refund Policy | The Stems Flowers Nairobi",
+  title: "Refund Policy",
   description:
     "Refund and returns policy for The Stems Flowers orders, including flowers, chocolates, wines, teddy bears and gift hampers delivered in Nairobi, Kenya.",
   alternates: {

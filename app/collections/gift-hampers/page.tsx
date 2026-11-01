@@ -8,7 +8,7 @@ import { SITE_URL, toAbsoluteImageUrl } from "@/lib/seo";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Gift Hampers Nairobi from KSh 8,500 | Same-Day Delivery | The Stems",
+  title: "Gift Hampers Nairobi from KSh 8,500",
   description:
     "Send luxury gift hampers in Nairobi with flowers, wine, chocolates and teddy bears. Prices from KSh 8,500 with same-day delivery in CBD and fast delivery citywide. Order online or WhatsApp The Stems.",
   keywords: [

@@ -7,7 +7,7 @@ const baseUrl = "https://thestemsflowers.co.ke";
 const pageUrl = `${baseUrl}/flower-wine-hamper-nairobi`;
 
 export const metadata: Metadata = {
-  title: "Flower and Wine Hamper Nairobi | Same-Day Delivery | The Stems",
+  title: "Flower and Wine Hamper Nairobi",
   description:
     "Send a flower and wine hamper in Nairobi with same-day delivery. Premium roses, curated wine gifts and luxury hamper options for birthdays, anniversaries and romantic surprises.",
   alternates: {

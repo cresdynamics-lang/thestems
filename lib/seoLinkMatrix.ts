@@ -368,3 +368,35 @@ export const BLOG_SEO_CALENDAR = [
   "Corporate flowers and client gifts in Nairobi",
   "Nairobi flower delivery area guides (Westlands, Lavington, Karen)",
 ] as const;
+
+const GUIDE_PRICES: SeoLink = { href: "/blog/flower-prices-nairobi", label: "Flower prices in Nairobi" };
+const GUIDE_DELIVERY: SeoLink = { href: "/blog/flower-delivery-nairobi", label: "How delivery works in Nairobi" };
+const GUIDE_OCCASIONS: SeoLink = { href: "/blog/what-flowers-to-send-occasion-kenya", label: "What flowers to send for each occasion" };
+const GUIDE_CARE: SeoLink = { href: "/blog/how-to-make-flowers-last-longer", label: "How to make flowers last longer" };
+const GUIDE_ROSES: SeoLink = { href: "/blog/how-many-roses-to-send-nairobi", label: "How many roses to send" };
+const GUIDE_LAST_MINUTE: SeoLink = { href: "/blog/last-minute-same-day-flower-gifts-nairobi", label: "Last-minute same-day gifts" };
+
+/** Sales page or product category → the blog guides that support it. First match wins. */
+const GUIDE_RULES: { match: RegExp; guides: SeoLink[] }[] = [
+  { match: /apolog/, guides: [{ href: "/blog/apology-flowers-nairobi-how-to-say-sorry", label: "How to say sorry with flowers" }, GUIDE_ROSES] },
+  { match: /get-well|fruit/, guides: [{ href: "/blog/get-well-flowers-hospital-delivery-nairobi", label: "Get well flowers for hospital delivery" }, GUIDE_OCCASIONS] },
+  { match: /graduation/, guides: [{ href: "/blog/graduation-and-kids-gifts-nairobi", label: "Graduation and kids gifts" }, { href: "/blog/best-gifts-for-children-nairobi", label: "Best gifts for children" }] },
+  { match: /wedding/, guides: [{ href: "/blog/wedding-flowers-nairobi-the-stems", label: "Planning wedding flowers on a budget" }, { href: "/blog/best-gifts-for-couples-nairobi", label: "Best gifts for couples" }] },
+  { match: /corporate/, guides: [{ href: "/blog/best-gift-hampers-for-corporate-gifting-nairobi", label: "Corporate gift hampers guide" }, { href: "/blog/best-gifts-for-colleagues-nairobi", label: "Best gifts for colleagues" }] },
+  { match: /mothers-day|valentine/, guides: [{ href: "/blog/valentines-mothers-day-christmas-flowers-kenya", label: "When to order for peak dates" }, GUIDE_OCCASIONS] },
+  { match: /kenya|send-gifts/, guides: [{ href: "/blog/send-flowers-to-kenya-from-abroad", label: "Sending flowers to Kenya from abroad" }, GUIDE_DELIVERY] },
+  { match: /same-day/, guides: [GUIDE_LAST_MINUTE, GUIDE_DELIVERY, { href: "/blog/same-day-flower-delivery-nairobi-cbd", label: "Same-day delivery in the CBD" }] },
+  { match: /flower-delivery-|florist|flower-shop/, guides: [GUIDE_DELIVERY, { href: "/blog/flower-delivery-westlands-karen-kileleshwa-nairobi", label: "Delivery to Westlands, Karen and Kileleshwa" }, GUIDE_PRICES] },
+  { match: /roses?\b|roses-|anniversary/, guides: [GUIDE_ROSES, { href: "/blog/rose-colors-meaning-anniversaries", label: "What rose colours mean" }, { href: "/blog/how-to-keep-red-roses-fresh-nairobi", label: "Keeping red roses fresh" }] },
+  { match: /teddy/, guides: [{ href: "/blog/teddy-bears-perfect-gifts-for-every-occasion", label: "Choosing a teddy bear size" }, { href: "/blog/best-gifts-for-children-nairobi", label: "Best gifts for children" }] },
+  { match: /wine/, guides: [{ href: "/blog/non-alcoholic-wines-gift-hampers-guide", label: "Non-alcoholic wines for hampers" }, { href: "/blog/best-gifts-for-men-nairobi", label: "Best gifts for men" }] },
+  { match: /hamper|chocolate/, guides: [{ href: "/blog/gifts-for-women-and-girlfriends-nairobi", label: "Gifts for women and girlfriends" }, { href: "/blog/best-gifts-for-wives-nairobi", label: "Best gifts for wives" }, { href: "/blog/best-gifts-for-men-nairobi", label: "Best gifts for men" }] },
+  { match: /birthday/, guides: [{ href: "/blog/birthday-flowers-gift-hampers-nairobi", label: "Picking birthday flowers" }, GUIDE_OCCASIONS] },
+  { match: /card|money/, guides: [{ href: "/blog/money-bouquet-nairobi", label: "Money bouquets explained" }, GUIDE_OCCASIONS] },
+];
+
+const DEFAULT_GUIDES: SeoLink[] = [GUIDE_PRICES, GUIDE_OCCASIONS, GUIDE_CARE];
+
+export function resolveGuideLinks(key: string): SeoLink[] {
+  return GUIDE_RULES.find((r) => r.match.test(key))?.guides ?? DEFAULT_GUIDES;
+}

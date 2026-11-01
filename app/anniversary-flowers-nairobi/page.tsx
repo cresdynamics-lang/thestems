@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 
 export const metadata: Metadata = {
-  title: "Anniversary Flowers Nairobi — Roses & Hampers Delivered Same Day | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/anniversary-flowers-nairobi` },
+  title: "Anniversary Flowers Nairobi | Same-Day",
   description:
     "Anniversary flowers delivered in Nairobi same day. Red roses, luxury hampers and romantic bouquets. From KSh 3,000. The Stems Flowers, Nairobi CBD. Pay with M-Pesa.",
 };

@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/seo";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Wedding Flowers Nairobi | Bridal Bouquets & Decor | The Stems",
+  title: "Wedding Flowers Nairobi | Bridal Bouquets",
   description:
     `Wedding flowers in Nairobi for bridal bouquets, car decor and venue styling. Same-day and pre-booked flower delivery available. WhatsApp ${WHATSAPP_DISPLAY}.`,
   alternates: {
@@ -51,6 +51,7 @@ export default async function WeddingFlowersNairobiPage() {
           Wedding Flowers in Nairobi - Bridal Bouquets, Car Decor and Gift Flowers
         </h1>
         <p className="text-brand-gray-700 text-base md:text-lg mb-6">
+          The Stems Flowers has done extensive work in events and wedding decor across Nairobi, from bridal bouquets to full venue flowers.{" "}
           The Stems Flowers designs wedding flowers in Nairobi for brides, grooms and families who want elegant floral styling.
           We provide bridal bouquets, bridesmaid bouquets, romantic table flowers and wedding gift bouquets with reliable delivery.
         </p>

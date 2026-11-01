@@ -11,69 +11,23 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Valentine's Gift Guide Nairobi | Romantic Flowers, Chocolates & Gift Ideas | The Stems Blog",
+  title: "Flower & Gift Blog Nairobi",
   description:
-    "Complete Valentine's Day gift guide for Nairobi: romantic flowers, chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's planning tips, same-day delivery guides, gift ideas for every relationship. Valentine's gift hampers & flower arrangements Nairobi.",
-  keywords: [
-    // Valentine's Blog Keywords
-    "valentine's gift guide nairobi",
-    "valentine's flowers nairobi blog",
-    "valentine's chocolates nairobi",
-    "romantic valentine's gifts nairobi",
-    "valentine's gift ideas kenya",
-    "pre valentine's planning nairobi",
-    "valentine's surprise gifts nairobi",
-    "valentine's hampers nairobi",
-
-    // Valentine's Relationship Advice
-    "what to gift wife valentine's nairobi",
-    "valentine's gifts for husband nairobi",
-    "valentine's gifts for girlfriend nairobi",
-    "valentine's gifts for mom nairobi",
-    "romantic valentine's ideas nairobi",
-
-    // Valentine's Content Types
-    "valentine's flower arrangements nairobi",
-    "valentine's chocolate hampers nairobi",
-    "valentine's wine gifts nairobi",
-    "valentine's teddy bears nairobi",
-
-    // Valentine's Delivery & Planning
-    "valentine's delivery nairobi guide",
-    "pre valentine's orders nairobi",
-    "valentine's day planning kenya",
-    "same day valentine's delivery nairobi",
-
-    // Valentine's Long-tail
-    "complete guide to valentine's gifts nairobi",
-    "best valentine's flower arrangements kenya",
-    "romantic valentine's gift hampers nairobi",
-    "valentine's day surprise packages nairobi",
-
-    // Valentine's Seasonal
-    "february valentine's gifts nairobi",
-    "2025 valentine's guide nairobi",
-    "love month gift ideas kenya",
-
-    // Traditional blog keywords
-    "flower blog nairobi",
-    "gift ideas kenya",
-    "nairobi florist blog",
-  ],
+    "Practical guides from The Stems Flowers: flower prices, same-day delivery, what to send for each occasion, and how to make bouquets last.",
   alternates: {
     canonical: `${baseUrl}/blog`,
   },
   openGraph: {
-    title: "Valentine's Gift Guide Nairobi | Romantic Flowers, Chocolates & Gift Ideas | The Stems Blog",
-    description: "Complete Valentine's Day gift guide for Nairobi: romantic flowers, chocolates, wine, teddy bears & surprise hampers for your wife, husband, girlfriend. Pre-Valentine's planning tips & delivery guides.",
+    title: "Flower & Gift Blog Nairobi | The Stems Flowers",
+    description: "Practical guides from The Stems Flowers: flower prices, same-day delivery, what to send for each occasion, and how to make bouquets last.",
     url: `${baseUrl}/blog`,
-    siteName: "The Stems",
+    siteName: "The Stems Flowers",
     images: [
       {
         url: "/images/products/flowers/BouquetFlowers3.jpg",
         width: 1200,
         height: 630,
-        alt: "Valentine's Gift Guide Nairobi - The Stems Blog",
+        alt: "Flower and gift guides from The Stems Flowers, Nairobi",
       },
     ],
     locale: "en_KE",
@@ -84,12 +38,13 @@ export const metadata: Metadata = {
 const blogJsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "Valentine's Gift Guide Nairobi - The Stems Blog",
-  description: "Complete Valentine's Day gift guide: romantic flowers, chocolates, wine, teddy bears & surprise hampers for Nairobi. Pre-Valentine's planning tips, delivery guides, and relationship gift ideas.",
+  name: "The Stems Flowers Blog",
+  description:
+    "Practical guides from The Stems Flowers: flower prices, same-day delivery, what to send for each occasion, and how to make bouquets last.",
   url: `${baseUrl}/blog`,
   publisher: {
     "@type": "Organization",
-    name: "The Stems",
+    name: "The Stems Flowers",
     url: baseUrl,
   },
 };

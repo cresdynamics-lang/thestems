@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/seo";
 const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
-  title: "Corporate Gift Hampers Nairobi | Business Gifting | The Stems",
+  title: "Corporate Gift Hampers Nairobi",
   description:
     `Corporate gift hampers in Nairobi for clients, teams and events. Same-day and scheduled delivery with custom bundles. WhatsApp ${WHATSAPP_DISPLAY}.`,
   alternates: {

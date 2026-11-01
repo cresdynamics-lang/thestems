@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Pink Roses Nairobi — Fresh Pink Rose Bouquets Delivered | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/pink-roses-nairobi` },
+  title: "Pink Roses Nairobi | Fresh Bouquets Delivered",
   description:
     "Order pink roses in Nairobi same day. Baby pink, hot pink and blush rose bouquets for birthdays, Women's Day and Mother's Day. The Stems Flowers at Delta Hotel, Nairobi CBD.",
 };

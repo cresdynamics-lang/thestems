@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Florist Nairobi CBD — Fresh Flowers at Delta Hotel, University Way | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/florist-nairobi-cbd` },
+  title: "Florist Nairobi CBD | Delta Hotel, University Way",
   description:
     "Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, bouquets and gift hampers. Walk in or order online with same-day delivery. Pay M-Pesa. Mon–Sat 8AM–8PM.",
 };

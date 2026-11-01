@@ -7,7 +7,7 @@ const baseUrl = "https://thestemsflowers.co.ke";
 const pageUrl = `${baseUrl}/send-gifts-to-kenya`;
 
 export const metadata: Metadata = {
-  title: "Send Gifts to Kenya | Flowers and Hampers Nairobi | The Stems",
+  title: "Send Gifts to Kenya | Flowers & Hampers",
   description:
     "Send flowers, gift hampers, wines and teddy bears to loved ones in Kenya. The Stems offers secure online ordering and same-day delivery in Nairobi for diaspora buyers in UK, USA, Canada and Europe.",
   alternates: {

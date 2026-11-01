@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 
 export const metadata: Metadata = {
-  title: "Same Day Flower Delivery Nairobi — Order by 4PM | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/same-day-flower-delivery-nairobi` },
+  title: "Same Day Flower Delivery Nairobi | Order by 4PM",
   description:
     "Same-day flower delivery anywhere in Nairobi. Order by 4PM for delivery today. Fresh roses, bouquets and gift hampers. Pay with M-Pesa. The Stems Flowers, Nairobi CBD.",
 };

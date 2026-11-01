@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/seo";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Red Roses Nairobi — Fresh Red Rose Bouquets Delivered Same Day | The Stems Flowers",
+  alternates: { canonical: `${SITE_URL}/red-roses-nairobi` },
+  title: "Red Roses Nairobi | Same-Day Bouquets",
   description:
-    "Order fresh red roses in Nairobi with same-day delivery. Red rose bouquets from KSh 2,500. Perfect for anniversaries, birthdays and romance. The Stems Flowers, Nairobi CBD.",
+    "Order fresh red roses in Nairobi with same-day delivery. Red rose bouquets from KSh 3,000. Perfect for anniversaries, birthdays and romance. The Stems Flowers, Nairobi CBD.",
 };
 
 export default function RedRosesNairobiPage() {

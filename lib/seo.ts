@@ -1,10 +1,10 @@
-import { SHOP_INFO } from "@/lib/constants";
+import { DELIVERY_LOCATIONS, SHOP_INFO } from "@/lib/constants";
 import { getCleanProductTitle } from "@/lib/productDisplay";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
-export const SITE_NAME = "The Stems Flowers Nairobi";
+export const SITE_NAME = "The Stems Flowers";
 
 export function absoluteUrl(path = ""): string {
   if (!path) return SITE_URL;
@@ -52,8 +52,8 @@ export function buildLocalBusinessJsonLd() {
     email: SHOP_INFO.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Delta Hotel, University Way",
-      addressLocality: "Nairobi CBD",
+      streetAddress: "Delta Hotel Building, University Way",
+      addressLocality: "Nairobi",
       addressRegion: "Nairobi",
       addressCountry: "KE",
     },
@@ -72,7 +72,7 @@ export function buildLocalBusinessJsonLd() {
       },
     ],
     description:
-      "Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, bouquets, gift hampers and teddy bears with same-day delivery across Nairobi. Pay with M-Pesa.",
+      "Nairobi florist at Delta Hotel Building, University Way, known for events and wedding decor. Fresh roses, bouquets, gift hampers and teddy bears with same-day delivery across Nairobi.",
     paymentAccepted: ["M-Pesa", "Cash", "Card"],
     hasMap: SHOP_INFO.mapUrl,
   };
@@ -159,6 +159,29 @@ export function buildSitewideFaqJsonLd() {
   };
 }
 
+/** Delivery facts from checkout: same-day when ordered by 4PM; fee depends on the area. */
+const MAX_DELIVERY_FEE_KES = Math.max(...DELIVERY_LOCATIONS.map((l) => l.fee));
+
+const SHIPPING_DETAILS_JSON_LD = {
+  "@type": "OfferShippingDetails",
+  shippingRate: { "@type": "MonetaryAmount", maxValue: MAX_DELIVERY_FEE_KES, currency: "KES" },
+  shippingDestination: { "@type": "DefinedRegion", addressCountry: "KE", addressRegion: "Nairobi" },
+  deliveryTime: {
+    "@type": "ShippingDeliveryTime",
+    cutoffTime: "16:00:00+03:00",
+    handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+    transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+  },
+};
+
+/** Matches /refund-policy: fresh and made-to-order items are final sale. */
+const RETURN_POLICY_JSON_LD = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "KE",
+  returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+  merchantReturnLink: absoluteUrl("/refund-policy"),
+};
+
 export function buildProductJsonLd(product: {
   title: string;
   slug: string;
@@ -194,6 +217,8 @@ export function buildProductJsonLd(product: {
         .toISOString()
         .split("T")[0],
       areaServed: { "@type": "City", name: "Nairobi" },
+      shippingDetails: SHIPPING_DETAILS_JSON_LD,
+      hasMerchantReturnPolicy: RETURN_POLICY_JSON_LD,
       seller: {
         "@type": "Florist",
         name: SITE_NAME,

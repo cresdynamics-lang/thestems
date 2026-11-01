@@ -54,9 +54,8 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default:
-      "Florist Nairobi CBD | Flowers, Teddy Bears & Gift Hampers | The Stems Flowers",
-    template: "%s | The Stems Flowers Nairobi",
+    default: "Florist Nairobi | Same-Day Flowers & Gifts | The Stems",
+    template: "%s | The Stems",
   },
   description:
     "The Stems Flowers is a Nairobi CBD florist at Delta Hotel, University Way. Fresh roses, flower bouquets, teddy bears and luxury gift hampers with same-day delivery across Nairobi. Order online and pay with M-Pesa.",
@@ -76,9 +75,6 @@ export const metadata: Metadata = {
   creator: "The Stems",
   publisher: "The Stems",
   metadataBase: new URL(SITE_URL),
-  alternates: {
-    canonical: SITE_URL,
-  },
   openGraph: {
     type: "website",
     locale: "en_KE",

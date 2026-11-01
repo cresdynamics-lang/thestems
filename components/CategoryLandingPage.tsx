@@ -2,6 +2,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import JsonLd from "@/components/JsonLd";
 import SeoInternalLinks from "@/components/SeoInternalLinks";
+import { resolveGuideLinks } from "@/lib/seoLinkMatrix";
 import { getProducts, type Product } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
 import type { CategoryLandingConfig } from "@/lib/categoryLandings";
@@ -198,6 +199,7 @@ export default async function CategoryLandingPage({
         </p>
 
         <SeoInternalLinks title="Related gifts & delivery" links={config.relatedLinks} />
+        <SeoInternalLinks title="Helpful guides" links={resolveGuideLinks(config.slug)} />
       </div>
     </div>
   );

@@ -38,6 +38,15 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/blog/surprise-gifts-for-wife-nairobi',
+        destination: '/blog/best-gifts-for-wives-nairobi',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     const securityHeaders = [
       { key: 'X-DNS-Prefetch-Control', value: 'on' },
@@ -59,7 +68,6 @@ const nextConfig = {
       {
         source: '/_next/image',
         headers: [
-          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },

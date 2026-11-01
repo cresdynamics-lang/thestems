@@ -6,6 +6,8 @@ import ProductDetailClient from "./ProductDetailClient";
 import ProductRecommendations from "@/components/product/ProductRecommendations";
 import ProductAddOnsCarousel from "@/components/product/ProductAddOnsCarousel";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import SeoInternalLinks from "@/components/SeoInternalLinks";
+import { resolveGuideLinks } from "@/lib/seoLinkMatrix";
 import PriceDisplay from "@/components/PriceDisplay";
 import { getProductBySlug } from "@/lib/db";
 import { supabase } from "@/lib/supabase";
@@ -192,6 +194,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
       <Suspense fallback={null}>
         <ProductRecommendations product={product} />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SeoInternalLinks title="Helpful guides" links={resolveGuideLinks(product.category)} />
+        </div>
       </Suspense>
 
       <NewsletterSignup />

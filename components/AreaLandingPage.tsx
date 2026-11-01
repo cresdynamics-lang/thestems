@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import SeoInternalLinks from "@/components/SeoInternalLinks";
+import { resolveGuideLinks } from "@/lib/seoLinkMatrix";
 import JsonLd from "@/components/JsonLd";
 import { getProducts } from "@/lib/db";
 import { getPredefinedProducts } from "@/lib/predefinedProducts";
@@ -134,6 +135,7 @@ export default async function AreaLandingPage({ config }: AreaLandingPageProps) 
           </div>
 
           <SeoInternalLinks title={`More delivery areas near ${config.areaName}`} links={areaLinks} />
+          <SeoInternalLinks title="Helpful guides" links={resolveGuideLinks(config.slug)} />
         </div>
       </div>
     </>

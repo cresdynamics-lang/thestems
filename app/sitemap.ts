@@ -1,9 +1,7 @@
 import type { MetadataRoute } from "next";
 import { supabaseAdmin } from "@/lib/supabase";
 import { SITE_URL } from "@/lib/seo";
-import { INTENTIONAL_BLOG_POSTS } from "@/lib/intentionalBlogPosts";
-import { SEO_PILLAR_BLOG_POSTS } from "@/lib/seoPillarBlogPosts";
-import { SEARCH_INTENT_BLOG_POSTS } from "@/lib/searchIntentBlogPosts";
+import { STATIC_BLOG_POSTS } from "@/lib/blogData";
 import { MAIN_NAV } from "@/lib/navTaxonomy";
 import { GBP_DESTINATION_URLS } from "@/lib/gbpDestinationUrls";
 
@@ -18,7 +16,6 @@ function staticPage(
 ): SitemapEntry {
   return {
     url: `${SITE_URL}${path}`,
-    lastModified: new Date(),
     changeFrequency,
     priority,
   };
@@ -84,6 +81,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     staticPage("/flower-delivery-runda-nairobi", 0.85, "weekly"),
     staticPage("/flower-delivery-gigiri-nairobi", 0.85, "weekly"),
     staticPage("/flower-delivery-upper-hill-nairobi", 0.9, "weekly"),
+    staticPage("/send-gifts-to-kenya", 0.85, "weekly"),
+    staticPage("/flowers-across-kenya", 0.85, "weekly"),
     staticPage("/terms-of-service", 0.3, "yearly"),
     staticPage("/refund-policy", 0.3, "yearly"),
     staticPage("/privacy-policy", 0.3, "yearly"),
@@ -103,21 +102,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const productUrls: SitemapEntry[] = (products ?? []).map((p) => ({
     url: `${SITE_URL}/product/${p.slug}`,
-    lastModified: p.updated_at ? new Date(p.updated_at) : new Date(),
+    lastModified: p.updated_at ? new Date(p.updated_at) : undefined,
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
-  const blogSlugDates = new Map<string, Date>();
-  for (const p of [
-    ...SEARCH_INTENT_BLOG_POSTS,
-    ...SEO_PILLAR_BLOG_POSTS,
-    ...INTENTIONAL_BLOG_POSTS,
-  ]) {
+  const blogSlugDates = new Map<string, Date | undefined>();
+  for (const p of STATIC_BLOG_POSTS) {
     blogSlugDates.set(p.slug, new Date(p.publishedAt));
   }
   for (const p of posts ?? []) {
-    blogSlugDates.set(p.slug, p.updated_at ? new Date(p.updated_at) : new Date());
+    if (p.updated_at) blogSlugDates.set(p.slug, new Date(p.updated_at));
+    else if (!blogSlugDates.has(p.slug)) blogSlugDates.set(p.slug, undefined);
   }
 
   const blogUrls: SitemapEntry[] = [...blogSlugDates.entries()].map(([slug, lastModified]) => ({

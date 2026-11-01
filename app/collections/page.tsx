@@ -7,7 +7,7 @@ import { whatsappUrl } from "@/lib/contact";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://thestemsflowers.co.ke";
 
 export const metadata: Metadata = {
-  title: "Flower & Gift Collections Nairobi | Same Day Delivery | The Stems",
+  title: "Flower & Gift Collections Nairobi",
   description: "Browse flowers, teddy bears, gift hampers, wines and chocolates in Nairobi. Same-day delivery and WhatsApp ordering available from The Stems Flowers.",
   keywords: [
     "flower collections Nairobi",
@@ -132,7 +132,7 @@ export default function CollectionsPage() {
                 Teddy Bears
               </h2>
               <p className="text-brand-gray-600 mb-2 md:mb-4 text-xs md:text-base line-clamp-2 md:line-clamp-none">
-                Soft and adorable companions in various sizes and colors - perfect for Valentine's gifts
+                Soft and adorable companions in various sizes and colors - perfect for birthdays, graduations and surprises
               </p>
               <span className="text-brand-green font-medium text-xs md:text-base">Shop Teddy Bears →</span>
             </div>

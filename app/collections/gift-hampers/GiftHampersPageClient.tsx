@@ -70,7 +70,7 @@ export default function GiftHampersPageClient({ products, allHamperImages = [], 
             Our luxury hampers combine Ferrero Rocher chocolates, non-alcoholic or alcoholic wine, fresh flower bouquets,
             cuddly teddy bears and personalised accessories — ideal when you want one impressive gift delivered in Nairobi.
             Corporate teams choose us for employee appreciation and client thank-you baskets, while couples love our romantic
-            surprise hampers for anniversaries and Valentine&apos;s gestures. Order online with M-Pesa or message us on
+            surprise hampers for anniversaries and romantic gestures. Order online with M-Pesa or message us on
             WhatsApp; we deliver to Westlands, Karen, Kilimani, Lavington, Runda and all major Nairobi zones.
           </p>
           <p className="text-brand-gray-500 text-xs md:text-sm mt-1">
