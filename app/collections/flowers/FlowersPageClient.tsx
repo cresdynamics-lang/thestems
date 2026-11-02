@@ -95,7 +95,7 @@ export default function FlowersPageClient({ products, allFlowerImages = [], flow
       const productsWithoutSubcats = allDisplayItems.filter((product) => {
         const hasImage = product.images && product.images.length > 0 && product.images[0];
         const hasSubcat =
-          product.subcategory ||
+          (product.subcategory && allowed.has(product.subcategory)) ||
           (product.tags && product.tags.some((tag) => allowed.has(tag)));
         return hasImage && !hasSubcat;
       });

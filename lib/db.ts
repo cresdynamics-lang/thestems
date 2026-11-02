@@ -141,7 +141,7 @@ export async function getProducts(filters?: {
     );
 
     if (filters?.includeDrafts) return mapped;
-    return mapped.filter(isProductPublished);
+    return mapped.filter((p) => isProductPublished(p) && p.images.length > 0);
   } catch (error) {
     console.error("Error fetching products:", formatSupabaseError(error));
     return [];

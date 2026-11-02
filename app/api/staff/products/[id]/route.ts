@@ -3,7 +3,7 @@ import { requireStaff } from "@/lib/staff/auth";
 import { logStaffAction, getClientIp } from "@/lib/staff/audit";
 import { canDelete } from "@/lib/staff/permissions";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateProductPages } from "@/lib/revalidate-products";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +42,13 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
+    if (body.visibility === "published" && Array.isArray(body.images) && body.images.length === 0) {
+      return NextResponse.json(
+        { message: "Add at least one product image before publishing, or save it as a draft." },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
       .update(body)
       .eq("id", id)
@@ -59,7 +66,7 @@ export async function PUT(
       ipAddress: getClientIp(request),
     });
 
-    revalidateTag("products", "max");
+    revalidateProductPages(data.slug);
     return NextResponse.json(data);
   } catch (e: unknown) {
     if (e instanceof Error && e.message === "Unauthorized") {
@@ -93,7 +100,7 @@ export async function DELETE(
       ipAddress: getClientIp(request),
     });
 
-    revalidateTag("products", "max");
+    revalidateProductPages();
     return NextResponse.json({ message: "Deleted" });
   } catch (e: unknown) {
     if (e instanceof Error && e.message === "Unauthorized") {

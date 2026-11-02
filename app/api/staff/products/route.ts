@@ -5,9 +5,12 @@ import { canDelete } from "@/lib/staff/permissions";
 import { getProducts } from "@/lib/db";
 import { listProductsSummary } from "@/lib/staff/queries";
 import { supabaseAdmin } from "@/lib/supabase";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateProductPages } from "@/lib/revalidate-products";
 
 export const dynamic = "force-dynamic";
+
+const NEEDS_IMAGE_MESSAGE =
+  "Add at least one product image before publishing, or save it as a draft.";
 
 export async function GET(request: NextRequest) {
   try {
@@ -46,6 +49,9 @@ export async function POST(request: NextRequest) {
   try {
     const staff = requireStaff(request);
     const body = await request.json();
+    if ((body.visibility || "published") === "published" && !body.images?.length) {
+      return NextResponse.json({ message: NEEDS_IMAGE_MESSAGE }, { status: 400 });
+    }
     const { data, error } = await (supabaseAdmin.from("products") as ReturnType<typeof supabaseAdmin.from>)
       .insert({
         slug: body.slug,
@@ -81,8 +87,7 @@ export async function POST(request: NextRequest) {
       ipAddress: getClientIp(request),
     });
 
-    revalidatePath("/");
-    revalidateTag("products", "max");
+    revalidateProductPages(data.slug);
     return NextResponse.json(data);
   } catch (e: unknown) {
     if (e instanceof Error && e.message === "Unauthorized") {
@@ -130,7 +135,7 @@ export async function PATCH(request: NextRequest) {
       ipAddress: getClientIp(request),
     });
 
-    revalidateTag("products", "max");
+    revalidateProductPages();
     return NextResponse.json({ message: "Bulk action completed" });
   } catch (e: unknown) {
     if (e instanceof Error && e.message === "Unauthorized") {

@@ -22,6 +22,13 @@ export function formatCurrency(amount: number): string {
   }).format(amount / 100);
 }
 
+/** Convert a KES amount typed by staff (e.g. "7,500") to the cents stored in the database. */
+export function kesToCents(value: string): number | null {
+  const amount = Number(value.replace(/[\s,]/g, ""));
+  if (!value.trim() || !Number.isFinite(amount) || amount < 0) return null;
+  return Math.round(amount * 100);
+}
+
 export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return new Intl.DateTimeFormat("en-KE", {

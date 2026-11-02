@@ -38,6 +38,14 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  async rewrites() {
+    return {
+      beforeFiles: [],
+      afterFiles: [],
+      // Images uploaded since the last restart aren't known to the static file handler.
+      fallback: [{ source: '/images/:path*', destination: '/api/uploaded-images/:path*' }],
+    };
+  },
   async redirects() {
     return [
       {

@@ -7,6 +7,7 @@ import { StaffPage } from "@/components/staff/StaffPage";
 import { Badge } from "@/components/staff/ui/Badge";
 import { Modal } from "@/components/staff/ui/Modal";
 import { staffFetch } from "@/lib/staff/api-client";
+import { kesToCents } from "@/lib/utils";
 import { invalidateStaffCache } from "@/lib/staff/staff-cache";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useStaffQuery } from "@/hooks/useStaffQuery";
@@ -49,7 +50,7 @@ export default function StaffProductsPage() {
       body: JSON.stringify({
         ids: selected,
         action,
-        price: bulkPrice ? parseInt(bulkPrice, 10) : undefined,
+        price: kesToCents(bulkPrice) ?? undefined,
       }),
     });
     setSelected([]);
@@ -215,7 +216,7 @@ export default function StaffProductsPage() {
       </div>
 
       <Modal open={bulkOpen} onClose={() => setBulkOpen(false)} title="Bulk price update">
-        <label className="staff-label">Price (smallest unit, e.g. cents)</label>
+        <label className="staff-label">Price (KES, e.g. 4500)</label>
         <input
           className="staff-input mb-4"
           value={bulkPrice}
